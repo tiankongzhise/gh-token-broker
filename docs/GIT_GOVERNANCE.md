@@ -25,7 +25,8 @@ push 前处理规则：
 
 允许身份：
 
-- `notebook <tiankongzhise@163.com>`
+- `notebook <tiankongzhise@163.com>`：本地提交身份
+- `tiankongzhise <104021016+tiankongzhise@users.noreply.github.com>`：仅允许作为 GitHub 在合并 PR 时自动创建的 merge commit author；不得用作本地普通提交身份
 
 初始保守记录：
 
@@ -45,6 +46,7 @@ push 前处理规则：
 | 日期 | 变更 | 证据 |
 |---|---|---|
 | 2026-11-27 | 建立初始保守策略：AI 署名和贡献者身份均每次单独询问 | 首次 push 前预防性记录 |
+| 2026-11-27 | 将 GitHub PR merge commit 自动作者身份加入允许名单，仅限 merge commit | 用户明确选择“加入允许名单”；本地普通提交身份不变 |
 
 ## main 分支保护约束
 

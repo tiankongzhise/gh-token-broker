@@ -224,3 +224,17 @@
 3. policy、执行配置和运行结果分别登记，禁止混写。
 4. checker 只能防止已登记的 stale/缺失引用问题，不能替代语义审查；发现新类型漂移时必须补登记规则。
 5. 本决策批准治理原则和首版 enforcement 机制，不表示 registry 覆盖已经完整。
+
+
+## D-0011 GitHub PR merge commit 作者身份
+
+- 日期：2026-11-27
+- 状态：`approved`
+- 批准证据：2026-11-27 push 前身份检查发现 GitHub 合并 PR 自动创建的 merge commit 使用 GitHub noreply 作者身份；用户明确选择“加入允许名单”。
+- 决策：允许 `tiankongzhise <104021016+tiankongzhise@users.noreply.github.com>` 仅作为 GitHub PR merge commit 作者身份；本地普通提交仍使用 `notebook <tiankongzhise@163.com>`。
+
+### 边界
+
+1. 该 noreply 身份不得作为本地普通提交身份。
+2. 这不改变 AI 署名每次单独询问的政策。
+3. 若未来更换 GitHub 账号、合并方式或允许其他贡献者，必须先更新 GIT_GOVERNANCE。

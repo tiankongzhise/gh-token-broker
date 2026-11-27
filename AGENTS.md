@@ -3,7 +3,7 @@
 > ⚠️ **AI 署名约定**（AI Signature Policy）：每次单独询问；未获当次明确同意，不得在提交中加入 AI 署名。
 > 详细记录、检查流程和变更日志见 [GIT_GOVERNANCE](docs/GIT_GOVERNANCE.md)。
 >
-> ⚠️ **贡献者身份约定**（Author Identity Policy）：每次单独询问；当前允许身份为 `notebook <tiankongzhise@163.com>`。
+> ⚠️ **贡献者身份约定**（Author Identity Policy）：每次单独询问；本地提交允许身份为 `notebook <tiankongzhise@163.com>`；GitHub PR merge commits 允许身份为 `tiankongzhise <104021016+tiankongzhise@users.noreply.github.com>`。
 > 详细记录、检查流程和变更日志见 [GIT_GOVERNANCE](docs/GIT_GOVERNANCE.md)。
 
 本文件只保存框架性约束、长期不变的安全/Git 规则和文档地图。会随进度变化的状态、批准、worktree、验证结果和未决事项不写在本文，必须读写 [PROJECT_STATUS](docs/PROJECT_STATUS.md)。
