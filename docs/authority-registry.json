@@ -56,6 +56,12 @@
       "required": true
     },
     {
+      "id": "git.commit-message-policy",
+      "fact": "commit message language, structure, information-density requirements and validation boundaries",
+      "authority": "docs/COMMIT_MESSAGES.md",
+      "required": true
+    },
+    {
       "id": "gitignore.policy",
       "fact": "when and how ignore rules should be changed",
       "authority": "docs/GITIGNORE_POLICY.md",

@@ -84,6 +84,12 @@ prototype/              # 未来：可运行示意 Demo
 - 当前开发目标版本只记录根 `VERSION`；普通 feature/fix/chore PR 不随意修改它。
 - 版本格式和 tag consistency 检查命令：`python scripts/check_version.py`。
 
+### 4.3 commit message 检查入口
+
+- commit message 规范和示例统一见 [COMMIT_MESSAGES](COMMIT_MESSAGES.md)。
+- 提交前检查：`python scripts/check_commit_messages.py`。
+- type 前缀保持英文机器可读，摘要和正文使用中文；正文必须包含原因/边界和 `验证：` 记录。
+
 ## 5. 秘密与配置约束
 
 ### 5.1 绝不提交的内容
@@ -165,25 +171,29 @@ python scripts/check_secrets.py
 - scoped token
 - 多 agent 策略
 
-### Phase 2：安全交付通道
+### Phase 2：scoped/grant 基础 + 安全交付通道
 
-目标：
+目标（顺序已按 CR-0001 调整）：
 
+- client secret 安全配置/加密存储与 scoped token client 适配层。
+- scoped child token mint、inventory、`min_ttl` 检查。
+- 最小 grant id 生命周期，先服务 CLI/exec/credential helper。
 - `exec` wrapper。
 - git credential helper。
-- `min_ttl` 检查。
 - 基础审计。
 - Windows 手动/集成验证。
 
-### Phase 3：policy + scoped token + grant
+约束：exec/helper 不得注入或返回 parent token；scoped token 不可用时必须失败关闭。
+
+### Phase 3：policy + approval integration
 
 目标：
 
 - per-agent credential hash。
 - repo/profile policy engine。
-- scoped child token mint/check/revoke。
-- grant id 生命周期。
-- token inventory。
+- scoped child token check/revoke 完整化。
+- grant 与 agent credential/transport context 的完整绑定。
+- token inventory 完整化。
 
 ### Phase 4：MCP
 

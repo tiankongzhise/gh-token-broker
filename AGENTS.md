@@ -35,6 +35,7 @@
 | 漏洞报告、秘密边界、泄露响应、push 前扫描要求 | [SECURITY](SECURITY.md) | 安全政策和泄露响应流程变化写该文件；扫描结果快照写 PROJECT_STATUS |
 | 文档覆盖度、缺失项、文档结构审计 | [DOCUMENTATION_AUDIT](docs/DOCUMENTATION_AUDIT.md) | 文档结构性变化后更新审计状态或新增 findings |
 | AI 署名、贡献者身份、push 前身份检查 | [GIT_GOVERNANCE](docs/GIT_GOVERNANCE.md) | 政策、允许身份、检查记录和变更证据写该文件 |
+| commit message 语言、结构、信息密度和自动检查 | [COMMIT_MESSAGES](docs/COMMIT_MESSAGES.md) | 规范变化写该文件；执行脚本为 `scripts/check_commit_messages.py` |
 | 已批准基线的实质变化 | 相关基线文档 + `docs/changes/` | 先创建 `docs/changes/CR-<id>.md`，记录 proposed/approved/rejected 和批准证据 |
 
 文档之间冲突时，以较新的明确用户批准为准；没有发现批准证据时标为待确认，不得自行选择后冒充已批准。
@@ -70,7 +71,7 @@
 
 - 默认分支：`main`；协作流程为 GitHub Flow；短期分支使用 `feat/<short-kebab>`、`fix/<short-kebab>`、`chore/<short-kebab>`。
 - 禁止直接向远端 `main` push；所有对 `main` 的修改必须通过分支和 Pull Request 合并。确需变更保护规则时必须另行获得用户明确授权。
-- 提交格式：Conventional Commits 1.0.0，默认英文。
+- 提交格式：Conventional Commits 1.0.0 type 前缀保持英文，摘要和正文必须使用中文；信息密度和自动检查见 [COMMIT_MESSAGES](docs/COMMIT_MESSAGES.md)。
 - 先检查工作区，保留用户和其他代理已有改动；不擅自清理、强推、改写历史或执行其他不可逆操作。
 - 提交仅含本任务文件；提交前检查 diff 和 staged diff。
 - 规则配置不自动授予 commit/push/merge/deploy 权限；按当前用户明确授权执行。

@@ -53,3 +53,10 @@ push 前处理规则：
 - 2026-11-27 用户明确要求：禁止直接向远端 `main` push，任何对 `main` 的修改必须通过分支和 Pull Request 合并。
 - GitHub 分支保护的实际配置状态见 [PROJECT_STATUS](PROJECT_STATUS.md)；本文件只记录治理约束。
 - 修改、绕过或删除 main 保护规则必须另行获得用户明确授权。
+
+## commit message 规范入口
+
+- 2026-11-27 用户指出此前 commit 信息量不足，并要求后续 commit 使用中文。
+- 当前规范：Conventional Commits type 前缀保持英文机器可读，摘要和正文必须使用中文；正文必须说明原因/变更/边界并包含 `验证：` 记录。
+- 详细规范和示例见 [COMMIT_MESSAGES](COMMIT_MESSAGES.md)；自动检查脚本为 `scripts/check_commit_messages.py`。
+- 本规范不改变 AI 署名和贡献者身份政策。
