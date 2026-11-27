@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="820" viewBox="0 0 1280 820">
+<rect width="100%" height="100%" fill="#f4f4f4"/>
+<text x="40" y="52" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="28" font-weight="700" fill="#222" text-anchor="start">审批优先的 WebUI 低保真流程总览</text>
+<text x="40" y="82" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#555" text-anchor="start">用户新方向：少配置；agent 主动读取协议并提交权限申请，用户只生成授权码并审批。原人工模式保留为高级模式。</text>
+<rect x="40" y="125" width="180" height="165" rx="4" fill="#ffffff" stroke="#555" stroke-width="2"/>
+<text x="56" y="153" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#222" text-anchor="start">1. 生成授权码</text>
+<text x="56" y="181" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">用户在 Broker 登录</text>
+<text x="56" y="203" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">生成一次性/短寿命 code</text>
+<text x="56" y="225" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">把 code 交给 agent</text>
+<line x1="220" y1="205" x2="245" y2="205" stroke="#555" stroke-width="2"/>
+<text x="223" y="194" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="24" font-weight="700" fill="#222" text-anchor="start">→</text>
+<rect x="245" y="125" width="180" height="165" rx="4" fill="#ffffff" stroke="#555" stroke-width="2"/>
+<text x="261" y="153" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#222" text-anchor="start">2. agent 发现协议</text>
+<text x="261" y="181" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">读取 localhost public node</text>
+<text x="261" y="203" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">well-known/discovery</text>
+<text x="261" y="225" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">了解申请格式和能力</text>
+<line x1="425" y1="205" x2="450" y2="205" stroke="#555" stroke-width="2"/>
+<text x="428" y="194" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="24" font-weight="700" fill="#222" text-anchor="start">→</text>
+<rect x="450" y="125" width="180" height="165" rx="4" fill="#ffffff" stroke="#555" stroke-width="2"/>
+<text x="466" y="153" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#222" text-anchor="start">3. agent 提交申请</text>
+<text x="466" y="181" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">项目/仓库/权限 profile</text>
+<text x="466" y="203" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">min_ttl / 用途说明</text>
+<text x="466" y="225" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">authorization code 认证</text>
+<line x1="630" y1="205" x2="655" y2="205" stroke="#555" stroke-width="2"/>
+<text x="633" y="194" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="24" font-weight="700" fill="#222" text-anchor="start">→</text>
+<rect x="655" y="125" width="180" height="165" rx="4" fill="#ffffff" stroke="#555" stroke-width="2"/>
+<text x="671" y="153" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#222" text-anchor="start">4. 用户审批</text>
+<text x="671" y="181" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">全部批准</text>
+<text x="671" y="203" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">部分批准/降权</text>
+<text x="671" y="225" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">拒绝并写原因</text>
+<line x1="835" y1="205" x2="860" y2="205" stroke="#555" stroke-width="2"/>
+<text x="838" y="194" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="24" font-weight="700" fill="#222" text-anchor="start">→</text>
+<rect x="860" y="125" width="180" height="165" rx="4" fill="#ffffff" stroke="#555" stroke-width="2"/>
+<text x="876" y="153" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#222" text-anchor="start">5. Broker 生效</text>
+<text x="876" y="181" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">创建/更新 agent policy</text>
+<text x="876" y="203" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">发放 credential/grant</text>
+<text x="876" y="225" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">后续按 approval  mint token</text>
+<line x1="1040" y1="205" x2="1065" y2="205" stroke="#555" stroke-width="2"/>
+<text x="1043" y="194" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="24" font-weight="700" fill="#222" text-anchor="start">→</text>
+<rect x="1065" y="125" width="180" height="165" rx="4" fill="#ffffff" stroke="#555" stroke-width="2"/>
+<text x="1081" y="153" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#222" text-anchor="start">6. 审计与撤销</text>
+<text x="1081" y="181" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">approval inbox</text>
+<text x="1081" y="203" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">agent/token inventory</text>
+<text x="1081" y="225" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">revoke + audit</text>
+<rect x="40" y="330" width="560" height="260" rx="4" fill="#ffffff" stroke="#555" stroke-width="2"/>
+<text x="56" y="358" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#222" text-anchor="start">审批模式（默认）</text>
+<text x="56" y="386" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">用户不需要手工编写 repo pattern/profile 组合</text>
+<text x="56" y="408" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">agent 根据项目上下文主动声明需要的 GitHub 权限</text>
+<text x="56" y="430" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">用户在 Approval Inbox 中按仓库批准/拒绝/降权申请</text>
+<text x="56" y="452" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">批准后自动生成 agent credential、policy 和后续 grant/token 边界</text>
+<text x="56" y="474" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">授权码一次性/短寿命；审批前不等于已获得 GitHub 访问能力</text>
+<rect x="640" y="330" width="560" height="260" rx="4" fill="#ffffff" stroke="#555" stroke-width="2"/>
+<text x="656" y="358" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#222" text-anchor="start">人工模式（高级保留）</text>
+<text x="656" y="386" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">保留原 GitHub Apps / Agents / Token / Grants / Settings 管理能力</text>
+<text x="656" y="408" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">用于手工修正策略、rotate/disable credential、处理异常和高级排障</text>
+<text x="656" y="430" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">不作为普通用户接入 agent 的默认路径</text>
+<text x="656" y="452" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">高风险操作仍需二次确认；秘密永不完整回显</text>
+<rect x="40" y="630" width="1160" height="120" rx="4" fill="#ffffff" stroke="#555" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="56" y="658" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#222" text-anchor="start">待用户确认的审批模式问题</text>
+<text x="56" y="686" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">已确认：授权码默认一次性/短寿命；失败或泄露则撤销并重新生成。</text>
+<text x="56" y="708" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">已确认：第一版可按仓库批准/拒绝，也可把 permission profile 降权；不开放原子权限操作。</text>
+<text x="56" y="730" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">已确认：agent discovery public node 严格仅限 127.0.0.1；public 不是公网公开。</text>
+</svg>

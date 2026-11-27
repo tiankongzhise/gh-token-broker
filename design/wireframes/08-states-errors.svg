@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="820" viewBox="0 0 1280 820">
+<rect width="100%" height="100%" fill="#f4f4f4"/>
+<text x="40" y="52" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="28" font-weight="700" fill="#222" text-anchor="start">状态与错误低保真集合</text>
+<text x="40" y="82" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#555" text-anchor="start">每个页面复用这些状态骨架；错误包含 code + message + correlation id，不包含秘密。</text>
+<rect x="40" y="120" width="280" height="260" rx="4" fill="#ffffff" stroke="#555" stroke-width="2"/>
+<text x="56" y="148" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#222" text-anchor="start">Empty</text>
+<text x="56" y="176" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">插画占位：空框</text>
+<text x="56" y="198" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">标题：还没有数据</text>
+<text x="56" y="220" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">下一步按钮/说明</text>
+<rect x="360" y="120" width="280" height="260" rx="4" fill="#ffffff" stroke="#555" stroke-width="2"/>
+<text x="376" y="148" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#222" text-anchor="start">Loading</text>
+<text x="376" y="176" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">skeleton table rows</text>
+<text x="376" y="198" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">按钮 disabled</text>
+<text x="376" y="220" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">防止重复点击</text>
+<rect x="680" y="120" width="280" height="260" rx="4" fill="#ffffff" stroke="#555" stroke-width="2"/>
+<text x="696" y="148" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#222" text-anchor="start">Network error</text>
+<text x="696" y="176" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">code: github_unreachable</text>
+<text x="696" y="198" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">message + retry</text>
+<text x="696" y="220" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">correlation id</text>
+<rect x="1000" y="120" width="280" height="260" rx="4" fill="#ffffff" stroke="#555" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="1016" y="148" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#222" text-anchor="start">Reauth required</text>
+<text x="1016" y="176" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">code: reauth_required</text>
+<text x="1016" y="198" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">显式 reauth 按钮</text>
+<text x="1016" y="220" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">不自动 device flow</text>
+<rect x="40" y="440" width="280" height="260" rx="4" fill="#ffffff" stroke="#555" stroke-width="2"/>
+<text x="56" y="468" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#222" text-anchor="start">Policy denied</text>
+<text x="56" y="496" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">code: policy_denied</text>
+<text x="56" y="518" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">说明哪个 profile/repo 被拒</text>
+<text x="56" y="540" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">不泄露 credential</text>
+<rect x="360" y="440" width="280" height="260" rx="4" fill="#ffffff" stroke="#555" stroke-width="2"/>
+<text x="376" y="468" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#222" text-anchor="start">Secret store error</text>
+<text x="376" y="496" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">code: secret_store_unavailable</text>
+<text x="376" y="518" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">恢复建议</text>
+<text x="376" y="540" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">不显示 key/material</text>
+<rect x="680" y="440" width="280" height="260" rx="4" fill="#ffffff" stroke="#555" stroke-width="2"/>
+<text x="696" y="468" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#222" text-anchor="start">Host/Origin rejected</text>
+<text x="696" y="496" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">localhost 安全错误页</text>
+<text x="696" y="518" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">无 CORS/拒绝跨站</text>
+<text x="696" y="540" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">说明如何正确访问</text>
+<rect x="1000" y="440" width="280" height="260" rx="4" fill="#ffffff" stroke="#555" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="1016" y="468" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#222" text-anchor="start">High-risk confirm</text>
+<text x="1016" y="496" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">危险操作标题</text>
+<text x="1016" y="518" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">后果说明</text>
+<text x="1016" y="540" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">确认/取消 + pending</text>
+</svg>
