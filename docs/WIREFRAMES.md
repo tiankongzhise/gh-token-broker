@@ -40,7 +40,7 @@
 | WF-08 | [08-states-errors.svg](../design/wireframes/08-states-errors.svg) | 空/加载/网络错误/reauth/policy denied/secret store/Host-Origin/高风险确认状态 | PRD 第 7 章 |
 | WF-09 | [09-approval-inbox.svg](../design/wireframes/09-approval-inbox.svg) | 审批模式默认页：生成 agent 授权码、待审批列表、申请详情、全部/部分/拒绝 | agent-initiated approval 新方向 |
 | WF-10 | [10-agent-code-flow.svg](../design/wireframes/10-agent-code-flow.svg) | 授权码、agent discovery public node、权限申请提交、审批生效的跨角色流程 | agent 对接协议、授权码边界 |
-| WF-11 | [11-partial-approval.svg](../design/wireframes/11-partial-approval.svg) | 按仓库部分批准示例：只勾选/取消仓库，profile 只读展示，最终差异确认 | 部分批准粒度、高风险默认不批准 |
+| WF-11 | [11-partial-approval.svg](../design/wireframes/11-partial-approval.svg) | 部分批准与降权示例：按仓库批准/拒绝，并可降低 permission profile，最终差异确认 | 部分批准粒度、高风险默认不批准 |
 
 可维护生成脚本：[generate_wireframes.py](../design/wireframes/generate_wireframes.py)。SVG 是评审主产物；脚本只是为了重新生成，不是产品代码。
 
@@ -81,7 +81,7 @@
 2. 用户把授权码交给 agent。授权码只代表“允许提交申请”，不代表已经获得 GitHub 权限。
 3. agent 读取 broker 的 localhost discovery public node，了解 API version、endpoint、支持的 profile 和申请格式。这里 public 指无需凭证可读协议元数据，不是公网公开。
 4. agent 根据项目上下文提交权限申请：host/owner/repo/profile/min_ttl/reason。
-5. 用户在 Approvals 查看申请和风险提示，可以全部批准、按仓库部分批准或拒绝；第一版不能在审批页编辑原子权限或 profile。
+5. 用户在 Approvals 查看申请和风险提示，可以全部批准、按仓库部分批准/降权或拒绝；第一版不能编辑 GitHub 原子权限。
 6. 批准后 broker 自动生成或更新 agent credential、policy 和后续 grant/token 边界；结果写 audit。
 7. agent 后续按公开协议请求 token；用户不需要手工配置每个 repo pattern/profile。
 
@@ -173,8 +173,8 @@
 已确认边界：
 
 1. 授权码默认一次性、短寿命；泄露/失败则撤销并重新生成。
-2. 第一版部分批准只按仓库批准/拒绝；不开放 GitHub 原子权限操作，也不在审批页编辑 permission profile。
-3. permission profile 仍可作为 agent 申请中的机器可读风险标签和后端授权语义，但在审批页只读展示。
+2. 第一版部分批准支持按仓库批准/拒绝，并支持把 permission profile 降为更低风险包；不开放 GitHub 原子权限操作。
+3. 对一次性跨多个仓库申请大量权限的 agent 申请，UI 应突出批量/高风险警告，并要求用户逐项仓库确认、降权或拒绝。
 4. discovery public node 严格仅限 `127.0.0.1`；public 只是无需凭证可读协议元数据，不是公网公开。
 5. agent 自报 project/name/version/reason 只作为未验证声明显示。
 6. 审批模式与人工模式必须通过顶部模式切换明确分离，默认审批模式。
