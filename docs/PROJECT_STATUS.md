@@ -92,12 +92,12 @@
 | 2026-11-27 | 用户批准 D-0002、确认后端核心保守解释为 Phase 1，并允许创建本地 commit | 并行执行边界已确认 |
 | 2026-11-27 | 文档治理基线提交到本地 main `be69311`；两个 worktree 已 fast-forward | 尚未 push |
 | 2026-11-27 | 用户确认许可证为 `LGPL-2.1-only` | 精确许可证语义已关闭 |
-| 2026-11-27 | WebUI worktree 提交低保真 wireframes 与 `docs/WIREFRAMES.md` | `feat/webui-wireframes` commit `d1f8157`；待用户审查 |
-| 2026-11-27 | 后端 worktree 提交 Phase 1 core token chain POC | `feat/backend-core` commit `9c1ba2a`；测试/build/vet/secret scan 通过；待用户审查 |
+| 2026-11-27 | WebUI worktree 提交低保真 wireframes 与 `docs/WIREFRAMES.md` | `feat/webui-wireframes` commit `d1f8157`；当时待用户审查，后续批准见 D-0007 |
+| 2026-11-27 | 后端 worktree 提交 Phase 1 core token chain POC | `feat/backend-core` commit `9c1ba2a`；测试/build/vet/secret scan 通过；当时待用户审查，后续接受见 D-0005 |
 | 2026-11-27 | WebUI worktree 增加低保真/后端 POC 审核讲解 Demo | `feat/webui-wireframes` commit `e0266c1`；用于辅助当前审核，不代表进入高保真或 Demo 阶段 |
 | 2026-11-27 | 用户指出原前端过于繁琐，确认审批模式方向 | D-0004 approved；人工模式高级保留 |
 | 2026-11-27 | 用户接受后端 POC 为 Phase 2 技术地基 | D-0005 approved；Phase 2 未启动 |
-| 2026-11-27 | WebUI worktree 增加审批优先低保真 | `feat/webui-wireframes` commit `4fe1a13`；待用户复审 |
+| 2026-11-27 | WebUI worktree 增加审批优先低保真 | `feat/webui-wireframes` commit `4fe1a13`；当时待用户复审，后续批准见 D-0007 |
 | 2026-11-27 | 用户确认审批模式细化并要求两套 UI 分离 | D-0006 approved；授权码一次性/短寿命、仓库级审批、严格 loopback、顶部模式切换 |
 | 2026-11-27 | 用户修正降权语义并确认低保真 | D-0007 approved；第一版允许 profile 降权但不开放原子权限编辑；低保真阶段通过 |
 | 2026-11-27 | 用户指出 CI/CD 与 `.gitignore` 治理缺口 | D-0008 approved；新增 CI/CD 与 gitignore 专门规范并接入文档地图；当时首个 CI 尚未实施，后续见 D-0009 |
