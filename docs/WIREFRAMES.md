@@ -40,30 +40,36 @@
 | WF-08 | [08-states-errors.svg](../design/wireframes/08-states-errors.svg) | 空/加载/网络错误/reauth/policy denied/secret store/Host-Origin/高风险确认状态 | PRD 第 7 章 |
 | WF-09 | [09-approval-inbox.svg](../design/wireframes/09-approval-inbox.svg) | 审批模式默认页：生成 agent 授权码、待审批列表、申请详情、全部/部分/拒绝 | agent-initiated approval 新方向 |
 | WF-10 | [10-agent-code-flow.svg](../design/wireframes/10-agent-code-flow.svg) | 授权码、agent discovery public node、权限申请提交、审批生效的跨角色流程 | agent 对接协议、授权码边界 |
-| WF-11 | [11-partial-approval.svg](../design/wireframes/11-partial-approval.svg) | 部分批准示例：按仓库/权限拒绝或降权，最终差异确认 | 部分批准粒度、高风险默认不批准 |
+| WF-11 | [11-partial-approval.svg](../design/wireframes/11-partial-approval.svg) | 按仓库部分批准示例：只勾选/取消仓库，profile 只读展示，最终差异确认 | 部分批准粒度、高风险默认不批准 |
 
 可维护生成脚本：[generate_wireframes.py](../design/wireframes/generate_wireframes.py)。SVG 是评审主产物；脚本只是为了重新生成，不是产品代码。
 
 ## 3. 导航与页面结构
 
-左侧固定导航按“审批优先 + 高级人工模式保留”重新组织：
+顶部必须有明确模式切换，默认进入 **Agent 审批模式**。两套 UI 不混在同一左侧导航里。
+
+审批模式左侧只显示：
 
 1. Dashboard
-2. Approvals（默认 agent 接入路径）
-3. GitHub Apps
-4. Audit
-5. Settings
-6. Advanced: Agents（人工策略模式）
-7. Advanced: Tokens（人工 inventory/grant 模式）
+2. Approvals
+3. Audit
+4. Settings
+
+人工模式左侧只显示：
+
+1. Dashboard
+2. GitHub Apps
+3. Agents
+4. Token / Grants
+5. Audit
+6. Settings
 
 设计意图：
 
-- Dashboard 优先回答“现在是否安全/可用/需要我做什么”，并突出 pending approvals 和 reauth。
-- Approvals 是默认路径：用户只生成授权码并审批 agent 主动提交的申请，不要求用户手工编写复杂 policy。
-- GitHub Apps 管理授权和 app/account 状态。
-- Audit 用于追踪与排障。
-- Settings 只放本地运行、安全和恢复配置。
-- Advanced: Agents / Tokens 保留原人工模式，用于修正策略、rotate/disable、revoke 和高级排障，不作为默认接入路径。
+- 审批模式是默认路径：用户只生成授权码并审批 agent 主动提交的申请，不要求用户手工编写复杂 policy。
+- 人工模式是独立高级界面：用于手工修正策略、rotate/disable、revoke、GitHub App 细节和高级排障。
+- 顶部模式切换不是普通 tab；切换后整页信息架构和左侧导航一起变化，避免两种心智模型混杂。
+- Dashboard 在两种模式下都保留“需要用户行动”优先级，但审批模式突出 pending approvals，人工模式突出高级排障入口。
 
 ## 4. 核心流程覆盖
 
@@ -75,7 +81,7 @@
 2. 用户把授权码交给 agent。授权码只代表“允许提交申请”，不代表已经获得 GitHub 权限。
 3. agent 读取 broker 的 localhost discovery public node，了解 API version、endpoint、支持的 profile 和申请格式。这里 public 指无需凭证可读协议元数据，不是公网公开。
 4. agent 根据项目上下文提交权限申请：host/owner/repo/profile/min_ttl/reason。
-5. 用户在 Approvals 查看申请和风险提示，可以全部批准、部分批准/降权或拒绝。
+5. 用户在 Approvals 查看申请和风险提示，可以全部批准、按仓库部分批准或拒绝；第一版不能在审批页编辑原子权限或 profile。
 6. 批准后 broker 自动生成或更新 agent credential、policy 和后续 grant/token 边界；结果写 audit。
 7. agent 后续按公开协议请求 token；用户不需要手工配置每个 repo pattern/profile。
 
@@ -164,12 +170,20 @@
 
 ## 6. 低保真阶段待确认问题
 
-1. 授权码默认一次性还是允许在短窗口内重复使用？当前建议：一次性，泄露/失败则撤销并重新生成。
-2. 部分批准的粒度：按仓库、按 permission profile、按单个权限项，还是三者都支持？当前建议：先按仓库 + profile，高风险权限单独确认。
-3. discovery public node 是否仅限 `127.0.0.1`？当前建议：是；public 只是无需凭证可读协议元数据，不是公网公开。
-4. agent 自报的 project/name/version 是否需要额外本地 attestation 或只作为未验证声明显示？当前建议：先明确标为未验证声明。
-5. Token Issues 与 Grants 是否接受合并为高级模式中的一个页面，还是拆成两个导航项？
-6. 高风险权限启用是否只二次确认，还是要求输入仓库名/类型化确认短语？
+已确认边界：
+
+1. 授权码默认一次性、短寿命；泄露/失败则撤销并重新生成。
+2. 第一版部分批准只按仓库批准/拒绝；不开放 GitHub 原子权限操作，也不在审批页编辑 permission profile。
+3. permission profile 仍可作为 agent 申请中的机器可读风险标签和后端授权语义，但在审批页只读展示。
+4. discovery public node 严格仅限 `127.0.0.1`；public 只是无需凭证可读协议元数据，不是公网公开。
+5. agent 自报 project/name/version/reason 只作为未验证声明显示。
+6. 审批模式与人工模式必须通过顶部模式切换明确分离，默认审批模式。
+
+仍待后续确认：
+
+1. Token Issues 与 Grants 在人工模式中合并为一个页面，还是拆成两个导航项？
+2. 高风险权限启用是否只二次确认，还是要求输入仓库名/类型化确认短语？
+3. 审批模式中 Dashboard 是否只需要 pending approvals/reauth/system health 三类卡片？
 
 这些问题只影响信息架构和交互细节，不影响后端 Phase 1 POC 并行推进。
 
@@ -177,7 +191,7 @@
 
 高保真阶段必须保持或明确变更：
 
-- 审批模式作为默认 agent 接入路径；人工模式仅高级保留。
+- 顶部模式切换；默认 Agent 审批模式；审批模式与人工模式左侧导航完全分离。
 - Dashboard 的“需要用户行动”优先级。
 - write-only secret 输入与不显示完整秘密约束。
 - reauth 显式确认。

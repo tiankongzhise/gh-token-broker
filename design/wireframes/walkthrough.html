@@ -25,7 +25,7 @@ main{padding:16px 24px}.layout{display:grid;grid-template-columns:190px minmax(5
 </nav>
 <main>
 <section id="uiMode">
-<div class="note"><b>使用方法：</b>左侧选择页面。灰色图是原低保真；蓝色编号是可点击讲解点。右侧“本页全部位置说明”按区域解释：这里配置/展示什么、作用、设计理由、边界差异。编号位置只是审核辅助，不代表最终视觉坐标。<br><b>方向更新：</b>审批模式（WF-09 至 WF-11）是用户提出的默认接入路径；原 Agents/Token/Grants 页面应理解为高级人工模式。</div>
+<div class="note"><b>使用方法：</b>左侧选择页面。灰色图是原低保真；蓝色编号是可点击讲解点。右侧“本页全部位置说明”按区域解释：这里配置/展示什么、作用、设计理由、边界差异。编号位置只是审核辅助，不代表最终视觉坐标。<br><b>方向更新：</b>审批模式（WF-09 至 WF-11）是用户提出的默认接入路径；原 Agents/Token/Grants 页面应理解为独立人工模式；顶部模式切换后，左侧导航整套替换，不混杂。</div>
 <div class="layout" style="margin-top:14px">
 <div class="pages" id="pageButtons"></div>
 <div class="stagecard"><div class="stage" id="stage"><img id="wireImg" alt="wireframe"></div><p class="small muted">如果编号与图形有轻微偏移，以右侧文字说明为准；低保真只确认信息架构，不确认像素。</p></div>
@@ -144,11 +144,11 @@ const pages=[
 {x:47,y:39,t:"agent discovery",what:"agent 读取 localhost `/.well-known/gh-token-broker` 一类 discovery endpoint。",why:"协议公开让不同 agent 可以自行对接，不需要用户复制复杂 API 文档。",edge:"public 指无需凭证可读协议元数据，不是公网公开；仍应仅限 loopback。"},
 {x:47,y:54,t:"提交权限申请",what:"agent 用授权码认证后提交项目、仓库、profile、min_ttl、原因。",why:"agent 最了解自己项目需要什么权限，比用户手工猜测更准确。",edge:"agent 可以夸大需求，所以用户审批和 broker 校验仍是安全边界。"},
 {x:80,y:72,t:"批准后生效",what:"broker 创建或更新 credential/policy/grant 边界，agent 后续按协议请求 token。",why:"批准结果机器可读，避免用户手工复制复杂配置。",edge:"批准前 agent 没有 GitHub 访问能力；被拒绝也只能得到机器可读拒绝结果。"}],edges:["这是一张跨角色流程图，不是普通 WebUI 页面。","协议发现与授权码认证是后续后端契约的核心。"]},
-{file:"11-partial-approval.svg",name:"部分批准",title:"Partial Approval：部分批准示例",purpose:"把‘全部或部分批准’变成具体界面：用户可以按仓库/权限拒绝或降权，而不是只能全选或全拒。",items:[
+{file:"11-partial-approval.svg",name:"部分批准",title:"Partial Approval：按仓库部分批准",purpose:"把‘全部或部分批准’变成具体界面：用户可以按仓库批准或拒绝；第一版不能在审批页编辑原子权限或 profile。",items:[
 {x:31,y:25,t:"原始申请",what:"agent 申请多个仓库和不同 profile，例如 repo-a pr-write、repo-b read-only、repo-c admin。",why:"真实 agent 常常一次申请多个范围；逐项展示才能让用户判断。",edge:"agent 的用途说明只是声明，不能证明它不会滥用。"},
 {x:70,y:25,t:"勾选批准范围",what:"用户勾选 repo-a/repo-b，取消 repo-c admin。",why:"部分批准让用户保留必要功能，同时去掉高风险或无关范围。",edge:"高风险项应默认不勾选，即使用户选择批准也要单独确认。"},
-{x:70,y:49,t:"降权和缩短 TTL",what:"可以把 pr-write 降为 read-only，或把 min_ttl 从 2h 缩到 30m。",why:"这比纯手工编辑 policy 简单，同时仍能收紧风险。",edge:"过度缩短 min_ttl 可能导致 agent 操作频繁失败，需要平衡。"},
-{x:70,y:70,t:"最终差异确认",what:"确认页列出批准、拒绝、降权后的最终结果并写 audit。",why:"用户需要知道点击确认后到底生效了什么。",edge:"如果后端应用失败，不能只显示成功；必须显示失败和可重试状态。"}],edges:["部分批准粒度是本次低保真最需要确认的交互问题之一。","建议第一版按仓库 + permission profile，而不是开放几十个 GitHub 原子权限。"]}
+{x:70,y:49,t:"第一版批准粒度",what:"只能批准/拒绝整个仓库请求；profile 作为只读风险标签展示，不能在审批页编辑。",why:"用户已确认第一版不开放原子权限操作，避免审批界面变成复杂权限编辑器。",edge:"如果 repo-c 请求的 profile 风险过高，用户只能拒绝该仓库或以后去人工模式调整，不能在审批模式里把它改成低风险。"},
+{x:70,y:70,t:"最终差异确认",what:"确认页列出哪些仓库被批准、哪些被拒绝，以及对应只读 profile 风险标签，并写 audit。",why:"用户需要知道点击确认后到底生效了什么。",edge:"如果后端应用失败，不能只显示成功；必须显示失败和可重试状态。"}],edges:["第一版已确认只按仓库部分批准，不开放原子权限操作。","permission profile 仍存在，但它只是机器可读风险标签/后端授权语义，不是审批页可编辑维度。"]}
 ];
 const scenarios=[
 {id:"normal",name:"正常的一天",title:"正常的一天：为什么不用反复授权",boundary:"父 token 还有效、refresh token 还有效、GitHub 网络正常。",steps:["你在 WebUI 显式完成 device flow。GitHub 返回父 token 和 refresh token；页面只显示成功状态，不显示 token。","broker 把父 token 放内存，把 refresh token 加密后写入 SQLite。master key 只存在 Windows Credential Manager。","agent 之后需要访问 GitHub 时，broker 使用内存里的父 token 或后续 child token 机制；你不需要再次打开浏览器授权。","接受的含义：你相信这条链可以作为后续 agent 访问控制的地基。拒绝的含义：后续不能假设这种自动续期能力存在。"]},
@@ -175,7 +175,10 @@ const glossary=[
 ["grant","未来用于一次或短寿命领取 token 的内部凭证。它不是 GitHub token。"],
 ["raw token 兼容模式","是否允许把完整 token 输出给某些旧工具/高级流程。风险更高，当前未定，默认应禁用或至少显式确认。"],
 ["reauth_required","refresh token 失效或授权撤销后的状态。此时必须用户显式重新授权，不能由 agent 自动触发。"],
-["correlation id","一次操作在日志/审计中的关联编号。它不是秘密，用于把 UI 错误、后端日志和审计记录串起来。"]
+["correlation id","一次操作在日志/审计中的关联编号。它不是秘密，用于把 UI 错误、后端日志和审计记录串起来。"],
+["permission profile","一组预先命名的权限包，而不是让用户逐项勾选 GitHub 原子权限。例子：read-only 可能代表只读仓库内容/元数据；pr-write 可能代表读取 + 写内容 + 创建 PR。第一版审批页只把它当只读风险标签，不让用户编辑。"],
+["已验证事实","broker 自己能密码学或状态机验证的事实。例子：授权码是否存在/未过期/未使用、审批是否存在、repo 是否被批准、credential 是否启用、GitHub API 返回的安装/授权状态。"],
+["未验证声明","agent 自称但 broker 无法独立证明的信息。例子：它说自己是 safe-agent v1、项目路径是 repo-a、申请 write 权限是为了修 bug。这些可能是真的，也可能是伪装或夸大，只能作为审批上下文，不能当作安全事实。"]
 ];
 const stage=document.getElementById('stage'),img=document.getElementById('wireImg'),panel=document.getElementById('pagePanel'),pageButtons=document.getElementById('pageButtons');
 function renderPages(){pages.forEach((p,i)=>{const b=document.createElement('button');b.className='pagebtn';b.textContent=p.name;b.onclick=()=>selectPage(i);pageButtons.appendChild(b)});selectPage(0)}

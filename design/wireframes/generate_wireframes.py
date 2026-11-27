@@ -15,14 +15,20 @@ WIDTH = 1280
 HEIGHT = 820
 FONT = "Microsoft YaHei, Segoe UI, Arial, sans-serif"
 
-NAV = [
+APPROVAL_NAV = [
     ("dashboard", "Dashboard"),
     ("approvals", "Approvals"),
-    ("apps", "GitHub Apps"),
     ("audit", "Audit"),
     ("settings", "Settings"),
-    ("agents", "Advanced: Agents"),
-    ("tokens", "Advanced: Tokens"),
+]
+
+MANUAL_NAV = [
+    ("dashboard", "Dashboard"),
+    ("apps", "GitHub Apps"),
+    ("agents", "Agents"),
+    ("tokens", "Token / Grants"),
+    ("audit", "Audit"),
+    ("settings", "Settings"),
 ]
 
 
@@ -76,12 +82,14 @@ def box(c: Canvas, x, y, w, h, title, lines=None, fill="#ffffff", dash=False):
         c.text_block(x + 16, y + 56, lines, size=14, line_height=22)
 
 
-def shell(c: Canvas, title: str, active: str, status="broker: running"):
+def shell(c: Canvas, title: str, active: str, mode="manual", status="broker: running"):
+    nav = APPROVAL_NAV if mode == "approval" else MANUAL_NAV
     c.rect(0, 0, 210, HEIGHT, fill="#e8e8e8", stroke="#555", sw=2)
     c.text(24, 42, "GH Token Broker", size=20, weight="700")
     c.text(24, 68, "localhost WebUI", size=13, fill="#555")
-    y = 112
-    for key, name in NAV:
+    c.text(24, 96, "审批模式" if mode == "approval" else "人工模式", size=13, weight="700", fill="#555")
+    y = 128
+    for key, name in nav:
         selected = key == active
         c.rect(14, y - 24, 182, 38, fill="#d4d4d4" if selected else "#e8e8e8", stroke="#777" if selected else "#aaa", sw=1, rx=4)
         c.text(30, y, name, size=15, weight="700" if selected else "400")
@@ -93,12 +101,15 @@ def shell(c: Canvas, title: str, active: str, status="broker: running"):
 
     c.rect(210, 0, WIDTH - 210, 72, fill="#eeeeee", stroke="#555", sw=2)
     c.text(238, 44, title, size=24, weight="700")
-    c.text(1228, 42, "用户本地会话", size=13, anchor="end", fill="#555")
+    c.rect(850, 18, 190, 36, fill="#d4d4d4" if mode == "approval" else "#f7f7f7", stroke="#555", sw=1, rx=18)
+    c.text(945, 41, "Agent 审批模式", size=13, weight="700" if mode == "approval" else "400", anchor="middle")
+    c.rect(1050, 18, 150, 36, fill="#d4d4d4" if mode == "manual" else "#f7f7f7", stroke="#555", sw=1, rx=18)
+    c.text(1125, 41, "人工模式", size=13, weight="700" if mode == "manual" else "400", anchor="middle")
 
 
-def page_frame(name: str, title: str, active: str):
+def page_frame(name: str, title: str, active: str, mode="manual"):
     c = Canvas()
-    shell(c, title, active)
+    shell(c, title, active, mode=mode)
     return c
 
 
@@ -126,7 +137,7 @@ def generate_overview():
     box(c, 40, 330, 560, 260, "审批模式（默认）", [
         "用户不需要手工编写 repo pattern/profile 组合",
         "agent 根据项目上下文主动声明需要的 GitHub 权限",
-        "用户在 Approval Inbox 中看清申请内容后全部/部分批准",
+        "用户在 Approval Inbox 中按仓库批准/拒绝申请",
         "批准后自动生成 agent credential、policy 和后续 grant/token 边界",
         "授权码一次性/短寿命；审批前不等于已获得 GitHub 访问能力",
     ])
@@ -137,14 +148,14 @@ def generate_overview():
         "高风险操作仍需二次确认；秘密永不完整回显",
     ])
     box(c, 40, 630, 1160, 120, "待用户确认的审批模式问题", [
-        "授权码默认一次性还是允许在短窗口内重复使用？建议：一次性，失败可重新生成。",
-        "部分批准的粒度：按仓库、按 permission profile、按权限项，还是三者都支持？建议先按仓库 + profile。",
-        "agent discovery public node 是否仅限 127.0.0.1？建议：是；这里的 public 指无需凭证可读协议元数据，不是公网公开。",
+        "已确认：授权码默认一次性/短寿命；失败或泄露则撤销并重新生成。",
+        "已确认：第一版只按仓库批准/拒绝，不开放原子权限操作，也不在审批页编辑 profile。",
+        "已确认：agent discovery public node 严格仅限 127.0.0.1；public 不是公网公开。",
     ], dash=True)
     c.save("00-overview-flow.svg")
 
 def generate_dashboard():
-    c = page_frame("dashboard", "Dashboard — 授权健康与需要行动", "dashboard")
+    c = page_frame("dashboard", "Dashboard — 审批模式首页", "dashboard", mode="approval")
     label(c, 240, 96, "reauth required", fill="#dddddd", width=150)
     box(c, 240, 136, 480, 118, "需要用户行动", [
         "GitHub App `example-app`：refresh token 失效或权限变化",
@@ -369,7 +380,7 @@ def generate_states():
 
 
 def generate_approval_inbox():
-    c = page_frame("approvals", "Approvals — agent 权限申请审批", "approvals")
+    c = page_frame("approvals", "Approvals — agent 权限申请审批", "approvals", mode="approval")
     label(c, 240, 96, "审批模式 · 默认", fill="#dddddd", width=150)
     box(c, 240, 136, 300, 250, "生成 agent 授权码", [
         "按钮：生成授权码",
@@ -389,12 +400,12 @@ def generate_approval_inbox():
         "agent 自称：name/version/project path（需显示为未验证声明）",
         "请求范围：host / owner / repo / permission profile / min_ttl",
         "用途说明：例如 read issues、create PR、push branch",
-        "风险提示：profile 是否包含 write/high-risk permission",
+        "风险提示：requested profile 是只读风险标签；是否包含 write/high-risk",
         "broker 校验结果：repo 存在性、App installation coverage、policy冲突",
     ])
     box(c, 840, 416, 370, 310, "审批操作", [
         "Approve all：接受全部申请",
-        "Partial approve：取消部分仓库/降低 profile/缩短 min_ttl",
+        "Partial approve：只按仓库勾选/取消；不编辑原子权限或 profile",
         "Reject：填写可选原因并通知 agent",
         "确认页显示最终生效差异，不显示完整 credential",
         "所有结果写 audit；pending 防重复点击",
@@ -428,7 +439,7 @@ def generate_agent_code_flow():
 
 
 def generate_partial_approval():
-    c = page_frame("approvals", "Partial Approval — 部分批准示例", "approvals")
+    c = page_frame("approvals", "Partial Approval — 按仓库部分批准", "approvals", mode="approval")
     box(c, 240, 108, 440, 570, "agent 原始申请", [
         "project: repo-maintainer",
         "repositories:",
@@ -443,9 +454,9 @@ def generate_partial_approval():
         "[x] owner/repo-b · read-only · 批准",
         "[ ] owner/repo-c · admin · 拒绝",
         "",
-        "可选降权：pr-write → read-only",
-        "可选缩短：min_ttl 2h → 30m",
-        "高风险项默认不勾选，需单独确认",
+        "第一版边界：只能批准/拒绝整个仓库请求",
+        "profile 只作为只读风险标签展示，不在审批页编辑",
+        "不开放 GitHub 原子权限勾选；高风险仓库默认不勾选",
         "",
         "最终确认：显示批准/拒绝差异",
         "结果写 audit；agent 收到机器可读结果",
@@ -468,7 +479,7 @@ def generate_index():
         ("08-states-errors.svg", "状态与错误集合"),
         ("09-approval-inbox.svg", "Approvals：agent 权限申请审批"),
         ("10-agent-code-flow.svg", "Agent 授权码与协议发现流程"),
-        ("11-partial-approval.svg", "Partial Approval：部分批准示例"),
+        ("11-partial-approval.svg", "Partial Approval：按仓库部分批准"),
     ]
     cards = []
     for href, title in pages:
