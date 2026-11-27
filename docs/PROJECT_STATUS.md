@@ -14,7 +14,7 @@
 | 产品实现状态 | 尚未开始；当前主 worktree 正在进行文档治理/结构修正 | 本文件创建时无产品代码 |
 | 许可证 | LGPL 2.1 已由用户指定；仓库按 `LGPL-2.1-only` 记录 | 用户原话为“本项目使用 LGPL 2.1 许可”；only/or-later 精确语义仍需确认，见 [DECISIONS](DECISIONS.md#d-0001-license-lgpl-21) |
 | secret store MVP | **已批准**：加密 SQLite + Windows Credential Manager 保存 master key | 2026-11-27 用户批准 D-0002；见 [DECISIONS](DECISIONS.md#d-0002-secret-store-mvp) |
-| 当前审核门 | 文档治理基线提交 + 两项并行工作的执行 | secret store 与后端 POC 保守范围已确认；许可证 only/or-later 精确语义仍待选择 |
+| 当前审核门 | 两项并行工作可执行；许可证精确语义待选择 | secret store 与后端 POC 保守范围已确认；文档治理基线已提交到本地 main |
 
 ## 2. 批准与授权记录
 
@@ -36,7 +36,7 @@
 | WebUI 低保真 | `E:\github\gh-token-broker-webui` | `feat/webui-wireframes` | `design/wireframes/`、`docs/WIREFRAMES.md` 及低保真所需文档索引 | 不定最终视觉、不实现后端、不改后端核心文件 |
 | 后端核心 | `E:\github\gh-token-broker-backend` | `feat/backend-core` | 按 Phase 1：Go module、配置、secret store 抽象/实现、device flow、refresh chain、mock GitHub 单元测试 | 不做 MCP/WebUI/scoped token/多 agent policy；不返回 raw token 给模型上下文 |
 
-注意：两个工作流 worktree 创建时基于 `main` 的 commit `c55ea97`；本轮文档治理变更在提交/合并前不会自动出现在这些 worktree 中。
+注意：两个工作流 worktree 创建时基于 `main` 的 commit `c55ea97`；2026-11-27 文档治理基线提交后，两个分支已 fast-forward 到同一文档基线。后续实时分支状态以 `git worktree list` 为准。
 
 ## 4. 未决事项
 
@@ -77,3 +77,4 @@
 | 2026-11-27 | 初始化项目文档和 secret scan baseline | commit `c55ea97` |
 | 2026-11-27 | 用户指定 LGPL 2.1、要求并行 worktree、要求审计文档并重构 AGENTS 为文档地图 | 本轮文档治理变更 |
 | 2026-11-27 | 用户批准 D-0002、确认后端核心保守解释为 Phase 1，并允许创建本地 commit | 并行执行边界已确认；许可证 only/or-later 仍待选择 |
+| 2026-11-27 | 文档治理基线提交到本地 main `be69311`；两个 worktree 已 fast-forward | 尚未 push |
