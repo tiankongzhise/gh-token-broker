@@ -94,6 +94,48 @@ func (s *Store) migrate(ctx context.Context) error {
 			created_at TEXT NOT NULL,
 			updated_at TEXT NOT NULL
 		)`,
+		`CREATE TABLE IF NOT EXISTS grants (
+			grant_hash TEXT PRIMARY KEY,
+			agent_id TEXT NOT NULL,
+			account_id TEXT NOT NULL,
+			host TEXT NOT NULL,
+			owner TEXT NOT NULL,
+			repo TEXT NOT NULL,
+			profile TEXT NOT NULL,
+			min_ttl_seconds INTEGER NOT NULL,
+			expires_at TEXT NOT NULL,
+			max_uses INTEGER NOT NULL,
+			use_count INTEGER NOT NULL DEFAULT 0,
+			status TEXT NOT NULL,
+			created_at TEXT NOT NULL,
+			redeemed_at TEXT NOT NULL DEFAULT '',
+			revoked_at TEXT NOT NULL DEFAULT '',
+			revoke_reason TEXT NOT NULL DEFAULT ''
+		)`,
+		`CREATE TABLE IF NOT EXISTS token_issues (
+			id TEXT PRIMARY KEY,
+			grant_hash TEXT NOT NULL,
+			account_id TEXT NOT NULL,
+			token_hash TEXT NOT NULL,
+			expires_at TEXT NOT NULL,
+			permissions_json TEXT NOT NULL DEFAULT '{}',
+			repository_selection TEXT NOT NULL DEFAULT '',
+			issued_at TEXT NOT NULL,
+			revoked_at TEXT NOT NULL DEFAULT '',
+			revoke_reason TEXT NOT NULL DEFAULT ''
+		)`,
+		`CREATE TABLE IF NOT EXISTS audit_events (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			timestamp TEXT NOT NULL,
+			event_type TEXT NOT NULL,
+			actor_type TEXT NOT NULL DEFAULT '',
+			actor_id TEXT NOT NULL DEFAULT '',
+			subject_type TEXT NOT NULL DEFAULT '',
+			subject_id TEXT NOT NULL DEFAULT '',
+			outcome TEXT NOT NULL DEFAULT '',
+			code TEXT NOT NULL DEFAULT '',
+			metadata_json TEXT NOT NULL DEFAULT '{}'
+		)`,
 	}
 	for _, statement := range statements {
 		if _, err := s.db.ExecContext(ctx, statement); err != nil {
