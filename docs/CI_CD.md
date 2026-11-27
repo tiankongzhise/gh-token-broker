@@ -21,9 +21,10 @@
 | 项 | 当前状态 |
 |---|---|
 | CI workflow | **已配置首个 workflow**：`.github/workflows/ci.yml`，job/context 为 `ci` |
-| CI 触发策略 | `pull_request` 对所有 PR 运行；`push` 只对 `main` 和 `feat/**` 运行；保留 `workflow_dispatch` 手动触发。`fix/**`/`chore/**` 短生命周期分支不单独跑 push CI，避免与 PR CI 重复 |
+| CI 触发策略 | `pull_request` 对所有 PR 运行；`push` 对 `main`、`feat/**` 和 `v*` tags 运行；保留 `workflow_dispatch` 手动触发。`fix/**`/`chore/**` 短生命周期分支不单独跑 push CI，避免与 PR CI 重复 |
 | CD/发布自动化 | **未配置、未批准** |
 | secret scan | 本地脚本和 CI 均运行 `python scripts/check_secrets.py` |
+| version check | 本地脚本和 CI 均运行 `python scripts/check_version.py`；tag 上下文校验 release tag 与 `VERSION` 一致 |
 | Go 条件检查 | workflow 在检测到 `go.mod` 时执行 gofmt/test/vet/build 及可用 race spot check；最近结果见 [PROJECT_STATUS](PROJECT_STATUS.md) |
 | Windows 手动冒烟 | 未运行真实 GitHub/device flow/Credential Manager 端到端冒烟 |
 | 依赖扫描/SBOM/签名/校验和 | 未配置 |
@@ -38,6 +39,7 @@
 
 - secret scan。
 - documentation authority check。
+- `VERSION` SemVer/tag consistency check。
 - whitespace/conflict marker 检查。
 - Markdown 本地链接存在性检查。
 - 生成的 wireframes 与设计源文件一致性检查（在对应工具链确定后）。
@@ -84,7 +86,7 @@
 
 适用：用户明确批准发布策略后。
 
-可能包括 tag 构建、artifact packaging、checksum、release notes、签名和发布上传。当前没有任何自动发布授权。
+可能包括 tag 构建、artifact packaging、checksum、release notes、签名和发布上传。版本号与 tag 控制原则见 [VERSIONING](VERSIONING.md)。当前没有任何自动发布授权。
 
 ## 4. 引入时机
 

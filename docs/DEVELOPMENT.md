@@ -16,7 +16,7 @@
 - 适合 Windows 本地分发。
 - 方便将传输层与核心 token/policy 逻辑解耦。
 
-后端 Phase 1 POC 已在 `feat/backend-core` worktree 初始化 Go module；在合并进 `main` 前，相关命令应在后端 worktree 执行。`go.mod` 当前要求 Go 1.26+，本轮开发环境实际使用 Go 1.27.1 windows/amd64。
+后端 Phase 1 core token chain POC 已集成进 `main`；后续 Phase 2 开发在 `feat/backend-safe-delivery` 分支/对应 worktree 执行。`go.mod` 当前要求 Go 1.26+，本轮开发环境实际使用 Go 1.27.1 windows/amd64。
 
 ### 2.2 存储
 
@@ -69,7 +69,7 @@ design/                 # 低保真/高保真设计产物
 prototype/              # 未来：可运行示意 Demo
 ```
 
-`cmd/` 与 `internal/` 当前只存在于后端 POC 分支 `feat/backend-core`；`design/wireframes/` 当前只存在于 WebUI 低保真分支 `feat/webui-wireframes`。合并前不要在主 worktree 假定这些文件可用。
+`cmd/`、`internal/` 与 `design/wireframes/` 已集成进 `main`；后续实时分支归属以 `docs/branch-ownership.json` 和 [PROJECT_STATUS](PROJECT_STATUS.md) 为准。
 
 ### 4.1 CI/CD 与生成物归属
 
@@ -77,6 +77,12 @@ prototype/              # 未来：可运行示意 Demo
 - `.gitignore` 修改时机和审查原则不在本文写死，统一见 [GITIGNORE_POLICY](GITIGNORE_POLICY.md)；实际规则以根 `.gitignore` 为准。
 - 引入新工具链、编译产物、测试报告、runtime cache 或日志目录时，必须在同一任务中检查是否需要更新根 `.gitignore`。
 - Go 源码、go.mod 和 go.sum 必须通过 `.gitattributes` 保持 LF；否则 Windows runner 的 CRLF checkout 会让 `gofmt -l` 误报全部文件。
+
+### 4.2 版本控制入口
+
+- 版本号、release tag、构建注入和发布控制边界统一见 [VERSIONING](VERSIONING.md)。
+- 当前开发目标版本只记录根 `VERSION`；普通 feature/fix/chore PR 不随意修改它。
+- 版本格式和 tag consistency 检查命令：`python scripts/check_version.py`。
 
 ## 5. 秘密与配置约束
 

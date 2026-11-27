@@ -2,7 +2,7 @@
 
 最近更新：2026-11-27
 
-本文定义分支生命周期、集成顺序和文件 ownership 原则。机器可读 ownership 登记表是 [branch-ownership.json](branch-ownership.json)；本文不复制具体归属清单。
+本文定义分支生命周期、集成顺序、merged branch 清理和文件 ownership 原则。机器可读 ownership 登记表是 [branch-ownership.json](branch-ownership.json)；本文不复制具体归属清单。
 
 ## 1. 核心原则
 
@@ -22,7 +22,17 @@
 | `chore/**` | 短生命周期治理/维护 PR 分支 | 不得修改 active feature 分支 ownership 路径 |
 | `fix/**` | 短生命周期修复 PR 分支 | 不得修改 active feature 分支 ownership 路径 |
 
-## 3. 集成队列
+## 3. 分支状态与生命周期
+
+`branch-ownership.json` 中的长期 feature 分支使用以下状态：
+
+| 状态 | 含义 | 是否拥有写入权 |
+|---|---|---|
+| `active` | 正在开发或等待 integration | 是，仅限登记路径 |
+| `integrated` | 成果已经合入 main；分支仅为历史/回退引用或用户明确要求暂存 | 否 |
+| `inactive` | 暂停开发；恢复前必须通过治理变更重新设为 active | 否 |
+
+## 4. 集成队列
 
 1. 同一时刻只允许一个 feature integration。
 2. feature 分支开 integration PR 前必须合并最新 `origin/main`。
@@ -30,7 +40,7 @@
 4. 当前队列状态记录在 [PROJECT_STATUS](PROJECT_STATUS.md)；静态 ownership 规则登记在 `branch-ownership.json`。
 5. 已验收成果默认应尽快集成进 main；若暂不合入，必须在 PROJECT_STATUS 记录原因和解除条件。
 
-## 4. 文件 ownership 边界
+## 5. 文件 ownership 边界
 
 - feature 分支可以继承 main 的文件，但不得独立修改未登记路径。
 - 共享治理文件包括 AGENTS、DECISIONS、PROJECT_STATUS、CI/Git 治理、workflow 和仓库脚本；它们不归属长期 feature 分支。
@@ -38,7 +48,16 @@
 - 例外必须有原因和解除条件；集成完成后应清除临时例外。
 - 释放 ownership 不等于删除分支；只表示其他分支可按流程接管该路径。
 
-## 5. 自动检查
+## 6. merged branch 清理
+
+1. 短生命周期 `chore/**`、`fix/**`、docs/ci/release prep 分支在 PR 合并后必须及时删除；默认在确认 merge 成功后删除远端分支，并在本地同步 main 后删除本地分支。若必须等待 main CI，应在 main CI 通过后立即删除，不得长期堆积。
+2. 已合并短分支不得复用来提交新工作；新工作必须创建新分支。
+3. 长期 `feat/**` 分支在阶段成果最终集成后默认也应删除。只有用户明确要求保留时才可以暂存；暂存期间必须在 registry 标记为 `integrated` 或 `inactive`，不再拥有写入权。
+4. 删除任何分支前必须确认其 tip 已合并进 `origin/main` 或没有独有提交；不得删除仍有未合并工作的分支。远端删除属于不可逆分支操作，必须获得用户明确确认。
+5. 删除分支不会删除已经合并进 main 的提交；cleanup 的目的是减少分支命名空间和所有权歧义，不是改写历史。
+6. branch cleanup 结果应同步到 PROJECT_STATUS；若保留已合并 feature 分支，必须记录保留原因。
+
+## 7. 自动检查
 
 `python scripts/check_branch_ownership.py` 会：
 

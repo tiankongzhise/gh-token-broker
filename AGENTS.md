@@ -28,6 +28,7 @@
 | 许可证、secret store、并行 worktree 等重要选择的备选方案、理由和状态 | [DECISIONS](docs/DECISIONS.md) | 新增或更新对应 decision entry；禁止只改实现不改决策记录 |
 | 开发环境、目录约定、实现顺序、代码风格、Git 细则、真实命令 | [DEVELOPMENT](docs/DEVELOPMENT.md) | 工具链/命令/约定变化更新该文件，并把当前验证快照同步到 PROJECT_STATUS |
 | CI/CD 门禁、引入时机、发布/供应链边界 | [CI_CD](docs/CI_CD.md) | CI/CD 原则、分层门禁和实际配置状态写该文件；当前验证快照仍写 PROJECT_STATUS |
+| 版本号、release tag、版本注入和发布控制边界 | [VERSIONING](docs/VERSIONING.md) + 根 `VERSION` | 原则写 VERSIONING；当前开发目标版本只写根 `VERSION`；实际验证快照写 PROJECT_STATUS |
 | `.gitignore` 何时修改、规则分类、审查清单 | [GITIGNORE_POLICY](docs/GITIGNORE_POLICY.md) + 根 `.gitignore` | 原则写 policy；实际规则写根 `.gitignore`；工具链/目录变化同步 DEVELOPMENT |
 | 测试分层、测试设计、Windows/安全/冒烟测试 | [TEST_PLAN](docs/TEST_PLAN.md) | 测试策略变化更新该文件；实际运行结果写 PROJECT_STATUS 或后续验证记录 |
 | 威胁模型、资产、信任边界、攻击者、缓解与非目标 | [THREAT_MODEL](docs/THREAT_MODEL.md) | 新威胁/缓解/残余风险写该文件；影响批准架构时另建 CR |
@@ -76,6 +77,7 @@
 - 推送前必须完成 secret scan，并检查 AI 署名约定与贡献者身份约定。
 - `.gitignore` 的具体规则不写死在本文；修改时机和审查原则见 [GITIGNORE_POLICY](docs/GITIGNORE_POLICY.md)，实际规则以根 `.gitignore` 为准。
 - 多 worktree 并行时不得跨 worktree 修改对方负责的文件来“顺手修复”；必要共享文档变更先回到主 worktree 或按 PROJECT_STATUS 的归属执行。
+- 已合并分支不得长期堆积；merged branch 清理时机、确认边界和 feature 分支暂存规则见 [BRANCHING](docs/BRANCHING.md)。
 
 ## 6. 编码与验证约束
 

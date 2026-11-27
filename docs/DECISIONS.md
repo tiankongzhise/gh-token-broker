@@ -253,6 +253,7 @@
 2. 长期 `feat/**` 分支保留 push CI，用于未开 PR 前的早期反馈。
 3. 该调整不降低 main 分支保护、required status check 或 strict up-to-date 要求。
 4. 若未来分支模型、PR 流程或 CI 成本约束变化，应重新评估该策略。
+5. 后续 D-0015 为版本一致性检查新增 `v*` tag push CI；这不改变 chore/fix 去重原则。
 
 
 ## D-0013 分支集成与文件 ownership 机制
@@ -269,3 +270,50 @@
 3. 已验收成果默认及时集成进 main；暂不合入必须有明确原因和解除条件。
 4. 该机制不能阻止本地编辑，只能通过检查阻止越权修改进入 main。
 5. 集成当前两个已验收分支不代表启动高保真或 Phase 2。
+
+
+## D-0014 merged branch 清理与暂存规则
+
+- 日期：2026-11-27
+- 状态：`approved`
+- 批准证据：2026-11-27 用户指出“对于已经合并的分支需要及时清理，不要堆积在本地和远端仓库中，这个需要沉淀到项目约束中去”；在逐项确认删除清单时选择“只删短分支”，即删除已合并 chore/fix 分支，暂存两个已合并 feature 分支。
+- 决策：merged branch lifecycle 写入 `docs/BRANCHING.md`；短生命周期分支合并后必须及时清理，长期 feature 分支默认清理，只有用户明确保留时才可暂存且必须失去 active 写入权。
+
+### 边界
+
+1. 删除前必须确认分支 tip 已合并进 `origin/main` 或无独有提交；不得删除仍有未合并工作的分支。
+2. 远端分支删除属于不可逆分支操作，必须获得用户明确确认。
+3. 已合并短分支不得复用；新工作使用新分支。
+4. 当前 `feat/webui-wireframes` 与 `feat/backend-core` 因用户选择暂存，但状态改为 `integrated`，不再拥有写入权。
+5. GitHub 仓库级 auto-delete merged branches 尚未配置；如要启用需另行明确授权。
+
+
+## D-0015 版本管理与 release tag 控制
+
+- 日期：2026-11-27
+- 状态：`approved`
+- 批准证据：2026-11-27 用户指出“当前缺少版本管理和控制。如果后期发版的时候，这会不利于自动发布”；随后明确选择推荐方案“VERSION 文件 + SemVer tag + CI 校验 + Go ldflags 注入”。
+- 决策：采用 Semantic Versioning 2.0.0；根目录 `VERSION` 记录当前开发目标版本，初始为 `0.1.0-dev`；正式发布使用 `vX.Y.Z` tag；CI 校验版本格式和 tag consistency；Go 二进制通过 ldflags 注入版本并提供 `--version`。
+
+### 边界
+
+1. `VERSION` 表示当前开发目标版本，不代表已经发布。
+2. tag 是正式发布事件；release tag 去掉 `v` 前缀后必须与 `VERSION` 一致。
+3. 普通 feature/fix/chore PR 不随意修改 `VERSION`。
+4. 为支持 tag consistency 检查，CI push trigger 增加 `v*` tags；这不构成自动发布或 CD 批准。
+5. release notes/changelog、artifact packaging、签名、SBOM、checksum 和自动发布流程仍未批准、未实现。
+
+
+## D-0016 高保真与后端 Phase 2 开始授权
+
+- 日期：2026-11-27
+- 状态：`approved`
+- 批准证据：2026-11-27 用户明确要求“同步了更新完的已合并分支的处理后，开始高保真和后端阶段2”。
+- 决策：在 merged-branch/versioning 治理基线同步后，开始 WebUI B 高保真阶段和后端 Phase 2 安全交付通道阶段。
+
+### 范围边界
+
+1. 高保真阶段产物限定为 `design/high-fidelity/` 与 `docs/DESIGN_SPEC.md`；可以使用 implementation-neutral 静态 HTML/CSS 作为设计 artifact，不表示批准正式前端技术栈。
+2. 后端 Phase 2 按 DEVELOPMENT 当前定义推进：`exec` wrapper、git credential helper、`min_ttl` 检查、基础审计、Windows 手动/集成验证。
+3. 该授权不批准 Demo 阶段、正式 WebUI 技术栈、MCP、scoped token/policy engine 完整实现、raw token 兼容模式或自动发布。
+4. 若实现中发现 Phase 2 与 scoped token/grant 依赖顺序冲突，必须先记录架构边界或 CR，不得 silently 扩大范围。
