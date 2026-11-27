@@ -54,15 +54,14 @@
 
 规则：同一时刻只处理一个 integration；main CI 通过后再同步另一个分支。权威原则见 [BRANCHING](BRANCHING.md)。
 
-## 3.2 当前暂停点（2026-11-27）
+## 3.2 当前治理收敛点（2026-11-27）
 
-用户要求“下班了先暂停任务，记录进度，回家再继续”。当前工作暂停在 PR #14 `chore/main-pr-gate`：
+用户已从暂停状态恢复，并要求把人工审核集中到根 `AGENTS.md` 的公共约束。当前工作仍在 PR #14 `chore/main-pr-gate`：
 
-1. PR #14 已包含三组已推送提交：open-main-PR gate/freshness、push 前身份确认异常触发修正、推送守卫机器可读约定对齐。`3ae497c` 的 PR CI 已成功。
-2. 本轮新增需求是缩小审核面：只保护 `AGENTS.md` 既有约束不被模糊授权静默 mutation；不建立泛化 control-plane 人工审核机制。
-3. 当前已保存 `scripts/check_agents_mutation.py` 草案，但尚未接入 CI，尚未写 D-0021/规则文档，尚未完成验证。
-4. 恢复时下一步：补 AGENTS mutation 行为规则、D-0021、CI 接入、authority registry/CI_CD/DOCUMENTATION_AUDIT/PROJECT_STATUS 更新，验证后推送并让 PR #14 CI 重新通过。
-5. 在 PR #14 合并前，不得继续 feature 新实现；这是 open-main-PR gate 要强制执行的场景本身。
+1. PR #14 已包含 open-main-PR gate/freshness、push 前身份确认异常触发修正、推送守卫机器可读约定对齐；`3ae497c` 的 PR CI 已成功。
+2. 本轮新增范围是窄范围 `AGENTS.md` mutation guard，以及根/领域 agent 规则分层与经验晋升机制；不建立泛化 control-plane 人工审核机制。
+3. `scripts/check_agents_mutation.py` 已保存，正在补 CI 接入、D-0021/D-0022 和领域规则 registry。
+4. 在 PR #14 合并前，不得继续 feature 新实现；这是 open-main-PR gate 要强制执行的场景本身。
 
 ## 4. 未决事项
 
@@ -88,6 +87,8 @@
 | 分支 ownership 检查 | 仓库根：`python scripts/check_branch_ownership.py` | 已配置，已接入 CI workflow；本轮新增 feature freshness 规则 | 2026-11-27 本地通过；PR #7 修复后 main CI 通过；PR #9/#10 integration CI 通过 |
 | open main PR 门禁 | 仓库根：`python scripts/check_main_pr_gate.py` | 本轮新增并接入 CI workflow；只对 `feat/**` 生效 | 2026-11-27 本地已实现；远端 CI 尚无结果 |
 | 高摩擦政策证据检查 | 仓库根：`python scripts/check_policy_evidence.py` | 本轮新增并接入 CI workflow | 2026-11-27 本地已实现；远端 CI 尚无结果 |
+| agent rules registry 检查 | 仓库根：`python scripts/check_agent_rules.py` | 本轮新增并接入 CI workflow | 2026-11-27 本地已实现；远端 CI 尚无结果 |
+| AGENTS mutation 检查 | 仓库根：`python scripts/check_agents_mutation.py` | 本轮新增并接入 CI workflow；只在既有 `AGENTS.md` 行被删除/改写时要求 D 证据 | 2026-11-27 本地已实现；远端 CI 尚无结果 |
 | 版本格式检查 | 仓库根：`python scripts/check_version.py` | 已接入 CI workflow；tag 上下文校验 tag 与 VERSION 一致 | 2026-11-27 本地通过 |
 | commit message 检查 | 仓库根：`python scripts/check_commit_messages.py` | 本轮新增并接入 CI workflow；GitHub merge commit 豁免 | 2026-11-27 本地通过 |
 | CI workflow | `.github/workflows/ci.yml` 已配置；GitHub Actions job/context 为 `ci` | PR #1 分支 CI 与 merge 后 main CI 已通过；backend 首次同步 CI 暴露 Windows CRLF/gofmt 问题，本轮用 `.gitattributes` 修复 | 已真实运行 |
@@ -141,3 +142,4 @@
 | 2026-11-27 | 用户要求后续 commit 使用中文并补充约束 | D-0018 approved；新增 COMMIT_MESSAGES 与结构性 checker，历史 commit 不回溯改写 |
 | 2026-11-27 | 用户指出悬空 main PR 会击穿仅靠 Git 历史的同步机制 | D-0019 approved；采用通用 open-main-PR gate 与 feature freshness；feature 工作必须先处理/同步 main PR |
 | 2026-11-27 | 用户要求修正 push 前每次确认政策并沉淀防复发机制 | D-0020 approved；改为异常触发型署名/身份政策，新增高摩擦政策证据检查 |
+| 2026-11-27 | 用户要求审核集中于 AGENTS 公共约束，并批准规则分层修正方案 | D-0021/D-0022 approved；只保护根 AGENTS 既有约束 mutation，局部经验沉淀到领域规则；阶段审核门统一由 PROJECT_STATUS 记录 |

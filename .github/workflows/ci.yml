@@ -52,6 +52,8 @@ jobs:
           python scripts/check_branch_ownership.py
           python scripts/check_main_pr_gate.py
           python scripts/check_policy_evidence.py
+          python scripts/check_agent_rules.py
+          python scripts/check_agents_mutation.py
           python scripts/check_version.py
           python scripts/check_commit_messages.py
 

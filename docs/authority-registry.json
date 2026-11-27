@@ -50,6 +50,30 @@
       "required": true
     },
     {
+      "id": "agent-rules.policy",
+      "fact": "root/domain/local agent rule hierarchy, promotion criteria and conflict precedence",
+      "authority": "docs/AGENT_RULES.md",
+      "required": true
+    },
+    {
+      "id": "agent-rules.executable-registry",
+      "fact": "registered domain rule files, owning branches and scoped paths",
+      "authority": "docs/agent-rules/registry.json",
+      "required": true
+    },
+    {
+      "id": "agent-rules.executable-check",
+      "fact": "domain rule registry and ownership consistency validation",
+      "authority": "scripts/check_agent_rules.py",
+      "required": true
+    },
+    {
+      "id": "agents.mutation-check",
+      "fact": "existing AGENTS.md constraint mutation requires explicit decision evidence",
+      "authority": "scripts/check_agents_mutation.py",
+      "required": true
+    },
+    {
       "id": "git.signature-policy",
       "fact": "AI attribution policy and push-time signature handling",
       "authority": "docs/GIT_GOVERNANCE.md",
@@ -135,6 +159,23 @@
         "DECISIONS"
       ],
       "missingOk": true
+    },
+    {
+      "id": "agents-no-phase-gate-duplication",
+      "paths": [
+        "AGENTS.md"
+      ],
+      "forbidden": [
+        "| A 低保真 |",
+        "| B 高保真 |",
+        "| C 示意 Demo |",
+        "| 后端/联调 |",
+        "| 测试/审查/发布检查 |"
+      ],
+      "requiredAny": [
+        "PROJECT_STATUS"
+      ],
+      "missingOk": false
     },
     {
       "id": "ci-no-stale-unconfigured-claims",

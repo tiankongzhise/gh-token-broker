@@ -42,6 +42,8 @@
 - branch ownership 与 feature freshness check。
 - open main PR gate：存在其他 base 为 `main` 的 open PR 时，`feat/**` 分支检查失败。
 - 高摩擦治理政策 evidence check。
+- agent rules registry 一致性检查。
+- `AGENTS.md` 既有约束 mutation evidence check。
 - commit message 结构检查。
 - `VERSION` SemVer/tag consistency check。
 - whitespace/conflict marker 检查。

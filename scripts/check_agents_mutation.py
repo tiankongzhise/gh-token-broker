@@ -61,17 +61,17 @@ def main() -> int:
         return 1
 
     additions = added_lines(decisions_diff)
-    decision_ids = {
+    agents_decision_ids = {
         match
         for line in additions
+        if "agents.md" in line.lower() or "agents 约束" in line.lower()
         for match in DECISION_RE.findall(line)
     }
-    agents_evidence = any("agents.md" in line.lower() or "agents 约束" in line.lower() for line in additions)
     committed_ids = set(DECISION_RE.findall(commit_messages))
-    evidenced_ids = decision_ids & committed_ids
+    evidenced_ids = agents_decision_ids & committed_ids
 
     failures: list[str] = []
-    if not decision_ids or not agents_evidence:
+    if not agents_decision_ids:
         failures.append("docs/DECISIONS.md must add decision evidence that explicitly covers the AGENTS.md mutation")
     if not evidenced_ids:
         failures.append("at least one commit must reference the D-xxxx decision covering the AGENTS.md mutation")

@@ -23,6 +23,7 @@
 |---|---|---|
 | 当前阶段、审核门、批准证据、允许目录、活跃 worktree、验证状态、未决事项 | [PROJECT_STATUS](docs/PROJECT_STATUS.md) | 立即更新 [PROJECT_STATUS](docs/PROJECT_STATUS.md) |
 | 事实归属、单一权威来源、stale 状态检查 | [INFORMATION_AUTHORITY](docs/INFORMATION_AUTHORITY.md) + [authority-registry.json](docs/authority-registry.json) | 新事实类型/文档归属变化更新 registry；原则变化更新 INFORMATION_AUTHORITY |
+| 根/领域 agent 规则分层、经验沉淀与晋升审核 | [AGENT_RULES](docs/AGENT_RULES.md) + `docs/agent-rules/` | 分层原则写 AGENT_RULES；领域规则写入对应 domain rule file；提升到根 AGENTS 需明确批准 |
 | 分支集成顺序、文件 ownership、跨分支冲突控制 | [BRANCHING](docs/BRANCHING.md) + [branch-ownership.json](docs/branch-ownership.json) | ownership/例外/分支状态变化更新 registry；原则变化更新 BRANCHING |
 | 产品目标、用户、范围、功能/非功能需求、验收标准 | [PRD](docs/PRD.md) | 未批准前修订 PRD；批准后实质变化先建 `docs/changes/CR-<id>.md` |
 | 发现证据、技术判断、参考项目分析、风险来源 | [PROJECT_DISCOVERY](docs/PROJECT_DISCOVERY.md) | 新证据写入该文件；已经形成选择的事项同步到 [DECISIONS](docs/DECISIONS.md) |
@@ -42,18 +43,13 @@
 
 文档之间冲突时，以较新的明确用户批准为准；没有发现批准证据时标为待确认，不得自行选择后冒充已批准。
 
-## 3. 阶段与人工审核框架
+## 3. 阶段、规则分层与 AGENTS mutation 保护
 
-| 阶段 | 产物与验证 | 人工重点 |
-|---|---|---|
-| 发现/需求/架构 | 首批文档、secret scan baseline | 确认范围、保密边界、技术方向、阶段配置 |
-| A 低保真 | `design/wireframes/` 与 `docs/WIREFRAMES.md` | WebUI 页面、流程、状态是否完整 |
-| B 高保真 | `design/high-fidelity/` 与 `docs/DESIGN_SPEC.md` | 视觉层级、信息密度、桌面使用体验 |
-| C 示意 Demo | `prototype/` 可运行可点击、模拟数据与状态切换 | 确认最终产品形态和 WebUI 基线 |
-| 后端/联调 | 按批准契约实现 daemon/MCP/storage/helper | 不破坏已批准基线；高风险变化走 CR |
-| 测试/审查/发布检查 | 真实运行检查、Windows 冒烟、安全测试、secret scan | 验收结果和高风险项 |
-
-核心 token chain POC 与 WebUI 低保真可以在用户明确授权的范围内并行。并行分工、分支和允许修改目录以 [PROJECT_STATUS](docs/PROJECT_STATUS.md) 为准；不得把一个 worktree 的授权扩大解释为全产品批准。
+1. 当前阶段、审核门、批准证据和进入下一阶段条件是可变状态，只以 [PROJECT_STATUS](docs/PROJECT_STATUS.md)、[DECISIONS](docs/DECISIONS.md) 和已批准 CR 为准；本文件不得复制阶段表或把阶段摘录当作当前事实。
+2. 本文件只保存全局硬约束、冲突优先级和规则地图。前端、后端等局部经验优先沉淀在对应领域规则或专门文档中；只有跨领域、全局安全/Git/发布/审核边界事项才可提升到本文件。
+3. 领域规则的权威清单见 [AGENT_RULES](docs/AGENT_RULES.md) 与 `docs/agent-rules/`。领域规则只能比本文件更严格，不得弱化全局约束。
+4. 对本文件的纯机械修正（链接、错别字、不改变语义的整理）可按当前任务授权执行；新增全局约束，或修改、删除、弱化、重排导致含义变化的既有约束，均属于 mutation，必须有明确用户批准。
+5. 授权模糊时，必须先展示“原约束 → 拟改约束”的最小差异并等待确认；禁止把“修正”“按规范处理”“继续”等泛化指令解释为 mutation 授权。自动检查见 `scripts/check_agents_mutation.py`。
 
 ## 4. 机密信息硬约束
 
