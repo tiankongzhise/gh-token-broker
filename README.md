@@ -85,6 +85,8 @@ GitHub API / Git over HTTPS
 - [架构设计](docs/ARCHITECTURE.md)
 - [开发说明](docs/DEVELOPMENT.md)
 - [测试计划](docs/TEST_PLAN.md)
+- [CI/CD 策略](docs/CI_CD.md)
+- [.gitignore 维护策略](docs/GITIGNORE_POLICY.md)
 - [威胁模型](docs/THREAT_MODEL.md)
 - [决策记录](docs/DECISIONS.md)
 - [文档审计](docs/DOCUMENTATION_AUDIT.md)

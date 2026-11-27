@@ -29,6 +29,16 @@ coverage.out
 logs/
 *.log
 
+# Temporary files and diagnostic output
+tmp/
+temp/
+*.tmp
+*.temp
+*.prof
+*.dmp
+*.stackdump
+coverage/
+
 # OS and editor metadata
 Thumbs.db
 Desktop.ini

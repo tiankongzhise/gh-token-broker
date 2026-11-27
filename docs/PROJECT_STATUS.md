@@ -37,7 +37,7 @@
 
 | 工作流 | 路径 | 分支 | 允许修改/目标 | 禁止事项 |
 |---|---|---|---|---|
-| 主文档/治理 | `E:\github\gh-token-broker` | `main` | 根文档、`docs/`、`scripts/check_secrets.py`、`.gitignore`、许可证与本阶段用户明确要求的文档治理 | 不开始产品实现 |
+| 主文档/治理 | `E:\github\gh-token-broker` | `main` | 根文档、`docs/`、`scripts/check_secrets.py`、`.gitignore`、许可证与本阶段用户明确要求的文档治理 | 不开始产品实现；CI policy 可记录但实际 workflow 未配置 |
 | WebUI 低保真 | `E:\github\gh-token-broker-webui` | `feat/webui-wireframes` | `design/wireframes/`、`docs/WIREFRAMES.md` 及低保真所需文档索引 | 不定最终视觉、不实现后端、不改后端核心文件 |
 | 后端核心 | `E:\github\gh-token-broker-backend` | `feat/backend-core` | 按 Phase 1：Go module、配置、secret store 抽象/实现、device flow、refresh chain、mock GitHub 单元测试 | 不做 MCP/WebUI/scoped token/多 agent policy；不返回 raw token 给模型上下文 |
 
@@ -55,12 +55,14 @@
 6. GitHub Enterprise host 支持优先级。
 7. operation-only MCP 是否作为第一交付通道。
 8. SQLite schema migration 方案；Phase 1 POC 已选用 `modernc.org/sqlite` 作为纯 Go 驱动，但该选型尚未被批准为长期架构决策。
+9. CI workflow 平台、依赖扫描、构建复现、SBOM/签名/校验和与发布自动化仍未配置；原则见 [CI_CD](CI_CD.md)。
 
 ## 5. 当前验证状态
 
 | 用途 | 工作目录与命令 | 状态 | 最近结果 |
 |---|---|---|---|
 | 秘密扫描 | 仓库根：`python scripts/check_secrets.py` | 已配置；每次 push 前必须运行 | 2026-11-27 后端提交前通过；WebUI 提交前通过 |
+| CI workflow | 未配置 | 仅有 `docs/CI_CD.md` policy；不代表流水线存在或通过 | 未运行 |
 | Go 格式检查 | 后端 worktree：`gofmt -l cmd internal`（应无输出） | 已在 `feat/backend-core` 验证 | 2026-11-27 通过 |
 | Go 单元测试 | 后端 worktree：`go test -count=1 -timeout=90s ./...` | 已在 `feat/backend-core` 验证 | 2026-11-27 通过，全部为 mock/test key，无真实 GitHub 调用 |
 | Go vet/build | 后端 worktree：`go vet ./... && go build ./...` | 已在 `feat/backend-core` 验证 | 2026-11-27 通过 |
@@ -96,3 +98,4 @@
 | 2026-11-27 | WebUI worktree 增加审批优先低保真 | `feat/webui-wireframes` commit `4fe1a13`；待用户复审 |
 | 2026-11-27 | 用户确认审批模式细化并要求两套 UI 分离 | D-0006 approved；授权码一次性/短寿命、仓库级审批、严格 loopback、顶部模式切换 |
 | 2026-11-27 | 用户修正降权语义并确认低保真 | D-0007 approved；第一版允许 profile 降权但不开放原子权限编辑；低保真阶段通过 |
+| 2026-11-27 | 用户指出 CI/CD 与 `.gitignore` 治理缺口 | D-0008 approved；新增 CI/CD 与 gitignore 专门规范并接入文档地图；实际 CI 未配置 |

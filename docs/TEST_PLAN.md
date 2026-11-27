@@ -315,6 +315,7 @@
 - policy/scoped/grant 集成测试通过。
 - exec/git credential helper Windows 测试通过。
 - secret scan 通过。
+- 与当前代码范围匹配的 CI/CD 门禁已配置并通过；具体分层和引入时机见 [CI_CD](CI_CD.md)。
 - 日志脱敏测试通过。
 - 真实测试仓库冒烟通过。
 - 文档中的启动、配置、恢复步骤与实际一致。

@@ -2,7 +2,7 @@
 
 最近审计：2026-11-27
 
-范围：README、AGENTS、LICENSE、SECURITY、docs/PRD、ARCHITECTURE、DEVELOPMENT、TEST_PLAN、PROJECT_DISCOVERY、scripts/check_secrets.py。
+范围：README、AGENTS、LICENSE、SECURITY、docs/PRD、ARCHITECTURE、DEVELOPMENT、TEST_PLAN、PROJECT_DISCOVERY、CI_CD、GITIGNORE_POLICY、scripts/check_secrets.py。
 
 目的：确认文档是否覆盖项目治理、需求、架构、安全、开发、测试和交付要求，并识别缺失或不一致。
 
@@ -28,6 +28,7 @@
 | DOC-005 | 缺少独立安全政策和泄露响应入口 | 秘密约束分散在 README/AGENTS/DEVELOPMENT | **已关闭**：新增根 `SECURITY.md` |
 | DOC-006 | 缺少结构化威胁模型 | 安全边界散见于发现/架构，缺少资产/攻击者/信任边界视图 | **已关闭**：新增 `docs/THREAT_MODEL.md` |
 | DOC-007 | AI 署名和贡献者身份政策的详细记录占用 AGENTS 顶部且难以演进 | 推送前必须可见，但历史证据不应挤占主规则 | **已关闭**：新增 `docs/GIT_GOVERNANCE.md`，AGENTS 保留简要硬约束 |
+| DOC-008 | CI/CD 和 `.gitignore` 缺少专门规范，存在被写死进 AGENTS 的风险 | CI/CD 只在审计/威胁模型中零散出现；`.gitignore` 有规则文件但没有维护原则 | **部分关闭**：新增 `docs/CI_CD.md` 与 `docs/GITIGNORE_POLICY.md` 并接入文档地图；实际 CI workflow 仍未配置 |
 
 ## 3. 仍开放的文档缺口
 
@@ -41,7 +42,7 @@
 | DOC-106 | 中 | 安装、启动、停止、卸载、升级、故障恢复 runbook 缺失 | 实现达到可运行阶段前新增 `docs/OPERATIONS.md` |
 | DOC-107 | 中 | master key rotation、丢失恢复、备份恢复演练只有原则，没有操作流程 | 后端实现/运维文档阶段补架构与 OPERATIONS |
 | DOC-108 | 中 | WebUI 可访问性、键盘操作、密度、语言和错误文案 baseline 未定义 | 低保真阶段补 `docs/WIREFRAMES.md` 或设计约束 |
-| DOC-109 | 中 | CI、依赖扫描、构建复现、发布签名/校验和供应链策略未定义 | Go module 初始化后补 DEVELOPMENT/TEST_PLAN；发布前必须完成 |
+| DOC-109 | 中 | CI/CD 原则已补齐，但实际 workflow、依赖扫描、构建复现、发布签名/校验和供应链实现未配置 | 首次准备远端协作/Go 合并/发布前按 `docs/CI_CD.md` 分层落实；不得把 policy 当作已配置 CI |
 | DOC-110 | 低 | GitHub Enterprise host 支持优先级未确认 | 保留在 PROJECT_STATUS 未决事项 |
 | DOC-111 | 低 | raw token 兼容模式的默认态和审计级别未最终确认 | 作为专门决策项，不应在实现中偷偷加入 |
 | DOC-112 | 低 | 漏洞报告渠道未配置 | 首次发布前更新 SECURITY.md；不要虚构联系渠道 |
