@@ -25,6 +25,8 @@
 | 架构边界、模块、数据模型、核心流程、部署、恢复 | [ARCHITECTURE](docs/ARCHITECTURE.md) | 未批准前修订架构；批准后实质变化先建 CR |
 | 许可证、secret store、并行 worktree 等重要选择的备选方案、理由和状态 | [DECISIONS](docs/DECISIONS.md) | 新增或更新对应 decision entry；禁止只改实现不改决策记录 |
 | 开发环境、目录约定、实现顺序、代码风格、Git 细则、真实命令 | [DEVELOPMENT](docs/DEVELOPMENT.md) | 工具链/命令/约定变化更新该文件，并把当前验证快照同步到 PROJECT_STATUS |
+| CI/CD 门禁、引入时机、发布/供应链边界 | [CI_CD](docs/CI_CD.md) | CI/CD 原则、分层门禁和实际配置状态写该文件；当前验证快照仍写 PROJECT_STATUS |
+| `.gitignore` 何时修改、规则分类、审查清单 | [GITIGNORE_POLICY](docs/GITIGNORE_POLICY.md) + 根 `.gitignore` | 原则写 policy；实际规则写根 `.gitignore`；工具链/目录变化同步 DEVELOPMENT |
 | 测试分层、测试设计、Windows/安全/冒烟测试 | [TEST_PLAN](docs/TEST_PLAN.md) | 测试策略变化更新该文件；实际运行结果写 PROJECT_STATUS 或后续验证记录 |
 | 威胁模型、资产、信任边界、攻击者、缓解与非目标 | [THREAT_MODEL](docs/THREAT_MODEL.md) | 新威胁/缓解/残余风险写该文件；影响批准架构时另建 CR |
 | 漏洞报告、秘密边界、泄露响应、push 前扫描要求 | [SECURITY](SECURITY.md) | 安全政策和泄露响应流程变化写该文件；扫描结果快照写 PROJECT_STATUS |
@@ -64,11 +66,13 @@
 ## 5. Git 与并行工作约束
 
 - 默认分支：`main`；协作流程为 GitHub Flow；短期分支使用 `feat/<short-kebab>`、`fix/<short-kebab>`、`chore/<short-kebab>`。
+- 禁止直接向远端 `main` push；所有对 `main` 的修改必须通过分支和 Pull Request 合并。确需变更保护规则时必须另行获得用户明确授权。
 - 提交格式：Conventional Commits 1.0.0，默认英文。
 - 先检查工作区，保留用户和其他代理已有改动；不擅自清理、强推、改写历史或执行其他不可逆操作。
 - 提交仅含本任务文件；提交前检查 diff 和 staged diff。
 - 规则配置不自动授予 commit/push/merge/deploy 权限；按当前用户明确授权执行。
 - 推送前必须完成 secret scan，并检查 AI 署名约定与贡献者身份约定。
+- `.gitignore` 的具体规则不写死在本文；修改时机和审查原则见 [GITIGNORE_POLICY](docs/GITIGNORE_POLICY.md)，实际规则以根 `.gitignore` 为准。
 - 多 worktree 并行时不得跨 worktree 修改对方负责的文件来“顺手修复”；必要共享文档变更先回到主 worktree 或按 PROJECT_STATUS 的归属执行。
 
 ## 6. 编码与验证约束
@@ -76,6 +80,7 @@
 - 不得虚构命令、测试结果、批准状态或已实现能力。
 - 变更聚焦当前任务，不夹带全库格式化、依赖升级或无关重构。
 - 新 Go 代码默认 `gofmt`；lint/test/build 命令以 [DEVELOPMENT](docs/DEVELOPMENT.md) 和 PROJECT_STATUS 中已配置内容为准。
+- CI/CD 门禁和引入时机不写死在本文；以 [CI_CD](docs/CI_CD.md) 为准。未在 PROJECT_STATUS 或 CI_CD 标为已配置的流水线不得当作事实。
 - 错误处理、日志、配置和依赖规则见 [DEVELOPMENT](docs/DEVELOPMENT.md)；安全边界见 [THREAT_MODEL](docs/THREAT_MODEL.md)。
 
 ## 7. 角色与委派框架

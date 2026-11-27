@@ -15,7 +15,7 @@
 
 用户需要在多个 GitHub 仓库中让 agent 通过 HTTPS 执行 clone、push、PR 等操作。传统做法是把 PAT 或长期 OAuth token 写入 Windows Credential Manager 或 Git Credential Manager，但这带来长期泄露风险。PAT 又不能通过公开 API 自动续签，因此单纯做“Windows 凭据轮换器”无法闭环。
 
-更合适的路径是使用 GitHub App 的 user access token + refresh token：user access token 默认 8 小时过期，refresh token 可滚动刷新，且操作仍归因于用户本人。本项目将该机制本地 broker 化，并补充 MCP、per-agent 授权、scoped token、审计与安全交付通道。
+更合适的路径是使用 GitHub App 的 user access token + refresh token：user access token 默认 8 小时过期，refresh token 可滚动刷新，且操作仍归因于用户本人。本项目将该机制本地 broker 化，并补充 agent 授权码接入、机器可读权限申请、用户审批、scoped token、审计与安全交付通道。
 
 ### 1.4 参考而非依赖
 
@@ -53,14 +53,15 @@
 4. broker 保存 refresh token，并记录授权账号、app、过期时间和安装范围。
 5. 未明确由用户启动时，普通 token 请求不得自动发起 device flow。
 
-#### 场景 B：agent 请求仓库操作授权
+#### 场景 B：agent 发起接入与权限申请（默认审批模式）
 
-1. agent 通过 MCP 声明目标 host、owner/repo 和操作类型。
-2. broker 验证 agent credential。
-3. broker 根据策略判断是否允许该 agent 访问该仓库和权限 profile。
-4. broker 检查 parent access token 状态并必要时刷新。
-5. broker 生成 scoped child token 或使用受控执行路径。
-6. broker 返回 grant id 或直接执行操作；默认不直接把 token 暴露给模型上下文。
+1. 用户登录本地 broker，生成一次性或短寿命 agent 授权码，并把授权码交给 agent。
+2. agent 读取 broker localhost discovery public node，了解协议版本、endpoint、支持的 profile 和申请格式。这里 public 指无需凭证可读协议元数据，不是公网公开。
+3. agent 用授权码提交权限申请，内容包括项目上下文、host、owner/repo、permission profile、min_ttl 和用途说明。
+4. 用户在 Approval Inbox 查看申请、风险提示和 broker 校验结果，可以全部批准、按仓库部分批准/降权或拒绝。
+5. 批准后 broker 创建或更新 agent credential、policy 和后续 grant/token 边界；拒绝则返回机器可读结果。
+6. 后续 agent 请求仓库操作时，broker 再验证 credential、policy、parent token 状态并生成 scoped child token 或使用受控执行路径。
+7. 原手工配置 agent credential/repo/profile 的方式保留为高级人工模式，不是默认接入路径。
 
 #### 场景 C：git push/pull
 
@@ -124,15 +125,16 @@
 4. device flow 首次授权。
 5. expiring user access token + refresh token 管理。
 6. parent token 内部缓存与刷新互斥。
-7. per-agent credential 与策略校验。
-8. repo/permission profile 映射。
-9. scoped child token 签发与剩余有效期检查。
-10. `exec` wrapper 与 git credential helper。
-11. MCP 控制面。
-12. SQLite 元数据和审计存储。
-13. Windows Credential Manager 或加密 SQLite 的秘密存储。
-14. localhost-only WebUI 管理界面。
-15. push 前机密信息扫描脚本。
+7. agent 授权码 bootstrap、discovery public node、权限申请与用户审批。
+8. per-agent credential 与策略校验。
+9. repo/permission profile 映射。
+10. scoped child token 签发与剩余有效期检查。
+11. `exec` wrapper 与 git credential helper。
+12. MCP 控制面。
+13. SQLite 元数据和审计存储。
+14. Windows Credential Manager 或加密 SQLite 的秘密存储。
+15. localhost-only WebUI 管理界面。
+16. push 前机密信息扫描脚本。
 
 ### 4.2 v1 非目标
 
@@ -228,6 +230,24 @@ parent token 默认不得作为 API/MCP 结果返回。
 
 ### 5.3 agent 身份与策略
 
+#### FR-8A：agent 授权码 bootstrap
+
+系统应支持用户生成一次性或短寿命 agent 授权码。授权码必须高熵、可撤销、带过期时间，并且只能用于提交接入/权限申请或完成绑定，不得直接代表 GitHub 权限。
+
+授权码批准前不得让 agent 获得 token、grant 或任意仓库访问能力。授权码明文最多只在生成时显示一次；之后只能显示 fingerprint/prefix、状态和过期时间。
+
+#### FR-8B：discovery public node 与 permission application
+
+broker 应提供严格绑定 `127.0.0.1` 的 discovery public node，返回协议版本、endpoint、支持的 permission profile、申请 schema、错误码和能力标记。该节点不返回秘密；这里 public 仅指本机无需凭证可读协议元数据，不表示公网或 LAN 可访问。
+
+agent 应能使用授权码提交机器可读 permission application。application 至少包括 agent 自报身份/项目上下文、host、owner/repo、permission profile、min_ttl 和 reason。系统必须把 agent 自报信息标记为未验证声明，而不是安全事实。
+
+#### FR-8C：用户审批与部分批准
+
+系统应提供 Approval Inbox。用户可以全部批准、按仓库部分批准/降权或拒绝申请。第一版支持 permission profile 降权，但不开放 GitHub 原子权限逐项编辑。对一次性跨多个仓库申请大量权限的申请，必须突出批量/高风险警告，并要求用户逐仓库批准、降权或拒绝；高风险权限默认不勾选或需单独确认。
+
+批准后系统应原子创建或更新 agent credential、policy 和后续 grant/token 边界；拒绝应返回机器可读结果。所有审批决定必须写审计。
+
 #### FR-9：per-agent credential
 
 系统不得只有一个全局校验码。每个 agent 应有独立 credential，服务端只保存 hash 或等效派生值。
@@ -316,7 +336,9 @@ localhost-only WebUI 至少提供：
 
 - 授权状态列表
 - GitHub App 配置列表
-- agent credential 与策略管理
+- Approval Inbox：生成 agent 授权码、查看待审批申请、全部/按仓库部分批准、降权或拒绝
+- 顶部模式切换：默认 Agent 审批模式；人工模式为独立界面
+- agent credential 与策略管理（仅人工模式）
 - token issue / grant 审计
 - reauth 入口
 - revoke 操作
