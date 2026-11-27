@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "domains": [
+    {
+      "id": "webui",
+      "file": "docs/agent-rules/webui.md",
+      "status": "active",
+      "branches": [
+        "feat/webui-high-fidelity"
+      ],
+      "paths": [
+        "design/high-fidelity/**",
+        "docs/DESIGN_SPEC.md"
+      ],
+      "note": "B 高保真 WebUI 设计领域；不拥有后端路径或全局治理文件"
+    },
+    {
+      "id": "backend",
+      "file": "docs/agent-rules/backend.md",
+      "status": "active",
+      "branches": [
+        "feat/backend-safe-delivery"
+      ],
+      "paths": [
+        "cmd/**",
+        "internal/**",
+        "go.mod",
+        "go.sum",
+        "config.example.yaml"
+      ],
+      "note": "后端 Phase 2 safe delivery 领域；不拥有 WebUI 设计或全局治理文件"
+    }
+  ]
+}
