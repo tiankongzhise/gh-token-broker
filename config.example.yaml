@@ -4,5 +4,6 @@ master_key_target: gh-token-broker/master-key
 github:
   host: github.com
   base_url: https://github.com
+  api_base_url: https://api.github.com
 token:
   parent_refresh_skew: 10m

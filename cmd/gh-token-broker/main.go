@@ -12,6 +12,7 @@ import (
 	"gh-token-broker/internal/githubapp"
 	"gh-token-broker/internal/storage/sqlite"
 	"gh-token-broker/internal/tokenchain"
+	"gh-token-broker/internal/version"
 )
 
 func main() {
@@ -33,6 +34,9 @@ func run(args []string) error {
 		return runDeviceFlow(args[1:])
 	case "refresh-check":
 		return runRefreshCheck(args[1:])
+	case "version", "--version", "-v":
+		fmt.Fprintln(os.Stdout, version.String())
+		return nil
 	case "help", "--help", "-h":
 		usage()
 		return nil
@@ -43,12 +47,13 @@ func run(args []string) error {
 }
 
 func usage() {
-	fmt.Fprint(os.Stderr, `gh-token-broker Phase 1 core token chain POC
+	fmt.Fprint(os.Stderr, `gh-token-broker development build
 
 Commands:
   init           initialize encrypted SQLite metadata and the WCM-backed master key
   device-flow    explicitly authorize one GitHub account through device flow
   refresh-check  verify the refresh chain without printing token material
+  version        print version and build metadata
 
 No command prints access tokens, refresh tokens, client secrets, or master keys.
 `)

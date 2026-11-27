@@ -21,8 +21,9 @@ type Config struct {
 }
 
 type GitHubConfig struct {
-	Host    string `yaml:"host"`
-	BaseURL string `yaml:"base_url"`
+	Host       string `yaml:"host"`
+	BaseURL    string `yaml:"base_url"`
+	APIBaseURL string `yaml:"api_base_url"`
 }
 
 type TokenConfig struct {
@@ -35,8 +36,9 @@ func Default() Config {
 		SecretBackend:   SecretBackendEncryptedSQLiteWithWCMMasterKey,
 		MasterKeyTarget: "gh-token-broker/master-key",
 		GitHub: GitHubConfig{
-			Host:    "github.com",
-			BaseURL: "https://github.com",
+			Host:       "github.com",
+			BaseURL:    "https://github.com",
+			APIBaseURL: "https://api.github.com",
 		},
 		Token: TokenConfig{
 			ParentRefreshSkew: "10m",
@@ -76,6 +78,9 @@ func (c Config) Validate() error {
 	}
 	if c.GitHub.BaseURL == "" {
 		return errors.New("github.base_url is required")
+	}
+	if c.GitHub.APIBaseURL == "" {
+		return errors.New("github.api_base_url is required")
 	}
 	if _, err := c.ParentSkew(); err != nil {
 		return fmt.Errorf("token.parent_refresh_skew: %w", err)
