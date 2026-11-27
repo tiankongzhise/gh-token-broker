@@ -28,6 +28,7 @@
 | 2026-11-27 | 允许 commit | 授权创建本地 git commit | 不授权 push、强推、改写历史或添加 AI 署名 |
 | 2026-11-27 | 审批模式方向 | 默认 UX：用户生成授权码，agent discovery 并提交权限申请，用户全部/部分审批；人工模式高级保留 | 不批准具体前端技术栈、高保真、discovery API 最终实现契约 |
 | 2026-11-27 | “后端通过，token chain 当作 Phase 2 的技术地基” | 接受 Phase 1 token chain 核心语义作为 Phase 2 地基 | 不表示 Phase 2 已启动，不批准所有实现细节或真实 GitHub 语义 |
+| 2026-11-27 | 审批模式交互细化 | 授权码一次性/短寿命；第一版只按仓库批准；discovery 严格 127.0.0.1；审批/人工两套 UI 顶部切换且默认审批模式 | 不批准高保真、Demo、最终 API schema 或高风险权限确认文案 |
 
 没有任何记录表明以下内容已批准：完整 PRD/架构基线、WebUI 技术栈、高保真设计、Demo、raw token 兼容模式、GitHub Enterprise 优先级、完整发布流程。
 
@@ -46,7 +47,7 @@
 按优先级排序：
 
 1. scoped token 父/子失效语义在目标 GitHub App 上的实测结果。
-2. 审批模式低保真细节：授权码 TTL/一次性语义、部分批准粒度、高风险项确认方式、agent 自报信息展示。
+2. 审批模式低保真剩余细节：高风险项确认方式、审批模式 Dashboard 精简程度、人工模式页面合并/拆分。
 3. discovery public node 与 permission application 的最终 API/schema 契约。
 4. WebUI 技术栈。
 5. raw token 兼容模式是否默认存在，还是仅编译/配置为高级模式。
@@ -63,7 +64,7 @@
 | Go 单元测试 | 后端 worktree：`go test -count=1 -timeout=90s ./...` | 已在 `feat/backend-core` 验证 | 2026-11-27 通过，全部为 mock/test key，无真实 GitHub 调用 |
 | Go vet/build | 后端 worktree：`go vet ./... && go build ./...` | 已在 `feat/backend-core` 验证 | 2026-11-27 通过 |
 | Go race spot check | 后端 worktree：`CGO_ENABLED=1 go test -race -count=1 -timeout=90s ./internal/tokenchain ./internal/platform/winmutex` | 已做局部验证，不是完整 CI 门禁 | 2026-11-27 通过 |
-| Wireframe artifact 检查 | WebUI worktree：生成脚本运行、12 个 SVG XML parse、walkthrough JS syntax、本地 HTTP 访问 | 已验证 | 2026-11-27 审批模式更新后通过 |
+| Wireframe artifact 检查 | WebUI worktree：生成脚本运行、12 个 SVG XML parse、模式分离检查、walkthrough JS syntax、本地 HTTP 访问 | 已验证 | 2026-11-27 模式分离与仓库级审批更新后通过 |
 | 启动/真实 GitHub 冒烟 | 未运行 | 需要真实 GitHub App 与用户授权，不能在审查前虚构 | 未运行 |
 
 ## 6. 角色与委派状态
@@ -92,3 +93,4 @@
 | 2026-11-27 | 用户指出原前端过于繁琐，确认审批模式方向 | D-0004 approved；人工模式高级保留 |
 | 2026-11-27 | 用户接受后端 POC 为 Phase 2 技术地基 | D-0005 approved；Phase 2 未启动 |
 | 2026-11-27 | WebUI worktree 增加审批优先低保真 | `feat/webui-wireframes` commit `4fe1a13`；待用户复审 |
+| 2026-11-27 | 用户确认审批模式细化并要求两套 UI 分离 | D-0006 approved；授权码一次性/短寿命、仓库级审批、严格 loopback、顶部模式切换 |

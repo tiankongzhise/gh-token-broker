@@ -58,7 +58,7 @@
 1. 用户登录本地 broker，生成一次性或短寿命 agent 授权码，并把授权码交给 agent。
 2. agent 读取 broker localhost discovery public node，了解协议版本、endpoint、支持的 profile 和申请格式。这里 public 指无需凭证可读协议元数据，不是公网公开。
 3. agent 用授权码提交权限申请，内容包括项目上下文、host、owner/repo、permission profile、min_ttl 和用途说明。
-4. 用户在 Approval Inbox 查看申请、风险提示和 broker 校验结果，可以全部批准、部分批准/降权或拒绝。
+4. 用户在 Approval Inbox 查看申请、风险提示和 broker 校验结果，可以全部批准、按仓库部分批准或拒绝。
 5. 批准后 broker 创建或更新 agent credential、policy 和后续 grant/token 边界；拒绝则返回机器可读结果。
 6. 后续 agent 请求仓库操作时，broker 再验证 credential、policy、parent token 状态并生成 scoped child token 或使用受控执行路径。
 7. 原手工配置 agent credential/repo/profile 的方式保留为高级人工模式，不是默认接入路径。
@@ -238,13 +238,13 @@ parent token 默认不得作为 API/MCP 结果返回。
 
 #### FR-8B：discovery public node 与 permission application
 
-broker 应提供 localhost discovery public node，返回协议版本、endpoint、支持的 permission profile、申请 schema、错误码和能力标记。该节点不返回秘密，不应暴露到公网。
+broker 应提供严格绑定 `127.0.0.1` 的 discovery public node，返回协议版本、endpoint、支持的 permission profile、申请 schema、错误码和能力标记。该节点不返回秘密；这里 public 仅指本机无需凭证可读协议元数据，不表示公网或 LAN 可访问。
 
 agent 应能使用授权码提交机器可读 permission application。application 至少包括 agent 自报身份/项目上下文、host、owner/repo、permission profile、min_ttl 和 reason。系统必须把 agent 自报信息标记为未验证声明，而不是安全事实。
 
 #### FR-8C：用户审批与部分批准
 
-系统应提供 Approval Inbox。用户可以全部批准、部分批准/降权或拒绝申请。部分批准第一版建议至少支持按仓库和 permission profile 调整；高风险权限默认不勾选或需单独确认。
+系统应提供 Approval Inbox。用户可以全部批准、按仓库部分批准或拒绝申请。部分批准第一版建议至少支持按仓库和 permission profile 调整；高风险权限默认不勾选或需单独确认。
 
 批准后系统应原子创建或更新 agent credential、policy 和后续 grant/token 边界；拒绝应返回机器可读结果。所有审批决定必须写审计。
 
@@ -336,8 +336,9 @@ localhost-only WebUI 至少提供：
 
 - 授权状态列表
 - GitHub App 配置列表
-- Approval Inbox：生成 agent 授权码、查看待审批申请、全部/部分批准或拒绝
-- agent credential 与策略管理（高级人工模式）
+- Approval Inbox：生成 agent 授权码、查看待审批申请、全部/按仓库部分批准或拒绝
+- 顶部模式切换：默认 Agent 审批模式；人工模式为独立界面
+- agent credential 与策略管理（仅人工模式）
 - token issue / grant 审计
 - reauth 入口
 - revoke 操作
