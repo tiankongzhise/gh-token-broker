@@ -12,13 +12,16 @@
 4. **秘密不进 CI 日志。** CI 不打印 secret、token、master key、client secret、agent credential 或完整 bearer 值；秘密扫描失败必须阻塞。
 5. **构建可复现优先。** 依赖版本锁定、工具链版本明确、构建输出可校验；供应链强化在发布前逐步加入。
 6. **CD 不等于自动发布。** 本项目是 Windows 本地安全敏感软件；发布、签名、分发和自动更新需要单独批准。当前只允许把 CD 理解为“可审计的构建/打包/校验流程”。
-7. **首个 CI 平台已落地为 GitHub Actions。** 这是首个 CI workflow 的实现选择；CD/发布平台和发布自动化仍需单独决策。
+7. **CI 触发避免无效重复，但不削弱合并门禁。** 短生命周期 PR 分支由 `pull_request` 检查把关；长期 `feat/**` 分支保留 push 早期反馈；`main` merge 后仍必须跑 push CI。
+8. **PR 创建不等于合入 main。** PR CI 失败时分支保护必须阻止合并；修复应追加到同一分支并触发新的 PR 检查。
+9. **首个 CI 平台已落地为 GitHub Actions。** 这是首个 CI workflow 的实现选择；CD/发布平台和发布自动化仍需单独决策。
 
 ## 2. 当前事实状态
 
 | 项 | 当前状态 |
 |---|---|
 | CI workflow | **已配置首个 workflow**：`.github/workflows/ci.yml`，job/context 为 `ci` |
+| CI 触发策略 | `pull_request` 对所有 PR 运行；`push` 只对 `main` 和 `feat/**` 运行；保留 `workflow_dispatch` 手动触发。`fix/**`/`chore/**` 短生命周期分支不单独跑 push CI，避免与 PR CI 重复 |
 | CD/发布自动化 | **未配置、未批准** |
 | secret scan | 本地脚本和 CI 均运行 `python scripts/check_secrets.py` |
 | Go 条件检查 | workflow 在检测到 `go.mod` 时执行 gofmt/test/vet/build 及可用 race spot check；最近结果见 [PROJECT_STATUS](PROJECT_STATUS.md) |
