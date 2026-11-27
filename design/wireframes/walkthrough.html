@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GH Token Broker 低保真与后端 POC 决策讲解</title>
+<style>
+:root{--ink:#222;--muted:#666;--line:#bbb;--soft:#f5f5f5;--panel:#fff;--accent:#2457a6;--danger:#9c2f2f;--ok:#2d6a4f}
+*{box-sizing:border-box}body{margin:0;font-family:"Microsoft YaHei","Segoe UI",Arial,sans-serif;color:var(--ink);background:#eee}
+header{padding:18px 24px;background:#222;color:#fff}header h1{font-size:20px;margin:0 0 8px}header p{margin:0;color:#ddd;font-size:13px;line-height:1.5}
+nav.mode{display:flex;gap:8px;padding:12px 24px;background:#ddd;position:sticky;top:0;z-index:5}button{font:inherit;cursor:pointer}.mode button,.pagebtn,.scenario{border:1px solid #777;background:#fff;border-radius:5px;padding:7px 10px}.mode button.active,.pagebtn.active,.scenario.active{background:#2457a6;color:#fff;border-color:#2457a6}
+main{padding:16px 24px}.layout{display:grid;grid-template-columns:190px minmax(560px,1fr) 430px;gap:14px;align-items:start}.pages{display:flex;flex-direction:column;gap:7px}.pagebtn{text-align:left;font-size:13px}.stagecard,.panel,.card{background:var(--panel);border:1px solid var(--line);border-radius:7px}.stagecard{padding:10px}.stage{position:relative;width:100%;aspect-ratio:1280/820;background:#fff;border:1px solid #999}.stage img{width:100%;height:100%;display:block}.hotspot{position:absolute;width:27px;height:27px;margin:-13px 0 0 -13px;border-radius:50%;border:2px solid #fff;background:#2457a6;color:#fff;font-weight:700;box-shadow:0 0 0 1px #2457a6,0 1px 4px #0007}.hotspot.active{background:#9c2f2f}.panel{padding:14px;max-height:calc(100vh - 120px);overflow:auto}.panel h2{font-size:18px;margin:0 0 8px}.panel h3{font-size:15px;margin:18px 0 7px;border-top:1px solid #ddd;padding-top:14px}.panel p,.panel li{font-size:13px;line-height:1.65}.item{border:1px solid #ddd;border-left:4px solid #2457a6;background:#fafafa;margin:8px 0;padding:9px;border-radius:4px}.item b{display:block;margin-bottom:4px}.label{font-weight:700;color:#2457a6}.warn{color:#9c2f2f;font-weight:700}.ok{color:var(--ok);font-weight:700}.muted{color:var(--muted)}.note{padding:10px;background:#fff8dc;border:1px solid #d7c56a;border-radius:5px;font-size:13px;line-height:1.6}.small{font-size:12px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}.card{padding:13px}.card h3{margin-top:0}.scenarios{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0 14px}.sim{display:grid;grid-template-columns:250px 1fr;gap:12px}.simbox{border:1px solid #aaa;background:#fafafa;border-radius:6px;padding:10px;min-height:105px}.simbox h4{margin:0 0 8px;font-size:14px}.step{border-left:4px solid #2457a6;background:#f8f8f8;margin:8px 0;padding:9px}.stepnum{display:inline-block;background:#2457a6;color:white;border-radius:50%;width:22px;height:22px;text-align:center;line-height:22px;margin-right:6px}.table{border-collapse:collapse;width:100%;font-size:13px}.table th,.table td{border:1px solid #bbb;padding:7px;vertical-align:top;line-height:1.5}.table th{background:#e8e8e8}.term{margin:7px 0;padding:8px;background:#f8f8f8;border-radius:4px}.term b{color:#2457a6}footer{padding:20px 24px;color:#666;font-size:12px}
+@media(max-width:1100px){.layout{grid-template-columns:1fr}.pages{flex-direction:row;flex-wrap:wrap}.panel{max-height:none}.sim{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+<h1>GH Token Broker：低保真页面与后端 POC 决策讲解 Demo</h1>
+<p>这不是下一阶段的高保真或产品 Demo，而是审核辅助工具。用具体例子解释每个页面区域在配置什么、为什么这样设计、边界情况下会怎样。所有 token/key 都是概念占位，不是真实秘密。</p>
+</header>
+<nav class="mode">
+<button id="showUi" class="active">一、低保真页面逐项讲解</button>
+<button id="showBackend">二、后端 POC 场景实验与接受/拒绝差异</button>
+<button id="showGlossary">三、名词速查</button>
+</nav>
+<main>
+<section id="uiMode">
+<div class="note"><b>使用方法：</b>左侧选择页面。灰色图是原低保真；蓝色编号是可点击讲解点。右侧“本页全部位置说明”按区域解释：这里配置/展示什么、作用、设计理由、边界差异。编号位置只是审核辅助，不代表最终视觉坐标。</div>
+<div class="layout" style="margin-top:14px">
+<div class="pages" id="pageButtons"></div>
+<div class="stagecard"><div class="stage" id="stage"><img id="wireImg" alt="wireframe"></div><p class="small muted">如果编号与图形有轻微偏移，以右侧文字说明为准；低保真只确认信息架构，不确认像素。</p></div>
+<aside class="panel" id="pagePanel"></aside>
+</div>
+</section>
+
+<section id="backendMode" hidden>
+<h2>后端 POC：把专业名词变成具体场景</h2>
+<p class="note"><b>先记住一句话：</b>Phase 1 POC 只验证“用户授权后，broker 能不能安全地保存 refresh token、持续换新父 token，并且避免多个请求同时刷新把链弄坏”。它还没有做 agent policy、scoped child token、MCP、WebUI 或审计。</p>
+<div class="grid2">
+<div class="card"><h3>这套链条在正常情况下解决什么？</h3><p>你在浏览器里显式授权一次。GitHub 给 broker 一个短期“父 token”和一个长期但不能长期存放明文的“refresh token”。父 token 过期后，broker 用 refresh token 换新的父 token和新的 refresh token。以后 agent 需要访问 GitHub 时，不需要你每次都重新授权。</p></div>
+<div class="card"><h3>它不解决什么？</h3><p>它还不决定某个 agent 能访问哪个仓库，也不生成最终发给 agent 的最小权限 child token，更不防止同用户下完全恶意进程。那些属于后续 Phase 2/3 和威胁模型边界。</p></div>
+</div>
+<h3>选择一个场景逐步播放</h3>
+<div class="scenarios" id="scenarioButtons"></div>
+<div class="sim">
+<div>
+<div class="simbox"><h4>概念图</h4><p>浏览器/GitHub<br>↓ 显式授权</p><p><b>父 token</b>：短期钥匙，放内存</p><p><b>refresh token</b>：换钥匙的钥匙，加密存 SQLite</p><p><b>master key</b>：解密 SQLite 的钥匙，只在 Windows Credential Manager</p></div>
+<div class="simbox"><h4>当前场景边界</h4><p id="scenarioBoundary">请选择场景。</p></div>
+</div>
+<div class="simbox"><h4 id="scenarioTitle">场景播放</h4><div id="scenarioSteps"></div><p><button id="nextStep">下一步</button> <button id="resetScenario">重播</button></p><p class="small muted">场景是讲解模型，不是实际网络调用。</p></div>
+</div>
+<h3>接受 POC 与不接受 POC 的实际差异</h3>
+<table class="table"><tr><th>决策</th><th>接下来会发生什么</th><th>具体例子</th><th>成本/风险</th></tr>
+<tr><td><b>接受</b></td><td>把当前 token chain 当作 Phase 2 的技术地基，后续 exec wrapper、git credential helper、policy 都建立在“父 token 内存缓存 + refresh token 加密轮换”之上。</td><td>例如之后做 git credential helper 时，默认假设：broker 能返回一个仍有效的凭据，并且 refresh 冲突已经在核心层处理。</td><td>如果核心语义错了，越晚推翻成本越高；接受不代表永久批准 SQLite 驱动、schema 或所有实现细节。</td></tr>
+<tr><td><b>部分接受/要求修改</b></td><td>保留 device flow 或加密思路，但先改你不同意的点，例如不用 SQLite、改变 CLI 表面、改变状态机或要求真实 GitHub 冒烟后再定。</td><td>例如你担心 master key 在 WCM 中无法备份，那么可以先要求设计备份/恢复，再进入 Phase 2。</td><td>现在修改成本最低；缺点是 Phase 2 会等待。</td></tr>
+<tr><td><b>拒绝</b></td><td>不把当前 POC 当作技术地基，后续实现不得假设它存在；需要重新决策 secret store 和 token chain。</td><td>例如改为直接使用 Windows Credential Manager 逐条存 refresh token，就要重新解决“refresh token 与过期状态必须同事务更新”的问题。</td><td>避免错误地基，但会重做 POC 和部分架构验证。</td></tr></table>
+<h3>建议你审查时问的三个问题</h3>
+<ol><li>我是否接受“refresh token 加密存 SQLite，master key 只放 Credential Manager”作为继续实现的方向？</li><li>我是否接受“普通 token 请求绝不自动弹 device flow，只有用户显式点 reauth 才重新授权”？</li><li>我是否理解并接受“最终安全性依赖单一 daemon 管理 token chain；多个独立进程同时当 owner 不是目标”？</li></ol>
+</section>
+
+<section id="glossaryMode" hidden>
+<h2>名词速查：用项目里的具体例子解释</h2>
+<div id="glossary"></div>
+</section>
+</main>
+<footer>审核辅助 demo；所有秘密均为占位概念。不得把这里的占位符当作真实 token 格式或真实配置值。</footer>
+<script>
+const pages=[
+{file:"00-overview-flow.svg",name:"总览",title:"页面结构与核心流程总览",purpose:"先确认产品闭环：配置 GitHub App → 显式授权 → 日常监控 → 配 agent 策略 → 发放/撤销 → 审计追踪。它不是某一页，而是所有页面的地图。",items:[
+{x:18,y:22,t:"首次配置",what:"配置 GitHub App 的非秘密信息，例如名称、host、client id；秘密输入只写不回显。",why:"没有 App identity，broker 无法代表用户向 GitHub 请求授权。把配置和授权分开，可以避免误以为填表就已经授权。",edge:"如果 secret store 不可用，保存秘密类字段会失败；不应把秘密临时写到明文文件。"},
+{x:36,y:22,t:"显式授权",what:"device flow：页面显示 verification URI 和 user code，用户在 GitHub 页面确认。",why:"授权是高风险动作，必须由用户明确触发；普通 agent 请求 token 时不能突然弹授权流程。",edge:"用户拒绝、代码过期、网络失败都不是崩溃；页面要显示可恢复错误。"},
+{x:54,y:22,t:"日常监控",what:"Dashboard 汇总授权健康、refresh 状态、reauth 警告和最近失败。",why:"用户最关心的是“现在是否需要我处理”，不是抽象统计数字。",edge:"refresh token 失效时不能自动重授权，只能提示用户显式 reauth。"},
+{x:70,y:22,t:"agent 策略",what:"给每个 agent credential 配 host、owner/repo、permission profile、min_ttl、rate limit。",why:"未来真正限制 agent 权限的是 policy 和 scoped child token，而不是父 token 本身。",edge:"高风险权限默认禁用；即使用户启用，也必须二次确认并写审计。"},
+{x:84,y:22,t:"发放、撤销、审计",what:"Token/Grants 页管理已发放凭据；Audit 页追踪谁做了什么。",why:"本地安全工具必须能回答“哪个 agent 在什么时候拿到了什么范围、什么时候被撤销”。",edge:"审计只能显示 fingerprint/last-eight，不能显示完整 token。"}],edges:["如果这条链路中任何一步缺失，用户会在后期才发现‘能授权但不能管控’或‘能管控但无法恢复’。","总览页用于确认信息架构，不代表最终页面视觉。"]},
+{file:"01-dashboard.svg",name:"Dashboard",title:"Dashboard：授权健康与需要行动",purpose:"回答三个问题：broker 是否正常、是否有需要用户立即处理的事、最近发生了什么安全/授权事件。",items:[
+{x:8,y:14,t:"左侧导航",what:"固定入口：Dashboard、GitHub Apps、Agents、Token/Grants、Audit、Settings。",why:"管理面页数不多，固定导航比面包屑更直接；用户随时能跳到审计或设置。",edge:"导航不是权限控制；即使直接访问 URL，后端仍要检查本地服务安全约束。"},
+{x:8,y:89,t:"本地状态",what:"显示 broker 是否运行、是否只绑定 127.0.0.1。",why:"这是本地安全边界的核心提示：WebUI 不应该暴露到局域网或公网。",edge:"如果 Host/Origin 不合法，应进入专用拒绝页，而不是继续显示管理界面。"},
+{x:31,y:21,t:"需要用户行动",what:"优先显示 reauth_required、权限变化、refresh token 失效等必须人处理的事项。",why:"这类问题不会自愈；放在顶部比放在表格里更难被忽略。",edge:"网络临时失败不等于 reauth_required；只有 refresh token 失效、授权撤销、SAML/组织策略变化等才需要重新授权。"},
+{x:66,y:21,t:"Broker 状态",what:"daemon、SQLite、secret store 可用性和最近 refresh 结果。",why:"token chain 依赖本地存储和 master key；存储不可用时必须尽早暴露。",edge:"secret store unavailable 时不能显示 master key，也不能降级为明文保存。"},
+{x:31,y:39,t:"GitHub 授权统计",what:"authorized、refresh_required、reauth_required、revoked/unknown 的数量。",why:"让用户快速理解授权状态分布，并进入 GitHub Apps 页处理。",edge:"数字只是入口；真正处理仍要进入详情，因为不同账号/宿主可能状态不同。"},
+{x:51,y:39,t:"Agent 访问统计",what:"启用 agent 数、今日 policy denied、高风险 profile 是否禁用。",why:"这是未来 policy 面的风险概览，帮助用户发现 agent 是否频繁越权尝试。",edge:"Phase 1 POC 还没有实现该能力；这里是未来完整产品低保真，不代表现有 POC 已支持。"},
+{x:75,y:39,t:"Token/Grant 统计",what:"active child token、active grant、即将过期数量。",why:"未来 scoped token 是发给 agent 的短期凭据；grant 是领取凭据的短寿命凭证。",edge:"同样属于后续阶段；当前后端 POC 只有父 token/refresh chain。"},
+{x:39,y:63,t:"最近事件摘要",what:"列出 refresh_failed、policy_denied、token_revoked 等事件及 correlation id。",why:"安全问题需要能追踪；点击事件应跳到 Audit 并带入同一 correlation id。",edge:"事件里不能出现 authorization header、完整 token、client secret 或 master key。"},
+{x:82,y:63,t:"快速操作",what:"进入常用页面，例如创建 credential、查看 grants、打开 audit。",why:"减少导航成本，但不绕过危险确认。",edge:"快速操作只是入口；revoke/disable/reauth 仍需对应页面确认。"}],edges:["Dashboard 不是装饰性统计页；第一优先级是‘需要用户行动’。","如果所有状态正常，页面可以安静；如果 reauth_required，必须显眼。"]},
+{file:"02-onboarding-device-flow.svg",name:"首次配置",title:"首次配置与显式 device flow",purpose:"解释从零开始如何把 GitHub App 接入 broker，以及为什么授权必须显式发生。",items:[
+{x:31,y:20,t:"空状态",what:"没有 GitHub App 时显示说明和‘添加 GitHub App’按钮。",why:"空状态不是错误；第一次使用产品时这是正常起点。",edge:"config invalid 或 secret store unavailable 才是错误，需要不同提示和恢复路径。"},
+{x:31,y:42,t:"App 表单",what:"填写 name、host、client id。client secret 采用 write-only 输入。",why:"name 是本地管理名；host 区分 github.com 或未来 GHE；client id 是 OAuth/device flow 必需的非秘密标识。",edge:"当前 GitHub device flow 通常不需要 client secret；保留 write-only 字段是为了兼容需要秘密的流或未来 web flow，不应把它误认为已授权。"},
+{x:31,y:64,t:"client secret write-only",what:"可以粘贴/写入，但保存后永远不完整回显，只显示 fingerprint 或 last-eight。",why:"减少误截图、误复制、界面泄露和日志泄露。",edge:"write-only 不是加密本身；真正保密仍靠后端 secret store。UI 只是减少暴露面。"},
+{x:69,y:34,t:"开始授权按钮",what:"用户点击后才调用 GitHub device flow。",why:"授权会改变 GitHub 侧用户授权状态，不能让 agent 的普通 token 请求隐式触发。",edge:"如果用户不点，broker 只能保持 unauthorized/reauth_required，不能绕过用户。"},
+{x:69,y:50,t:"verification URI + user code",what:"显示 GitHub 授权网址和短码，用户打开浏览器确认。",why:"CLI/daemon 没有浏览器交互能力，device flow 正是为这种本地工具设计。",edge:"user code 会过期；过期不是安全事故，需要重新发起。"},
+{x:69,y:66,t:"pending/success/error",what:"pending 等待用户确认；success 显示账号和过期摘要；error 分类为 expired/access_denied/network/config/secret store。",why:"不同错误的下一步完全不同：expired 可重试，access_denied 要用户决定，network 可稍后重试，secret store 是本地恢复问题。",edge:"success 也不能显示 token；只显示非秘密元数据。"}],edges:["首次配置最容易把‘填写 App’误认为‘已经授权’，所以流程被拆成表单和显式授权两段。","如果用户关闭页面，pending 不应后台无限等待；要有过期和取消状态。"]},
+{file:"03-github-apps.svg",name:"GitHub Apps",title:"GitHub Apps：授权与安装范围",purpose:"管理每个 GitHub App/account 的授权健康、过期时间和重新授权入口。",items:[
+{x:32,y:20,t:"App/Account 列表",what:"每行显示 name、host、user、auth status、parent expiry、refresh expiry。",why:"parent expiry 是短期父 token 何时过期；refresh expiry 是换 token 能力何时失效，两者含义不同。",edge:"父 token 过期通常可自动 refresh；refresh token 过期就必须用户重新授权。"},
+{x:32,y:42,t:"状态徽章",what:"valid、refreshing、reauth_required、revoked、unknown_error。",why:"状态机让用户知道系统是在自动恢复、需要人处理，还是状态未知。",edge:"unknown_error 不应被当成 revoked；它可能是网络或 GitHub 临时故障。"},
+{x:32,y:63,t:"行操作",what:"view、reauth、refresh now、mark untrusted。",why:"view 查看详情；reauth 显式重新授权；refresh now 是诊断/手动刷新；mark untrusted 是本地安全处置。",edge:"refresh now 不能修复已撤销的 refresh token；那时只能 reauth。"},
+{x:70,y:26,t:"添加 App 表单",what:"与 onboarding 相同：非秘密配置加 write-only 秘密字段。",why:"用户可能管理多个 App 或多个 host/account。",edge:"同名不同 host 不能混为一谈；账号身份还需要真实 GitHub 验证，当前 POC 的 user-login 只是元数据。"},
+{x:70,y:49,t:"详情 drawer",what:"显示 client id、host、installations、授权状态机、最近错误和 correlation id。",why:"drawer 保留列表上下文，适合查看排障信息。",edge:"drawer 也不能显示完整秘密；只能显示 fingerprint/last-eight。"},
+{x:70,y:70,t:"显式 reauth 确认",what:"说明为什么需要重新授权，确认后才启动 device flow。",why:"reauth 会改变 GitHub 授权链，可能使旧 token 失效，属于高风险/显式操作。",edge:"取消时保持 reauth_required；agent 后续请求仍失败，而不是静默恢复。"}],edges:["parent token expiry 与 refresh token expiry 是两个最容易混淆的时间；页面故意分开展示。","安装范围/组织权限变化可能需要 reauth，这不是本地 bug。"]},
+{file:"04-agents-policies.svg",name:"Agents",title:"Agents：credential 与访问策略",purpose:"未来用于定义哪个本地 agent 能用什么身份、访问哪些仓库、用什么权限 profile。",items:[
+{x:31,y:20,t:"Agent 列表",what:"显示 name、enabled、created、last used、credential fingerprint。",why:"credential 是 agent 访问 broker 的身份，不是 GitHub token。fingerprint 只用于辨认，不可用来认证。",edge:"完整 credential 只在创建时显示一次；之后无法查看，只能 rotate。"},
+{x:31,y:41,t:"create/rotate/disable/enable",what:"创建、轮换、禁用、启用 agent credential。",why:"agent 配置泄露或不再使用时，需要能吊销它对 broker 的访问。",edge:"disable agent 不等于撤销已经发出去的 GitHub token；还需要 token inventory/revoke。"},
+{x:31,y:63,t:"策略编辑字段",what:"配置 host、owner、repo pattern、permission profile、min_ttl、rate limit。",why:"这些字段把‘哪个 agent’限制到‘哪些仓库、哪类权限、凭据至少剩多久、调用频率多少’。",edge:"repo pattern 配置错误可能导致过宽访问；保存前必须校验并清楚展示匹配范围。"},
+{x:70,y:30,t:"permission profile",what:"例如 read-only、pr-write、high-risk disabled。",why:"用户不应直接理解和管理 GitHub 几十种细粒度 permission；profile 是可审查的权限模板。",edge:"profile 是产品语义，不是 GitHub 原生概念；必须在后续详细定义。"},
+{x:70,y:52,t:"min_ttl",what:"要求返回给调用方的凭据至少还有多长时间有效。",why:"避免 agent 拿到一个几秒内过期的 token，导致 git 操作一半失败。",edge:"min_ttl 太长会更频繁 refresh；太短会增加半途过期风险。"},
+{x:70,y:70,t:"高风险权限确认",what:"workflow write、administration、secrets 等默认禁用，启用需显著警告和二次确认。",why:"这些权限可能修改 CI、仓库设置或秘密，破坏范围远大于只读。",edge:"是否要求输入仓库名是低保真待确认问题；输入确认比单纯点按钮更能防止误操作。"}],edges:["这一页大部分是后续 Phase 3 能力，不属于当前后端 POC。","agent credential 只是访问 broker 的钥匙；真正访问 GitHub 的应是后续 scoped child token。"]},
+{file:"05-token-issues-grants.svg",name:"Token/Grants",title:"Token Issues 与 Grants",purpose:"未来管理已发放 child token 和短寿命 grant，使用户能看见并撤销 agent 实际持有的 GitHub 访问能力。",items:[
+{x:31,y:20,t:"Token Issues inventory",what:"显示 issue id、agent、repo、profile、fingerprint/last-eight、expires、status。",why:"issue inventory 回答‘现在外面还有哪些有效凭据’。这是主动撤销和审计的基础。",edge:"不能显示完整 token；即使本机用户也没有必要在 UI 中反复暴露它。"},
+{x:31,y:42,t:"筛选与状态",what:"active/expired/revoked，以及按 agent/repo 过滤。",why:"排查时要快速区分‘仍可用’、‘自然过期’、‘人工撤销’。",edge:"expired 不需要撤销；revoked 是显式安全动作；active 才是风险面。"},
+{x:31,y:62,t:"check validity/revoke/view audit",what:"检查有效性、撤销 token、查看相关审计。",why:"check 用于排障；revoke 用于风险控制；audit 用于追踪。",edge:"check validity 不应把 token 内容输出到 UI 或日志。"},
+{x:70,y:27,t:"Grants",what:"显示 grant id prefix、agent、repo/profile、expires、uses、status。",why:"grant 是短寿命领取凭证，常用于把 token 发放过程拆开；它不是 GitHub token。",edge:"默认单次使用；redeemed 后不能再换取 token，即使它还没过期。"},
+{x:70,y:52,t:"grant 与 token 的区别",what:"grant id 是 broker 内部一次性/短寿命凭证；token issue 是最终可访问 GitHub 的凭据记录。",why:"分开可以降低 token 直接经过不可信通道的风险。",edge:"撤销 grant 不一定撤销已经发放的 token；两者需要分开理解和操作。"},
+{x:70,y:72,t:"Revoke 确认 modal",what:"撤销前显示 metadata 和 fingerprint/last-eight，说明使用中的 git/gh 操作会失败。",why:"revoke 是不可逆且有实际破坏性的操作，必须防止误点。",edge:"pending 时按钮禁用；失败不能假装成功；成功后写审计。"}],edges:["Token Issues 与 Grants 是否合并为一个页面，是本次低保真需要用户决定的问题。","这一页也是后续能力，当前 Phase 1 POC 尚无 child token/grant。"]},
+{file:"06-audit.svg",name:"Audit",title:"Audit：授权、发放、撤销追踪",purpose:"给用户提供可追溯事实：谁在什么时间对哪个对象做了什么，结果是什么，如何关联排障。",items:[
+{x:31,y:20,t:"Filters",what:"按时间、actor/agent、event type、repo、result、correlation id 过滤。",why:"审计量大时没有过滤就很难定位一次失败或撤销。",edge:"correlation id 是排障线索，不是秘密；可以复制。"},
+{x:31,y:39,t:"quick filters",what:"failures only、reauth、high-risk admin actions。",why:"最常见审计需求是找失败、找重授权、找高风险管理操作。",edge:"quick filter 只是查询条件，不改变审计数据。"},
+{x:31,y:59,t:"事件列表",what:"timestamp、actor、event、repo/profile、result、error code。",why:"列表先给概览，细节进 drawer，避免信息过载。",edge:"error code 应稳定机器可读；human message 可以变，但 code 不应随意变。"},
+{x:31,y:76,t:"空/加载/错误",what:"无事件、加载 skeleton、audit store unavailable/corrupted query。",why:"审计不可用时不能伪装成‘没有事件’，这会产生错误安全感。",edge:"audit store 损坏或不可用是高严重度本地错误，应在 Dashboard 也提示。"},
+{x:70,y:31,t:"详情 drawer",what:"完整 event metadata、可复制 correlation id、脱敏 details_json。",why:"排障需要上下文，但秘密仍要脱敏。",edge:"details_json 不能原样写入 token/secret；后端必须做字段级脱敏。"},
+{x:70,y:57,t:"关联链接",what:"链接相关 token issue、grant、agent。",why:"审计不是孤立日志；用户应能跳到对象详情继续处理。",edge:"对象已删除时链接应显示 tombstone/不存在，而不是报错页面。"}],edges:["审计的目的不是‘记录越多越好’，而是能回答安全问题和排障问题。","Audit 当前是产品低保真设计，不属于 Phase 1 POC 已实现范围。"]},
+{file:"07-settings-security.svg",name:"Settings",title:"Settings：安全与本地运行",purpose:"配置本地服务边界、secret store 状态、token 默认策略、备份恢复和日志脱敏。",items:[
+{x:31,y:20,t:"本地服务",what:"bind 127.0.0.1、port、startup mode、single instance status、SQLite path。",why:"loopback-only 是防止局域网访问的第一层边界；single instance 避免多个 owner 同时管理 token chain。",edge:"仅绑定 localhost 还不够，后端仍需 Host/Origin 检查防 DNS rebinding。"},
+{x:31,y:42,t:"Secret store",what:"backend 为 encrypted SQLite + WCM master key；显示 available/unavailable/key version。",why:"用户需要知道加密存储是否可用，但绝不能看到 master key。",edge:"WCM 不可用不等于可以临时明文保存；正确行为是失败并提示恢复。"},
+{x:31,y:63,t:"test access / rotate master key",what:"test access 验证能否读取/解密；rotate master key 是未来能力。",why:"test 是恢复排障入口；key rotation 是长期密钥卫生。",edge:"当前 POC 尚未实现 master key rotation；key version 只是为未来预留。"},
+{x:70,y:27,t:"Token 策略默认值",what:"default min_ttl、safety margin、raw token output disabled。",why:"默认值决定大多数 agent 获取凭据时的安全/可用平衡。",edge:"raw token 模式如果存在，应是高级显式模式并写审计；它会扩大泄露面。"},
+{x:70,y:51,t:"备份与恢复",what:"说明 SQLite 密文/元数据可备份，master key 不随备份；missing key 时恢复后 reauth_required。",why:"把密文备份和钥匙备份混为一谈会造成误解：有数据库不等于能解密。",edge:"如果 WCM key 丢失，最安全的恢复通常不是找回 key，而是要求用户重新授权。"},
+{x:70,y:72,t:"日志级别/脱敏",what:"配置日志级别并展示脱敏状态。",why:"排障需要日志，但日志是常见泄露源。",edge:"debug 模式也不能记录 authorization、token、secret、master key 明文。"}],edges:["Settings 是安全边界集中展示区，不是普通偏好页。","恢复设计仍是开放问题；当前 POC 只做加密存储和 master key 读取/创建。"]},
+{file:"08-states-errors.svg",name:"状态/错误",title:"通用状态与错误骨架",purpose:"确保所有页面在异常、空数据、加载和高风险确认时有可预期行为，而不是只设计 happy path。",items:[
+{x:15,y:20,t:"Empty",what:"没有数据时显示标题、说明和下一步按钮。",why:"空状态是新手引导，不是错误。",edge:"‘真的没有数据’和‘查询失败所以没数据’必须视觉和语义不同。"},
+{x:36,y:20,t:"Loading",what:"skeleton rows、按钮 disabled、防止重复点击。",why:"防止用户误以为页面死机或重复提交危险操作。",edge:"加载超时应转为 network/store error，不能无限转圈。"},
+{x:57,y:20,t:"Network error",what:"code、message、retry、correlation id。",why:"网络失败通常可重试，不应当成授权失效。",edge:"GitHub unreachable 与 bad refresh token 的后果完全不同。"},
+{x:78,y:20,t:"Reauth required",what:"显示显式 reauth 按钮，不自动 device flow。",why:"重新授权需要用户知情和确认。",edge:"reauth 成功后状态才恢复；取消则保持不可用。"},
+{x:15,y:57,t:"Policy denied",what:"说明哪个 profile/repo 被拒，不泄露 credential。",why:"agent 需要知道被拒原因，用户需要审计越权尝试。",edge:"policy denied 不是 GitHub 错误，而是 broker 本地策略主动拒绝。"},
+{x:36,y:57,t:"Secret store error",what:"secret_store_unavailable、恢复建议、不显示 key/material。",why:"密钥材料不可用是本地安全故障，需要明确恢复路径。",edge:"不能降级为明文存储来‘提高可用性’。"},
+{x:57,y:57,t:"Host/Origin rejected",what:"localhost 安全错误页，说明如何正确访问。",why:"防 DNS rebinding 和跨站请求进入本地管理面。",edge:"这不是用户配置错误页；后端仍必须拒绝请求。"},
+{x:78,y:57,t:"High-risk confirm",what:"危险操作标题、后果说明、确认/取消和 pending。",why:"revoke/disable/high-risk permission/reauth 都可能造成实际破坏。",edge:"确认后失败要显示失败；不能仅因为用户确认就假装操作成功。"}],edges:["这些状态是验收标准的一部分；后续高保真不得把它们删掉。","错误响应必须包含 code + message + correlation id，且不包含秘密。"]}
+];
+const scenarios=[
+{id:"normal",name:"正常的一天",title:"正常的一天：为什么不用反复授权",boundary:"父 token 还有效、refresh token 还有效、GitHub 网络正常。",steps:["你在 WebUI 显式完成 device flow。GitHub 返回父 token 和 refresh token；页面只显示成功状态，不显示 token。","broker 把父 token 放内存，把 refresh token 加密后写入 SQLite。master key 只存在 Windows Credential Manager。","agent 之后需要访问 GitHub 时，broker 使用内存里的父 token 或后续 child token 机制；你不需要再次打开浏览器授权。","接受的含义：你相信这条链可以作为后续 agent 访问控制的地基。拒绝的含义：后续不能假设这种自动续期能力存在。"]},
+{id:"rotation",name:"refresh 轮换",title:"refresh 轮换：为什么必须事务性保存",boundary:"父 token 接近过期，refresh token 仍有效。GitHub 规则是使用一次 refresh token 后，旧 refresh token 和旧父 token 会失效。",steps:["broker 用旧 refresh token 向 GitHub 请求新 token。","GitHub 返回新父 token + 新 refresh token。此刻旧 refresh token 已经不能再使用。","POC 在同一个 SQLite 事务里写入新 refresh token 并更新过期时间/状态。要么一起成功，要么一起回滚。","如果不用事务，只更新了 metadata 但没保存新 secret，下一次就会拿旧 refresh token 去刷新，而旧值已失效，链就断了。","接受 POC 意味着接受这种‘原子轮换’是必要设计；不是可有可无的实现细节。"]},
+{id:"concurrent",name:"两个 agent 同时请求",title:"互斥刷新：为什么需要 mutex",boundary:"两个请求同时发现父 token 快过期。没有互斥时它们可能同时使用同一个 refresh token。",steps:["请求 A 和请求 B 同时进入刷新逻辑。","没有 mutex 时，A 用旧 refresh token 换新链；B 也可能拿同一个旧 refresh token 再换一次。因为旧值已被 A 使用，B 会失败，甚至造成状态混乱。","POC 使用进程内 mutex 和 Windows named mutex，让同一账户一次只有一个刷新者。","B 等待 A 完成后直接使用新父 token，而不是再次刷新。","这解决的是‘同时刷新’，不解决多个独立进程都长期缓存父 token 后的一致性；最终架构仍应以单一 daemon 作为 owner。"]},
+{id:"restart",name:"重启电脑/进程",title:"重启后：内存没了，但授权不一定没了",boundary:"进程重启导致内存中的父 token 消失，但 SQLite 和 WCM master key 仍可用，refresh token 未过期。",steps:["内存中的父 token 消失，这是预期行为；父 token 本来就不明文落盘。","broker 从 SQLite 读取加密 refresh token，并通过 WCM master key 解密。","broker 用 refresh token 换新的父 token，于是无需用户重新授权。","如果 master key 丢失或 refresh token 也过期，则不能静默恢复，只能进入 reauth_required。"]},
+{id:"revoked",name:"用户撤销授权",title:"授权被撤销：为什么不能自动重新授权",boundary:"用户在 GitHub 设置里撤销 App 授权，或 refresh token 因其他原因失效。",steps:["broker 下次刷新时，GitHub 返回 bad_refresh_token/invalid_grant 一类错误。","POC 把账户标记为 reauth_required，并停止继续用同一个坏 refresh token 重试。","agent 再请求时会得到明确错误或状态，而不是触发浏览器授权。","只有你在 WebUI/CLI 显式确认 reauth，才会重新启动 device flow。","这是安全边界：agent 不能因为需要 token 就替你发起授权。"]},
+{id:"network",name:"GitHub 网络失败",title:"网络失败：为什么不等于授权失效",boundary:"GitHub 暂时不可达、超时或本地网络断开。",steps:["刷新请求失败，但没有收到‘refresh token 无效’这类授权错误。","POC 不应把账户标记成 reauth_required，因为问题可能只是网络。","界面应显示 github_unreachable、retry 和 correlation id。","边界差异：bad_refresh_token 需要人重新授权；network error 通常稍后自动或手动重试。"]},
+{id:"stolen",name:"只复制走 SQLite",title:"威胁边界：只偷到数据库文件能做什么",boundary:"攻击者复制了 SQLite 文件，但没有当前用户的 Windows Credential Manager master key，也不能在当前用户上下文解密。",steps:["SQLite 里 refresh token 是 AES-GCM 密文，不是明文。","只复制数据库文件无法直接读出 refresh token。","但如果攻击者已经能在你的 Windows 用户上下文运行代码，并同时访问数据库和 Credential Manager，POC 不能承诺防御这种完全同权限恶意进程。","这就是威胁模型里‘不防御同用户完全恶意进程’的含义。"]},
+{id:"missingkey",name:"master key 丢失",title:"master key 丢失：为什么不能绕过",boundary:"SQLite 还在，但 WCM 中的 master key 被删除或不可恢复。",steps:["密文 refresh token 无法解密，broker 不能使用它。","正确行为是显示 secret store/missing key 状态，并要求重新授权。","错误做法是绕过加密、把新 token 明文存起来，或用硬编码 key。","接受 POC 意味着接受‘可用性让位于不泄露秘密’。"]},
+{id:"child",name:"父 token vs child token",title:"父 token 与 scoped child token：最容易混淆的边界",boundary:"当前 POC 只做到父 token/refresh chain；child token 是未来 Phase 3。",steps:["父 token 是 GitHub 给用户的 user access token，权限通常较宽，broker 内部使用。","scoped child token 是未来按 repo/profile 签发的受限凭据，才适合发给具体 agent。","当前 POC 并没有实现 child token，因此不能把 POC 理解成‘agent 已经获得最小权限访问’。","接受 POC 只是接受地基，不是接受完整权限模型。"]}];
+const glossary=[
+["父 token / parent token","GitHub 发给用户授权的短期 user access token。例子：它像一把 8 小时有效的门卡。Phase 1 只管理这把门卡，不直接把它交给 agent 作为最终最小权限凭据。"],
+["refresh token","用来换新父 token 的‘换卡凭证’。例子：门卡过期后，用它去前台换新门卡；用一次后旧凭证失效，前台给你新凭证。"],
+["refresh chain","不断用旧 refresh token 换新父 token + 新 refresh token 的链。关键边界是每一次轮换都要保存新值，否则下一次链断。"],
+["device flow","本地 CLI/daemon 显示的短码，你在浏览器 GitHub 页面确认。适合没有内嵌浏览器的服务。它必须由用户显式触发。"],
+["encrypted SQLite","把 refresh token 加密后放数据库。数据库可同时存 secret 密文和过期/状态 metadata，因此能事务性更新。"],
+["Windows Credential Manager / WCM","Windows 当前用户的本地凭据保险箱。本项目只把 master key 放那里，不把每条 refresh token 都直接放那里。"],
+["master key","解开 SQLite 秘密字段的钥匙。例子：SQLite 是保险柜，master key 是保险柜钥匙；钥匙不随数据库备份。"],
+["mutex refresh","同一账户同一时间只允许一个刷新操作。防止两个并发请求同时使用同一个旧 refresh token。"],
+["min_ttl","希望拿到的凭据至少还剩多久有效。例子：git push 可能要 2 分钟，min_ttl 就不应只有 10 秒。"],
+["agent credential","agent 访问 broker 的本地身份凭据，不是 GitHub token。泄露后应 rotate/disable。"],
+["scoped child token","未来按仓库/权限 profile 签发的受限 GitHub 凭据。当前 POC 尚未实现。"],
+["grant","未来用于一次或短寿命领取 token 的内部凭证。它不是 GitHub token。"],
+["raw token 兼容模式","是否允许把完整 token 输出给某些旧工具/高级流程。风险更高，当前未定，默认应禁用或至少显式确认。"],
+["reauth_required","refresh token 失效或授权撤销后的状态。此时必须用户显式重新授权，不能由 agent 自动触发。"],
+["correlation id","一次操作在日志/审计中的关联编号。它不是秘密，用于把 UI 错误、后端日志和审计记录串起来。"]
+];
+const stage=document.getElementById('stage'),img=document.getElementById('wireImg'),panel=document.getElementById('pagePanel'),pageButtons=document.getElementById('pageButtons');
+function renderPages(){pages.forEach((p,i)=>{const b=document.createElement('button');b.className='pagebtn';b.textContent=p.name;b.onclick=()=>selectPage(i);pageButtons.appendChild(b)});selectPage(0)}
+function selectPage(i){const p=pages[i];document.querySelectorAll('.pagebtn').forEach((b,j)=>b.classList.toggle('active',i===j));img.src=p.file;stage.querySelectorAll('.hotspot').forEach(x=>x.remove());panel.innerHTML=`<h2>${p.title}</h2><p>${p.purpose}</p><h3>点击图中编号后的焦点说明</h3><div id="focus" class="note">点击左侧图中的蓝色编号，或直接在下面阅读全部说明。</div><h3>本页全部位置说明</h3>`;
+p.items.forEach((it,idx)=>{const h=document.createElement('button');h.className='hotspot';h.textContent=idx+1;h.style.left=it.x+'%';h.style.top=it.y+'%';h.onclick=()=>focusItem(it,idx,h);stage.appendChild(h);const div=document.createElement('div');div.className='item';div.innerHTML=`<b>${idx+1}. ${it.t}</b><p><span class="label">配置/展示什么：</span>${it.what}</p><p><span class="label">作用和设计理由：</span>${it.why}</p><p><span class="warn">边界差异：</span>${it.edge}</p>`;panel.appendChild(div)});const eh=document.createElement('h3');eh.textContent='本页审核时的边界检查';panel.appendChild(eh);const ul=document.createElement('ul');p.edges.forEach(e=>{const li=document.createElement('li');li.textContent=e;ul.appendChild(li)});panel.appendChild(ul)}
+function focusItem(it,idx,btn){stage.querySelectorAll('.hotspot').forEach(x=>x.classList.remove('active'));btn.classList.add('active');const f=document.getElementById('focus');f.innerHTML=`<b>${idx+1}. ${it.t}</b><br><span class="label">是什么：</span>${it.what}<br><span class="label">为什么：</span>${it.why}<br><span class="warn">边界：</span>${it.edge}`}
+renderPages();
+let currentScenario=0,stepIndex=0;const sb=document.getElementById('scenarioButtons');
+scenarios.forEach((s,i)=>{const b=document.createElement('button');b.className='scenario';b.textContent=s.name;b.onclick=()=>selectScenario(i);sb.appendChild(b)});document.getElementById('nextStep').onclick=()=>{const s=scenarios[currentScenario];if(stepIndex<s.steps.length-1){stepIndex++;drawScenario()}};document.getElementById('resetScenario').onclick=()=>{stepIndex=0;drawScenario()};
+function selectScenario(i){currentScenario=i;stepIndex=0;document.querySelectorAll('.scenario').forEach((b,j)=>b.classList.toggle('active',i===j));drawScenario()}
+function drawScenario(){const s=scenarios[currentScenario];document.getElementById('scenarioTitle').textContent=s.title;document.getElementById('scenarioBoundary').textContent=s.boundary;document.getElementById('scenarioSteps').innerHTML=s.steps.slice(0,stepIndex+1).map((x,i)=>`<div class="step"><span class="stepnum">${i+1}</span>${x}</div>`).join('')}
+selectScenario(0);
+document.getElementById('glossary').innerHTML=glossary.map(x=>`<div class="term"><b>${x[0]}</b><br>${x[1]}</div>`).join('');
+const modes=[['showUi','uiMode'],['showBackend','backendMode'],['showGlossary','glossaryMode']];modes.forEach(([b,m])=>{document.getElementById(b).onclick=()=>{modes.forEach(([bb,mm])=>{document.getElementById(bb).classList.toggle('active',bb===b);document.getElementById(mm).hidden=mm!==m})}})
+</script>
+</body>
+</html>

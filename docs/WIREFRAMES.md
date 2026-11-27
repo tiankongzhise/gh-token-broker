@@ -6,6 +6,8 @@
 
 入口：[design/wireframes/index.html](../design/wireframes/index.html)
 
+审核辅助讲解 Demo：[design/wireframes/walkthrough.html](../design/wireframes/walkthrough.html)。该 Demo 只用于帮助理解低保真和后端 Phase 1 POC 的决策含义，不是高保真设计、不是产品原型、也不构成下一阶段批准。
+
 ## 1. 审核范围
 
 本阶段只确认：
