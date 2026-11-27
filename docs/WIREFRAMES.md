@@ -1,6 +1,6 @@
 # WIREFRAMES — GH Token Broker WebUI 低保真
 
-状态：draft 0.1，待人工审核
+状态：低保真已批准（本行只是阅读提示；权威状态以 [PROJECT_STATUS](PROJECT_STATUS.md) 为准，批准证据见 [D-0007](DECISIONS.md#d-0007-审批降权语义修正与低保真批准)）
 
 日期：2026-11-27
 
@@ -168,9 +168,9 @@
 | Host/Origin rejected | WF-08 | localhost 安全错误页 |
 | 高风险操作确认 | WF-04、WF-05、WF-08、WF-09、WF-11 | revoke/disable/high-risk permission/reauth/高风险申请批准 |
 
-## 6. 低保真阶段待确认问题
+## 6. 低保真交互边界与后续问题
 
-已确认边界：
+当前设计边界（权威决策见 D-0006/D-0007）：
 
 1. 授权码默认一次性、短寿命；泄露/失败则撤销并重新生成。
 2. 第一版部分批准支持按仓库批准/拒绝，并支持把 permission profile 降为更低风险包；不开放 GitHub 原子权限操作。
@@ -185,7 +185,7 @@
 2. 高风险权限启用是否只二次确认，还是要求输入仓库名/类型化确认短语？
 3. 审批模式中 Dashboard 是否只需要 pending approvals/reauth/system health 三类卡片？
 
-这些问题只影响信息架构和交互细节，不影响后端 Phase 1 POC 并行推进。
+这些问题留给高保真或实现前确认；它们不改变低保真基线已通过审核的事实。
 
 ## 7. 与高保真阶段的交接要求
 
