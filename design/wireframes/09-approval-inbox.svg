@@ -42,12 +42,12 @@
 <text x="256" y="472" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">agent 自称：name/version/project path（需显示为未验证声明）</text>
 <text x="256" y="494" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">请求范围：host / owner / repo / permission profile / min_ttl</text>
 <text x="256" y="516" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">用途说明：例如 read issues、create PR、push branch</text>
-<text x="256" y="538" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">风险提示：requested profile 是只读风险标签；是否包含 write/high-risk</text>
+<text x="256" y="538" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">风险提示：requested profile 是否包含 write/high-risk；多仓库高权限批量申请需突出警告</text>
 <text x="256" y="560" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">broker 校验结果：repo 存在性、App installation coverage、policy冲突</text>
 <rect x="840" y="416" width="370" height="310" rx="4" fill="#ffffff" stroke="#555" stroke-width="2"/>
 <text x="856" y="444" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#222" text-anchor="start">审批操作</text>
 <text x="856" y="472" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">Approve all：接受全部申请</text>
-<text x="856" y="494" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">Partial approve：只按仓库勾选/取消；不编辑原子权限或 profile</text>
+<text x="856" y="494" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">Partial approve：按仓库勾选/取消，也可降权 profile；不编辑原子权限</text>
 <text x="856" y="516" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">Reject：填写可选原因并通知 agent</text>
 <text x="856" y="538" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">确认页显示最终生效差异，不显示完整 credential</text>
 <text x="856" y="560" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">所有结果写 audit；pending 防重复点击</text>

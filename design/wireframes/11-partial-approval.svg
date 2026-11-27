@@ -17,7 +17,7 @@
 <text x="28" y="754" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" fill="#222" text-anchor="start">broker: running</text>
 <text x="28" y="776" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" fill="#222" text-anchor="start">127.0.0.1 only</text>
 <rect x="210" y="0" width="1070" height="72" rx="0" fill="#eeeeee" stroke="#555" stroke-width="2"/>
-<text x="238" y="44" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="24" font-weight="700" fill="#222" text-anchor="start">Partial Approval — 按仓库部分批准</text>
+<text x="238" y="44" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="24" font-weight="700" fill="#222" text-anchor="start">Partial Approval — 部分批准与降权</text>
 <rect x="850" y="18" width="190" height="36" rx="18" fill="#d4d4d4" stroke="#555" stroke-width="1"/>
 <text x="945" y="41" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="13" font-weight="700" fill="#222" text-anchor="middle">Agent 审批模式</text>
 <rect x="1050" y="18" width="150" height="36" rx="18" fill="#f7f7f7" stroke="#555" stroke-width="1"/>
@@ -37,8 +37,8 @@
 <text x="726" y="186" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">[x] owner/repo-b · read-only · 批准</text>
 <text x="726" y="208" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">[ ] owner/repo-c · admin · 拒绝</text>
 <text x="726" y="230" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start"></text>
-<text x="726" y="252" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">第一版边界：只能批准/拒绝整个仓库请求</text>
-<text x="726" y="274" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">profile 只作为只读风险标签展示，不在审批页编辑</text>
+<text x="726" y="252" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">可选降权：pr-write → read-only / issue-read</text>
+<text x="726" y="274" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">可按仓库逐项决定批准、降权或拒绝</text>
 <text x="726" y="296" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">不开放 GitHub 原子权限勾选；高风险仓库默认不勾选</text>
 <text x="726" y="318" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start"></text>
 <text x="726" y="340" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">最终确认：显示批准/拒绝差异</text>

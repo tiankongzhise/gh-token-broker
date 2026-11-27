@@ -137,7 +137,7 @@ def generate_overview():
     box(c, 40, 330, 560, 260, "审批模式（默认）", [
         "用户不需要手工编写 repo pattern/profile 组合",
         "agent 根据项目上下文主动声明需要的 GitHub 权限",
-        "用户在 Approval Inbox 中按仓库批准/拒绝申请",
+        "用户在 Approval Inbox 中按仓库批准/拒绝/降权申请",
         "批准后自动生成 agent credential、policy 和后续 grant/token 边界",
         "授权码一次性/短寿命；审批前不等于已获得 GitHub 访问能力",
     ])
@@ -149,7 +149,7 @@ def generate_overview():
     ])
     box(c, 40, 630, 1160, 120, "待用户确认的审批模式问题", [
         "已确认：授权码默认一次性/短寿命；失败或泄露则撤销并重新生成。",
-        "已确认：第一版只按仓库批准/拒绝，不开放原子权限操作，也不在审批页编辑 profile。",
+        "已确认：第一版可按仓库批准/拒绝，也可把 permission profile 降权；不开放原子权限操作。",
         "已确认：agent discovery public node 严格仅限 127.0.0.1；public 不是公网公开。",
     ], dash=True)
     c.save("00-overview-flow.svg")
@@ -400,12 +400,12 @@ def generate_approval_inbox():
         "agent 自称：name/version/project path（需显示为未验证声明）",
         "请求范围：host / owner / repo / permission profile / min_ttl",
         "用途说明：例如 read issues、create PR、push branch",
-        "风险提示：requested profile 是只读风险标签；是否包含 write/high-risk",
+        "风险提示：requested profile 是否包含 write/high-risk；多仓库高权限批量申请需突出警告",
         "broker 校验结果：repo 存在性、App installation coverage、policy冲突",
     ])
     box(c, 840, 416, 370, 310, "审批操作", [
         "Approve all：接受全部申请",
-        "Partial approve：只按仓库勾选/取消；不编辑原子权限或 profile",
+        "Partial approve：按仓库勾选/取消，也可降权 profile；不编辑原子权限",
         "Reject：填写可选原因并通知 agent",
         "确认页显示最终生效差异，不显示完整 credential",
         "所有结果写 audit；pending 防重复点击",
@@ -439,7 +439,7 @@ def generate_agent_code_flow():
 
 
 def generate_partial_approval():
-    c = page_frame("approvals", "Partial Approval — 按仓库部分批准", "approvals", mode="approval")
+    c = page_frame("approvals", "Partial Approval — 部分批准与降权", "approvals", mode="approval")
     box(c, 240, 108, 440, 570, "agent 原始申请", [
         "project: repo-maintainer",
         "repositories:",
@@ -454,8 +454,8 @@ def generate_partial_approval():
         "[x] owner/repo-b · read-only · 批准",
         "[ ] owner/repo-c · admin · 拒绝",
         "",
-        "第一版边界：只能批准/拒绝整个仓库请求",
-        "profile 只作为只读风险标签展示，不在审批页编辑",
+        "可选降权：pr-write → read-only / issue-read",
+        "可按仓库逐项决定批准、降权或拒绝",
         "不开放 GitHub 原子权限勾选；高风险仓库默认不勾选",
         "",
         "最终确认：显示批准/拒绝差异",
@@ -479,7 +479,7 @@ def generate_index():
         ("08-states-errors.svg", "状态与错误集合"),
         ("09-approval-inbox.svg", "Approvals：agent 权限申请审批"),
         ("10-agent-code-flow.svg", "Agent 授权码与协议发现流程"),
-        ("11-partial-approval.svg", "Partial Approval：按仓库部分批准"),
+        ("11-partial-approval.svg", "Partial Approval：部分批准与降权"),
     ]
     cards = []
     for href, title in pages:
