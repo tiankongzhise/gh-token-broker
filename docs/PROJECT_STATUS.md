@@ -11,7 +11,7 @@
 | 当前阶段 | WebUI 低保真产物与后端 Phase 1 core token chain POC 已产出，均停在各自人工审查门 | 2026-11-27 用户授权并行推进；本阶段产物不代表完整产品基线批准 |
 | 批准状态 | **有限授权，不是完整产品基线批准** | 授权并行推进 A 低保真和后端核心；不视为高保真、Demo、完整后端、raw token 策略或 WebUI 技术栈批准 |
 | 后端核心解释 | 已确认采用保守解释：按 [DEVELOPMENT](DEVELOPMENT.md) Phase 1 的核心 token chain POC 边界执行 | 2026-11-27 用户确认“采取保守解释”；不自动包含 MCP、WebUI、scoped token、多 agent policy |
-| 产品实现状态 | 后端 Phase 1 POC 已在后端 worktree 提交；WebUI 低保真已在 WebUI worktree 提交 | 后端 `feat/backend-core` commit `9c1ba2a`；WebUI `feat/webui-wireframes` commit `d1f8157`；均未 push、未合并 |
+| 产品实现状态 | 后端 Phase 1 POC 已在后端 worktree 提交；WebUI 低保真与审核讲解 Demo 已在 WebUI worktree 提交 | 后端 `feat/backend-core` commit `9c1ba2a`；WebUI `feat/webui-wireframes` commits `d1f8157`、`e0266c1`；均未 push、未合并 |
 | 许可证 | **已确认**：`LGPL-2.1-only` | 2026-11-27 用户明确选择；见 [DECISIONS](DECISIONS.md#d-0001-license-lgpl-21) |
 | secret store MVP | **已批准**：加密 SQLite + Windows Credential Manager 保存 master key | 2026-11-27 用户批准 D-0002；见 [DECISIONS](DECISIONS.md#d-0002-secret-store-mvp) |
 | 当前审核门 | **A 低保真人工审查门 + 后端 Phase 1 POC 人工审查门** | 低保真需用户确认页面/流程/状态；POC 需用户确认是否接受为后续 Phase 2 技术基础；不得自行进入高保真、Demo 或 Phase 2 |
@@ -59,7 +59,7 @@
 | Go 单元测试 | 后端 worktree：`go test -count=1 -timeout=90s ./...` | 已在 `feat/backend-core` 验证 | 2026-11-27 通过，全部为 mock/test key，无真实 GitHub 调用 |
 | Go vet/build | 后端 worktree：`go vet ./... && go build ./...` | 已在 `feat/backend-core` 验证 | 2026-11-27 通过 |
 | Go race spot check | 后端 worktree：`CGO_ENABLED=1 go test -race -count=1 -timeout=90s ./internal/tokenchain ./internal/platform/winmutex` | 已做局部验证，不是完整 CI 门禁 | 2026-11-27 通过 |
-| Wireframe artifact 检查 | WebUI worktree：生成脚本运行、9 个 SVG XML parse、必需文件存在 | 已验证 | 2026-11-27 通过 |
+| Wireframe artifact 检查 | WebUI worktree：生成脚本运行、9 个 SVG XML parse、walkthrough 静态/JS 语法/简化 DOM runtime smoke、本地 HTTP 访问 | 已验证 | 2026-11-27 通过 |
 | 启动/真实 GitHub 冒烟 | 未运行 | 需要真实 GitHub App 与用户授权，不能在审查前虚构 | 未运行 |
 
 ## 6. 角色与委派状态
@@ -84,3 +84,4 @@
 | 2026-11-27 | 用户确认许可证为 `LGPL-2.1-only` | 精确许可证语义已关闭 |
 | 2026-11-27 | WebUI worktree 提交低保真 wireframes 与 `docs/WIREFRAMES.md` | `feat/webui-wireframes` commit `d1f8157`；待用户审查 |
 | 2026-11-27 | 后端 worktree 提交 Phase 1 core token chain POC | `feat/backend-core` commit `9c1ba2a`；测试/build/vet/secret scan 通过；待用户审查 |
+| 2026-11-27 | WebUI worktree 增加低保真/后端 POC 审核讲解 Demo | `feat/webui-wireframes` commit `e0266c1`；用于辅助当前审核，不代表进入高保真或 Demo 阶段 |
