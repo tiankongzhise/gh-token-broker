@@ -238,3 +238,34 @@
 1. 该 noreply 身份不得作为本地普通提交身份。
 2. 这不改变 AI 署名每次单独询问的政策。
 3. 若未来更换 GitHub 账号、合并方式或允许其他贡献者，必须先更新 GIT_GOVERNANCE。
+
+
+## D-0012 CI 触发策略去重
+
+- 日期：2026-11-27
+- 状态：`approved`
+- 批准证据：2026-11-27 用户发现同一 commit 的 push CI 与 PR CI 重复，询问是否必须；在解释 PR CI 仍是合并前门禁后，明确选择“推荐方案 1”并要求继续修。
+- 决策：GitHub Actions `push` 触发只保留 `main` 和 `feat/**`；`pull_request` 对所有 PR 运行；`workflow_dispatch` 保留。
+
+### 边界
+
+1. `fix/**` 与 `chore/**` 短生命周期分支不单独跑 push CI，避免与 PR CI 重复；它们仍必须通过 PR CI 才能合入 main。
+2. 长期 `feat/**` 分支保留 push CI，用于未开 PR 前的早期反馈。
+3. 该调整不降低 main 分支保护、required status check 或 strict up-to-date 要求。
+4. 若未来分支模型、PR 流程或 CI 成本约束变化，应重新评估该策略。
+
+
+## D-0013 分支集成与文件 ownership 机制
+
+- 日期：2026-11-27
+- 状态：`approved`
+- 批准证据：2026-11-27 用户指出两个 feature 分支已领先 main，要求建立机制协调 feature 分支同步、防止 main 成为影子分支和分支间冲突；随后明确选择“两个都集成”和“实用严格模式”。
+- 决策：`main` 是唯一集成交汇点；长期 feature 分支必须登记文件 ownership；集成按队列进行；越权 diff 由本地/CI 检查拦截。
+
+### 边界
+
+1. 长期 feature 分支只独立修改 `docs/branch-ownership.json` 登记的路径。
+2. 短生命周期 `chore/**`/`fix/**` 不永久登记 lease，但不得修改 active feature ownership 路径。
+3. 已验收成果默认及时集成进 main；暂不合入必须有明确原因和解除条件。
+4. 该机制不能阻止本地编辑，只能通过检查阻止越权修改进入 main。
+5. 集成当前两个已验收分支不代表启动高保真或 Phase 2。

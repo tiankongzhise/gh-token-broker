@@ -43,6 +43,15 @@
 
 注意：两个工作流 worktree 创建时基于 `main` 的 commit `c55ea97`；2026-11-27 文档治理基线提交后，两个分支曾 fast-forward 到同一文档基线。当前两个分支已分别携带本阶段产物 commit：WebUI `d1f8157`、后端 `9c1ba2a`，均未合并回 main。后续实时分支状态以 `git worktree list` 为准。
 
+## 3.1 当前 integration queue
+
+| 顺序 | 分支 | 集成内容 | 当前状态 |
+|---|---|---|---|
+| 1 | `feat/webui-wireframes` | 已批准低保真 wireframes 与讲解 artifact | 待集成；不表示高保真开始 |
+| 2 | `feat/backend-core` | 已接受为 Phase 2 技术地基的 core token chain POC | 待集成；不表示 Phase 2 开始 |
+
+规则：同一时刻只处理一个 integration；main CI 通过后再同步另一个分支。权威原则见 [BRANCHING](BRANCHING.md)。
+
 ## 4. 未决事项
 
 按优先级排序：
@@ -105,3 +114,5 @@
 | 2026-11-27 | main 保护与首轮 CI 实测结果 | PR #1 CI 通过并合并；main CI 通过；main protection 已配置；backend 同步后发现并修复 CRLF/gofmt CI 兼容问题 |
 | 2026-11-27 | 用户要求审计状态漂移并建立单一权威来源机制 | D-0010 approved；新增 authority registry/checker，WIREFRAMES 状态修正在 WebUI 分支同步处理 |
 | 2026-11-27 | 用户允许 GitHub PR merge commit 自动作者身份 | D-0011 approved；仅限 GitHub merge commit，本地普通提交身份不变 |
+| 2026-11-27 | 用户批准 CI 触发策略去重 | D-0012 approved；push CI 保留 main 与 feat/**，chore/fix 短分支依靠 PR CI |
+| 2026-11-27 | 用户批准两个已验收 feature 分支均集成，并选择实用严格 ownership 模式 | D-0013 approved；建立 integration queue 与 branch ownership registry |

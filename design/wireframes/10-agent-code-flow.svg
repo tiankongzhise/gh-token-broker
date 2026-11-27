@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="820" viewBox="0 0 1280 820">
+<rect width="100%" height="100%" fill="#f4f4f4"/>
+<text x="40" y="52" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="28" font-weight="700" fill="#222" text-anchor="start">Agent 授权码与协议发现流程</text>
+<text x="40" y="82" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#555" text-anchor="start">这是 agent-facing 流程，不是复杂人工配置页。public node 指无需凭证可读的 localhost 协议元数据，不是公网服务。</text>
+<rect x="40" y="120" width="360" height="620" rx="4" fill="#f8f8f8" stroke="#555" stroke-width="2"/>
+<text x="220" y="150" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="18" font-weight="700" fill="#222" text-anchor="middle">用户 / Owner</text>
+<rect x="460" y="120" width="360" height="620" rx="4" fill="#f8f8f8" stroke="#555" stroke-width="2"/>
+<text x="640" y="150" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="18" font-weight="700" fill="#222" text-anchor="middle">Agent</text>
+<rect x="880" y="120" width="360" height="620" rx="4" fill="#f8f8f8" stroke="#555" stroke-width="2"/>
+<text x="1060" y="150" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="18" font-weight="700" fill="#222" text-anchor="middle">GH Token Broker</text>
+<rect x="60" y="190" width="320" height="58" rx="4" fill="#ffffff" stroke="#777" stroke-width="1"/>
+<text x="72" y="212" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" fill="#333" text-anchor="start">1. 登录本地 Broker</text>
+<text x="72" y="230" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" fill="#333" text-anchor="start">生成一次性授权码</text>
+<rect x="480" y="220" width="320" height="58" rx="4" fill="#ffffff" stroke="#777" stroke-width="1"/>
+<text x="492" y="242" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" fill="#333" text-anchor="start">2. 用户把授权码交给 agent</text>
+<text x="492" y="260" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" fill="#333" text-anchor="start">例如粘贴到 agent 配置/命令</text>
+<rect x="480" y="310" width="320" height="58" rx="4" fill="#ffffff" stroke="#777" stroke-width="1"/>
+<text x="492" y="332" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" fill="#333" text-anchor="start">3. 读取 discovery</text>
+<text x="492" y="350" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" fill="#333" text-anchor="start">GET /.well-known/gh-token-broker</text>
+<rect x="900" y="310" width="280" height="58" rx="4" fill="#ffffff" stroke="#777" stroke-width="1"/>
+<text x="912" y="332" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" fill="#333" text-anchor="start">返回公开协议元数据</text>
+<text x="912" y="350" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" fill="#333" text-anchor="start">api version/endpoints/capabilities</text>
+<rect x="480" y="410" width="320" height="58" rx="4" fill="#ffffff" stroke="#777" stroke-width="1"/>
+<text x="492" y="432" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" fill="#333" text-anchor="start">4. 用授权码提交申请</text>
+<text x="492" y="450" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" fill="#333" text-anchor="start">项目、仓库、profile、min_ttl、原因</text>
+<rect x="900" y="430" width="280" height="58" rx="4" fill="#ffffff" stroke="#777" stroke-width="1"/>
+<text x="912" y="452" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" fill="#333" text-anchor="start">校验授权码</text>
+<text x="912" y="470" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" fill="#333" text-anchor="start">创建 pending approval</text>
+<rect x="60" y="520" width="320" height="58" rx="4" fill="#ffffff" stroke="#777" stroke-width="1"/>
+<text x="72" y="542" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" fill="#333" text-anchor="start">5. 用户审批</text>
+<text x="72" y="560" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" fill="#333" text-anchor="start">全部 / 部分 / 拒绝</text>
+<rect x="900" y="590" width="280" height="58" rx="4" fill="#ffffff" stroke="#777" stroke-width="1"/>
+<text x="912" y="612" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" fill="#333" text-anchor="start">批准后生效</text>
+<text x="912" y="630" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" fill="#333" text-anchor="start">创建 credential/policy/grant 边界</text>
+<rect x="480" y="650" width="320" height="58" rx="4" fill="#ffffff" stroke="#777" stroke-width="1"/>
+<text x="492" y="672" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" fill="#333" text-anchor="start">6. agent 后续按协议请求 token</text>
+<text x="492" y="690" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" fill="#333" text-anchor="start">不再要求用户手工配置 policy</text>
+<line x1="380" y1="220" x2="480" y2="240" stroke="#555" stroke-width="2"/>
+<line x1="640" y1="280" x2="640" y2="310" stroke="#555" stroke-width="2"/>
+<line x1="800" y1="340" x2="900" y2="340" stroke="#555" stroke-width="2"/>
+<line x1="800" y1="440" x2="900" y2="460" stroke="#555" stroke-width="2"/>
+<line x1="900" y1="610" x2="380" y2="550" stroke="#555" stroke-width="2"/>
+<line x1="900" y1="650" x2="800" y2="680" stroke="#555" stroke-width="2"/>
+</svg>

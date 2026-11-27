@@ -32,6 +32,18 @@
       "required": true
     },
     {
+      "id": "branching.policy",
+      "fact": "branch integration principles, ownership rules and integration queue policy",
+      "authority": "docs/BRANCHING.md",
+      "required": true
+    },
+    {
+      "id": "branching.executable-ownership",
+      "fact": "active feature branch file ownership and exceptions",
+      "authority": "docs/branch-ownership.json",
+      "required": true
+    },
+    {
       "id": "git.signature-policy",
       "fact": "AI attribution policy and push-time signature handling",
       "authority": "docs/GIT_GOVERNANCE.md",
