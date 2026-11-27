@@ -238,3 +238,18 @@
 1. 该 noreply 身份不得作为本地普通提交身份。
 2. 这不改变 AI 署名每次单独询问的政策。
 3. 若未来更换 GitHub 账号、合并方式或允许其他贡献者，必须先更新 GIT_GOVERNANCE。
+
+
+## D-0012 CI 触发策略去重
+
+- 日期：2026-11-27
+- 状态：`approved`
+- 批准证据：2026-11-27 用户发现同一 commit 的 push CI 与 PR CI 重复，询问是否必须；在解释 PR CI 仍是合并前门禁后，明确选择“推荐方案 1”并要求继续修。
+- 决策：GitHub Actions `push` 触发只保留 `main` 和 `feat/**`；`pull_request` 对所有 PR 运行；`workflow_dispatch` 保留。
+
+### 边界
+
+1. `fix/**` 与 `chore/**` 短生命周期分支不单独跑 push CI，避免与 PR CI 重复；它们仍必须通过 PR CI 才能合入 main。
+2. 长期 `feat/**` 分支保留 push CI，用于未开 PR 前的早期反馈。
+3. 该调整不降低 main 分支保护、required status check 或 strict up-to-date 要求。
+4. 若未来分支模型、PR 流程或 CI 成本约束变化，应重新评估该策略。

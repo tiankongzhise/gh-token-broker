@@ -105,3 +105,4 @@
 | 2026-11-27 | main 保护与首轮 CI 实测结果 | PR #1 CI 通过并合并；main CI 通过；main protection 已配置；backend 同步后发现并修复 CRLF/gofmt CI 兼容问题 |
 | 2026-11-27 | 用户要求审计状态漂移并建立单一权威来源机制 | D-0010 approved；新增 authority registry/checker，WIREFRAMES 状态修正在 WebUI 分支同步处理 |
 | 2026-11-27 | 用户允许 GitHub PR merge commit 自动作者身份 | D-0011 approved；仅限 GitHub merge commit，本地普通提交身份不变 |
+| 2026-11-27 | 用户批准 CI 触发策略去重 | D-0012 approved；push CI 保留 main 与 feat/**，chore/fix 短分支依靠 PR CI |
