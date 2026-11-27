@@ -2,20 +2,21 @@
 
 最近审计：2026-11-27
 
-范围：README、AGENTS、LICENSE、SECURITY、docs/PRD、ARCHITECTURE、DEVELOPMENT、TEST_PLAN、PROJECT_DISCOVERY、CI_CD、GITIGNORE_POLICY、scripts/check_secrets.py。
+范围：README、AGENTS、LICENSE、SECURITY、docs/PRD、ARCHITECTURE、DEVELOPMENT、TEST_PLAN、PROJECT_DISCOVERY、CI_CD、GITIGNORE_POLICY、INFORMATION_AUTHORITY、authority-registry.json、scripts/check_secrets.py。
 
 目的：确认文档是否覆盖项目治理、需求、架构、安全、开发、测试和交付要求，并识别缺失或不一致。
 
 ## 1. 总体结论
 
-现有文档对产品目标、token 生命周期、refresh 并发、MCP/WebUI 安全约束、测试分层和秘密扫描已有较好覆盖。主要问题不是“完全缺少文档”，而是：
+现有文档对产品目标、token 生命周期、refresh 并发、MCP/WebUI 安全约束、测试分层、秘密扫描、CI/CD 和 Git 治理已有较好覆盖。早期“可变状态塞进 AGENTS”“缺少决策/安全/威胁模型入口”的高优先级问题已关闭。
 
-1. 可变状态集中塞在 `AGENTS.md`，不利于持续维护。
-2. 决策、批准、发现和当前状态混在不同文档中，缺少单一事实源。
-3. 安全政策/威胁模型虽有零散内容，但缺少专门文档。
-4. 若干实现前必须回答的本地认证、数据保留、运维和权限 profile 细节仍未定义。
+当前主要风险转为：
 
-本轮已修正高优先级治理问题；剩余缺口见第 3 节。
+1. 同一可变事实在 artifact、policy、决策和状态文档中重复登记，导致状态漂移。
+2. 若干实现前必须回答的本地认证、数据保留、运维和权限 profile 细节仍未定义。
+3. CI 已落地但供应链、发布和完整安全门禁尚未实现。
+
+本轮已新增单一权威来源机制来降低第一类风险；剩余缺口见第 3 节。
 
 ## 2. 本轮已关闭/部分关闭的问题
 
@@ -28,7 +29,8 @@
 | DOC-005 | 缺少独立安全政策和泄露响应入口 | 秘密约束分散在 README/AGENTS/DEVELOPMENT | **已关闭**：新增根 `SECURITY.md` |
 | DOC-006 | 缺少结构化威胁模型 | 安全边界散见于发现/架构，缺少资产/攻击者/信任边界视图 | **已关闭**：新增 `docs/THREAT_MODEL.md` |
 | DOC-007 | AI 署名和贡献者身份政策的详细记录占用 AGENTS 顶部且难以演进 | 推送前必须可见，但历史证据不应挤占主规则 | **已关闭**：新增 `docs/GIT_GOVERNANCE.md`，AGENTS 保留简要硬约束 |
-| DOC-008 | CI/CD 和 `.gitignore` 缺少专门规范，存在被写死进 AGENTS 的风险 | CI/CD 只在审计/威胁模型中零散出现；`.gitignore` 有规则文件但没有维护原则 | **部分关闭**：新增 `docs/CI_CD.md` 与 `docs/GITIGNORE_POLICY.md` 并接入文档地图；实际 CI workflow 仍未配置 |
+| DOC-008 | CI/CD 和 `.gitignore` 缺少专门规范，存在被写死进 AGENTS 的风险 | CI/CD 只在审计/威胁模型中零散出现；`.gitignore` 有规则文件但没有维护原则 | **已关闭**：新增 `docs/CI_CD.md` 与 `docs/GITIGNORE_POLICY.md` 并接入文档地图；首个 CI 实施由 DOC-109/D-0009 跟踪 |
+| DOC-009 | artifact/状态文档会写死审批或验证状态，导致与 PROJECT_STATUS/DECISIONS 漂移 | WIREFRAMES draft 状态与低保真批准不一致；CI 配置状态也多处漂移 | **已关闭/持续 enforcement**：新增 `INFORMATION_AUTHORITY.md`、`authority-registry.json` 和 checker；后续新增事实类型必须登记 |
 
 ## 3. 仍开放的文档缺口
 
@@ -52,5 +54,5 @@
 - 当前状态只写 `docs/PROJECT_STATUS.md`；其他文档需要引用状态时链接到该文件。
 - 决策理由和状态只写 `docs/DECISIONS.md`；其他文档可以引用决策，不复制大段备选分析。
 - 已批准基线的实质变化必须有 `docs/changes/CR-<id>.md`。
-- 文档新增/删除/改归属后，更新本审计和 AGENTS 文档地图。
+- 文档新增/删除/改归属后，更新本审计、AGENTS 文档地图和 `docs/authority-registry.json`。
 - 不得为了“看起来完整”把未实现命令、未运行测试或未获得批准写成事实。

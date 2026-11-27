@@ -30,7 +30,7 @@ def iter_repo_files():
 def check_conflict_markers() -> list[str]:
     failures: list[str] = []
     for path in iter_repo_files():
-        if path.suffix.lower() not in TEXT_SUFFIXES and path.name != ".gitignore":
+        if path.suffix.lower() not in TEXT_SUFFIXES and path.name not in {".gitignore", ".gitattributes"}:
             continue
         try:
             lines = path.read_text(encoding="utf-8").splitlines()
@@ -39,6 +39,8 @@ def check_conflict_markers() -> list[str]:
         for lineno, line in enumerate(lines, 1):
             if line.startswith(CONFLICT_MARKERS):
                 failures.append(f"{path.relative_to(ROOT)}:{lineno}: conflict marker")
+            if line.rstrip(" 	") != line:
+                failures.append(f"{path.relative_to(ROOT)}:{lineno}: trailing whitespace")
     return failures
 
 

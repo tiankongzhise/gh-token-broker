@@ -12,7 +12,7 @@
 4. **秘密不进 CI 日志。** CI 不打印 secret、token、master key、client secret、agent credential 或完整 bearer 值；秘密扫描失败必须阻塞。
 5. **构建可复现优先。** 依赖版本锁定、工具链版本明确、构建输出可校验；供应链强化在发布前逐步加入。
 6. **CD 不等于自动发布。** 本项目是 Windows 本地安全敏感软件；发布、签名、分发和自动更新需要单独批准。当前只允许把 CD 理解为“可审计的构建/打包/校验流程”。
-7. **CI 平台另行决策。** GitHub Actions 是自然候选，因为项目托管在 GitHub，但当前不把它写成已批准事实。
+7. **首个 CI 平台已落地为 GitHub Actions。** 这是首个 CI workflow 的实现选择；CD/发布平台和发布自动化仍需单独决策。
 
 ## 2. 当前事实状态
 
@@ -21,7 +21,7 @@
 | CI workflow | **已配置首个 workflow**：`.github/workflows/ci.yml`，job/context 为 `ci` |
 | CD/发布自动化 | **未配置、未批准** |
 | secret scan | 本地脚本和 CI 均运行 `python scripts/check_secrets.py` |
-| Go POC 检查 | 后端 worktree 已手动运行 `gofmt`、`go test`、`go vet`、`go build` 和局部 race spot check |
+| Go 条件检查 | workflow 在检测到 `go.mod` 时执行 gofmt/test/vet/build 及可用 race spot check；最近结果见 [PROJECT_STATUS](PROJECT_STATUS.md) |
 | Windows 手动冒烟 | 未运行真实 GitHub/device flow/Credential Manager 端到端冒烟 |
 | 依赖扫描/SBOM/签名/校验和 | 未配置 |
 
@@ -31,9 +31,10 @@
 
 适用：所有分支和文档变更。
 
-计划包括：
+首个 workflow 当前包括：
 
 - secret scan。
+- documentation authority check。
 - whitespace/conflict marker 检查。
 - Markdown 本地链接存在性检查。
 - 生成的 wireframes 与设计源文件一致性检查（在对应工具链确定后）。
@@ -42,7 +43,7 @@
 
 适用：Go module 或后端代码进入合并流程后。
 
-计划包括：
+首个 workflow 当前包括：
 
 - `gofmt` 检查。
 - `go vet ./...`。
@@ -96,3 +97,4 @@
 - 实际 workflow 一旦配置，应放在平台约定位置（例如未来的 `.github/workflows/`），并在本文记录“已配置”的事实。
 - `AGENTS.md` 不写死具体 CI 命令、workflow 名称或平台细节，只链接本文。
 - 本地命令和当前验证快照仍分别记录在 `docs/DEVELOPMENT.md` 与 `docs/PROJECT_STATUS.md`。
+- CI 文档权威来源和 stale 状态检查规则登记在 `docs/authority-registry.json`。

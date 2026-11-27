@@ -37,7 +37,7 @@
 
 | 工作流 | 路径 | 分支 | 允许修改/目标 | 禁止事项 |
 |---|---|---|---|---|
-| 主文档/治理 | `E:\github\gh-token-broker` | `main` | 根文档、`docs/`、`scripts/check_secrets.py`、`.gitignore`、许可证与本阶段用户明确要求的文档治理 | 不开始产品实现；CI policy 可记录但实际 workflow 未配置 |
+| 主文档/治理 | `E:\github\gh-token-broker` | `main` | 根文档、`docs/`、`scripts/check_secrets.py`、`.gitignore`、许可证与本阶段用户明确要求的文档治理 | 不开始产品实现；首个 CI workflow 已配置 |
 | WebUI 低保真 | `E:\github\gh-token-broker-webui` | `feat/webui-wireframes` | `design/wireframes/`、`docs/WIREFRAMES.md` 及低保真所需文档索引 | 不定最终视觉、不实现后端、不改后端核心文件 |
 | 后端核心 | `E:\github\gh-token-broker-backend` | `feat/backend-core` | 按 Phase 1：Go module、配置、secret store 抽象/实现、device flow、refresh chain、mock GitHub 单元测试 | 不做 MCP/WebUI/scoped token/多 agent policy；不返回 raw token 给模型上下文 |
 
@@ -55,13 +55,14 @@
 6. GitHub Enterprise host 支持优先级。
 7. operation-only MCP 是否作为第一交付通道。
 8. SQLite schema migration 方案；Phase 1 POC 已选用 `modernc.org/sqlite` 作为纯 Go 驱动，但该选型尚未被批准为长期架构决策。
-9. 依赖扫描、构建复现、SBOM/签名/校验和与发布自动化仍未配置；首个 GitHub Actions CI 已按用户授权添加，远端结果待验证；原则见 [CI_CD](CI_CD.md)。
+9. 依赖扫描、构建复现、SBOM/签名/校验和与发布自动化仍未配置；首个 GitHub Actions CI 已配置并完成首轮真实验证；原则见 [CI_CD](CI_CD.md)。
 
 ## 5. 当前验证状态
 
 | 用途 | 工作目录与命令 | 状态 | 最近结果 |
 |---|---|---|---|
 | 秘密扫描 | 仓库根：`python scripts/check_secrets.py` | 已配置；每次 push 前必须运行 | 2026-11-27 后端提交前通过；WebUI 提交前通过 |
+| 文档权威检查 | 仓库根：`python scripts/check_doc_authority.py` | 本轮新增，已接入 CI workflow | 2026-11-27 本地通过；远端待本轮 PR 验证 |
 | CI workflow | `.github/workflows/ci.yml` 已配置；GitHub Actions job/context 为 `ci` | PR #1 分支 CI 与 merge 后 main CI 已通过；backend 首次同步 CI 暴露 Windows CRLF/gofmt 问题，本轮用 `.gitattributes` 修复 | 已真实运行 |
 | main 分支保护 | GitHub branch protection | 已配置：要求 PR、要求 `ci` 且 strict、enforce admins、禁止 force push/deletion | 2026-11-27 API 验证 |
 | Go 格式检查 | 后端 worktree：`gofmt -l cmd internal`（应无输出） | 已在 `feat/backend-core` 验证 | 2026-11-27 通过 |
@@ -91,14 +92,15 @@
 | 2026-11-27 | 用户批准 D-0002、确认后端核心保守解释为 Phase 1，并允许创建本地 commit | 并行执行边界已确认 |
 | 2026-11-27 | 文档治理基线提交到本地 main `be69311`；两个 worktree 已 fast-forward | 尚未 push |
 | 2026-11-27 | 用户确认许可证为 `LGPL-2.1-only` | 精确许可证语义已关闭 |
-| 2026-11-27 | WebUI worktree 提交低保真 wireframes 与 `docs/WIREFRAMES.md` | `feat/webui-wireframes` commit `d1f8157`；待用户审查 |
-| 2026-11-27 | 后端 worktree 提交 Phase 1 core token chain POC | `feat/backend-core` commit `9c1ba2a`；测试/build/vet/secret scan 通过；待用户审查 |
+| 2026-11-27 | WebUI worktree 提交低保真 wireframes 与 `docs/WIREFRAMES.md` | `feat/webui-wireframes` commit `d1f8157`；当时待用户审查，后续批准见 D-0007 |
+| 2026-11-27 | 后端 worktree 提交 Phase 1 core token chain POC | `feat/backend-core` commit `9c1ba2a`；测试/build/vet/secret scan 通过；当时待用户审查，后续接受见 D-0005 |
 | 2026-11-27 | WebUI worktree 增加低保真/后端 POC 审核讲解 Demo | `feat/webui-wireframes` commit `e0266c1`；用于辅助当前审核，不代表进入高保真或 Demo 阶段 |
 | 2026-11-27 | 用户指出原前端过于繁琐，确认审批模式方向 | D-0004 approved；人工模式高级保留 |
 | 2026-11-27 | 用户接受后端 POC 为 Phase 2 技术地基 | D-0005 approved；Phase 2 未启动 |
-| 2026-11-27 | WebUI worktree 增加审批优先低保真 | `feat/webui-wireframes` commit `4fe1a13`；待用户复审 |
+| 2026-11-27 | WebUI worktree 增加审批优先低保真 | `feat/webui-wireframes` commit `4fe1a13`；当时待用户复审，后续批准见 D-0007 |
 | 2026-11-27 | 用户确认审批模式细化并要求两套 UI 分离 | D-0006 approved；授权码一次性/短寿命、仓库级审批、严格 loopback、顶部模式切换 |
 | 2026-11-27 | 用户修正降权语义并确认低保真 | D-0007 approved；第一版允许 profile 降权但不开放原子权限编辑；低保真阶段通过 |
-| 2026-11-27 | 用户指出 CI/CD 与 `.gitignore` 治理缺口 | D-0008 approved；新增 CI/CD 与 gitignore 专门规范并接入文档地图；实际 CI 未配置 |
-| 2026-11-27 | 用户要求 main 分支保护、添加 CI 并真实 push 验证 | D-0009 approved；禁止直接 push main，main 修改走分支 + PR；执行结果待远端验证后更新 |
+| 2026-11-27 | 用户指出 CI/CD 与 `.gitignore` 治理缺口 | D-0008 approved；新增 CI/CD 与 gitignore 专门规范并接入文档地图；当时首个 CI 尚未实施，后续见 D-0009 |
+| 2026-11-27 | 用户要求 main 分支保护、添加 CI 并真实 push 验证 | D-0009 approved；禁止直接 push main，main 修改走分支 + PR；首轮远端验证已完成 |
 | 2026-11-27 | main 保护与首轮 CI 实测结果 | PR #1 CI 通过并合并；main CI 通过；main protection 已配置；backend 同步后发现并修复 CRLF/gofmt CI 兼容问题 |
+| 2026-11-27 | 用户要求审计状态漂移并建立单一权威来源机制 | D-0010 approved；新增 authority registry/checker，WIREFRAMES 状态修正在 WebUI 分支同步处理 |
