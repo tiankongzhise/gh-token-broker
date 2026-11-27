@@ -63,15 +63,37 @@
 
 ## 4. 细粒度授权规则修正
 
-用户明确指出：如果 agent 申请 `repo-admin`，用户不希望只能“全给 / read-only / 拒绝”。因此本设计修正为：
+用户明确指出：如果 agent 申请 `repo-admin`，用户不希望只能“全给 / read-only / 拒绝”；并且同一个 application 中的多个仓库不能共用同一组细粒度结果。因此本设计修正为：
 
 - 申请 profile 定义本次授权的**权限上限**。
-- 用户可以在该上限内逐项调整 GitHub 原子权限，例如保留 `contents:write`、`pull_requests:write`，把 `issues` 降为 `read`，并关闭 `actions` 与 `administration`。每项最高只能选择申请上限，不能超出。
+- 每个仓库都有独立决定：拒绝、按申请上限批准、或使用自定义子集。
+- 每个仓库都有独立权限矩阵；repo-a 的最终授权不得自动覆盖 repo-c，repo-b 被拒绝时必须明确显示为无权限。
+- 用户可以在每个仓库的申请上限内逐项调整 GitHub 原子权限，例如保留 `contents:write`、`pull_requests:write`，把 `issues` 降为 `read`，并关闭 `actions` 与 `administration`。每项最高只能选择该仓库的申请上限，不能超出。
 - 不得通过细粒度编辑器增加申请权限组之外的权限；不在申请组内的权限应显示为不可选择。
-- 确认前必须展示“申请 → 最终授予”的差异。
-- 最终决定必须写审计，包含上限、被关闭权限和被拒绝仓库，但不包含秘密。
+- 确认前必须按仓库展示“申请 → 最终授予”的差异。
+- 最终决定必须按仓库写审计，包含上限、被降低/关闭权限和被拒绝仓库，但不包含秘密。
 
 这是对低保真“第一版不开放原子权限逐项编辑”的交互修正；它仍然是设计提案，待用户审核后才成为后续实现约束。
+
+### 4.1 Contents / Administration 边界速查
+
+以下解释依据 GitHub 官方文档中 scoped token 权限描述和 GitHub App permissions endpoint 表；最终仍以真实 GitHub App 冒烟矩阵为准：
+
+| 权限 | `none` | `read` | `write` |
+|---|---|---|---|
+| `contents` | 不授予仓库内容权限；公开资源的隐式可读性不等于私有仓库授权 | 读取仓库内容、提交、分支、下载、release/merge 相关读操作；HTTPS clone/fetch/pull 需要该类读取能力 | 包含 read，并可写入仓库内容、创建/更新/删除文件、push/merge/branch mutation 等；修改 workflow 文件可能还需要单独的 `workflows` 权限 |
+| `administration` | 不授予仓库管理能力 | 读取部分仓库管理/配置状态；不等于普通仓库 metadata 读取 | 仓库创建、删除、设置、团队/协作者/Actions 配置等高风险管理能力；普通 clone/push/PR 不需要它 |
+
+关键边界：
+
+- `contents` 管“仓库代码和内容”，`administration` 管“仓库管理和设置”；二者不能互相替代。
+- 普通 agent 开发流程通常需要 `contents`，有时需要 `pull_requests`/`issues`；通常不应需要 `administration`。
+- `metadata` 是独立的基础元数据权限，不应把 `administration:read` 误解成“只是看仓库”。
+- 某些 endpoint 需要多个权限叠加；例如修改 `.github/workflows` 内文件可能同时涉及 `contents` 与 `workflows`。
+- GitHub App user access token 的有效能力是用户权限、App 已批准权限和 scoped token 权限的交集；broker 不能通过 scoped token 放大用户或 App 原本没有的能力。
+- GitHub scoped token API 的权限枚举只有 `read`/`write`；UI 中的 `none` 应在实现时转换为“不发送该 permission key”，而不是发送 `none` 字符串。
+
+参考：GitHub Docs — Create a scoped access token（`POST /applications/{client_id}/token/scoped`）与 Permissions required for GitHub Apps。
 
 ## 5. 与低保真基线的保持关系
 
