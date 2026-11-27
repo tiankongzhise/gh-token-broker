@@ -58,7 +58,7 @@
 1. 用户登录本地 broker，生成一次性或短寿命 agent 授权码，并把授权码交给 agent。
 2. agent 读取 broker localhost discovery public node，了解协议版本、endpoint、支持的 profile 和申请格式。这里 public 指无需凭证可读协议元数据，不是公网公开。
 3. agent 用授权码提交权限申请，内容包括项目上下文、host、owner/repo、permission profile、min_ttl 和用途说明。
-4. 用户在 Approval Inbox 查看申请、风险提示和 broker 校验结果，可以全部批准、按仓库部分批准或拒绝。
+4. 用户在 Approval Inbox 查看申请、风险提示和 broker 校验结果，可以全部批准、按仓库部分批准/降权或拒绝。
 5. 批准后 broker 创建或更新 agent credential、policy 和后续 grant/token 边界；拒绝则返回机器可读结果。
 6. 后续 agent 请求仓库操作时，broker 再验证 credential、policy、parent token 状态并生成 scoped child token 或使用受控执行路径。
 7. 原手工配置 agent credential/repo/profile 的方式保留为高级人工模式，不是默认接入路径。
@@ -244,7 +244,7 @@ agent 应能使用授权码提交机器可读 permission application。applicati
 
 #### FR-8C：用户审批与部分批准
 
-系统应提供 Approval Inbox。用户可以全部批准、按仓库部分批准或拒绝申请。部分批准第一版建议至少支持按仓库和 permission profile 调整；高风险权限默认不勾选或需单独确认。
+系统应提供 Approval Inbox。用户可以全部批准、按仓库部分批准/降权或拒绝申请。第一版支持 permission profile 降权，但不开放 GitHub 原子权限逐项编辑。对一次性跨多个仓库申请大量权限的申请，必须突出批量/高风险警告，并要求用户逐仓库批准、降权或拒绝；高风险权限默认不勾选或需单独确认。
 
 批准后系统应原子创建或更新 agent credential、policy 和后续 grant/token 边界；拒绝应返回机器可读结果。所有审批决定必须写审计。
 
@@ -336,7 +336,7 @@ localhost-only WebUI 至少提供：
 
 - 授权状态列表
 - GitHub App 配置列表
-- Approval Inbox：生成 agent 授权码、查看待审批申请、全部/按仓库部分批准或拒绝
+- Approval Inbox：生成 agent 授权码、查看待审批申请、全部/按仓库部分批准、降权或拒绝
 - 顶部模式切换：默认 Agent 审批模式；人工模式为独立界面
 - agent credential 与策略管理（仅人工模式）
 - token issue / grant 审计

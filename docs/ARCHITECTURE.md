@@ -200,7 +200,7 @@ profiles:
 - **agent authorization code**：用户生成的一次性或短寿命高熵授权码，只允许 agent 提交接入/权限申请或完成绑定；不直接代表 GitHub 权限。
 - **discovery public node**：严格绑定 `127.0.0.1`、无需凭证可读的协议元数据 endpoint，公开 API version、申请 schema、支持的 profile、能力标记和错误码。这里 public 指协议元数据公开，不是公网或 LAN 公开。
 - **permission application**：agent 用授权码提交的机器可读申请，包含自报身份/项目上下文、host、owner/repo、profile、min_ttl、reason。
-- **approval decision**：用户全部批准、按仓库部分批准或拒绝。第一版不开放原子权限勾选，也不在审批页编辑 permission profile；profile 是只读风险标签和后端授权语义。批准后系统创建或更新 agent credential、policy 和后续 grant/token 边界。
+- **approval decision**：用户全部批准、按仓库部分批准/降权或拒绝。第一版支持 permission profile 降权，但不开放 GitHub 原子权限逐项编辑；对一次性跨多个仓库申请大量权限的申请必须突出批量/高风险警告。批准后系统创建或更新 agent credential、policy 和后续 grant/token 边界。
 
 安全约束：
 
@@ -455,7 +455,7 @@ agent -> broker discovery public node: read protocol metadata
 agent -> broker submit permission application(code, project, repos, profiles, minTTL, reason)
 broker -> validate code expiry/use/revocation and request shape
 broker -> create pending approval; no GitHub access granted yet
-user -> Approval Inbox: approve all / approve selected repositories / reject
+user -> Approval Inbox: approve all / approve or downgrade selected repositories / reject
 broker -> atomically create or update agent credential + policy
 broker -> write audit and return machine-readable decision
 ```
@@ -612,7 +612,7 @@ HTTP 安全要求：
 
 - 顶部模式切换：默认 Agent 审批模式；审批模式与人工模式整套导航分离。
 - Dashboard：授权状态、refresh 状态、pending approvals、最近失败、reauth 提醒。
-- Approvals：生成 agent 授权码、审批 permission application、全部/按仓库部分批准或拒绝。
+- Approvals：生成 agent 授权码、审批 permission application、全部/按仓库部分批准、降权或拒绝。
 - GitHub Apps：app/account/installation 状态。
 - Agents：agent credential、策略、启用/禁用（仅人工模式）。
 - Token Issues：发放、到期、revoke 状态。
