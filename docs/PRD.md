@@ -334,12 +334,9 @@ SQLite 用于元数据、策略、审计和 token inventory。必须明确区分
 
 #### FR-22：secret store
 
-支持以下两种模式之一，MVP 可先实现一种：
+MVP 采用已批准的 D-0002 方案：秘密材料字段级加密后存 SQLite，master key 存 Windows Credential Manager。决策状态和批准证据见 [DECISIONS](DECISIONS.md#d-0002-secret-store-mvp)。
 
-1. 秘密材料直接存 Windows Credential Manager。
-2. 秘密材料加密后存 SQLite，master key 存 Windows Credential Manager。
-
-选择后必须写入实现 ADR 或架构修订。
+直接逐条使用 Windows Credential Manager 是被比较后未采用的备选方案；若未来要重新启用，必须先评估 refresh chain 事务一致性、child token inventory、主动 revoke 和孤儿 credential 清理，并按变更控制处理。
 
 #### FR-23：加密要求
 

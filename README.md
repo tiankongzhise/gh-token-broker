@@ -66,7 +66,7 @@ GitHub API / Git over HTTPS
 - MCP 控制面：授权、状态、撤销、审计、重新授权。
 - 数据面：`exec` wrapper 与 git credential helper，避免 token 进入模型上下文。
 - localhost-only WebUI。
-- SQLite 元数据/审计存储；秘密材料放 Windows Credential Manager 或加密存储。
+- SQLite 元数据/审计存储；秘密材料字段级加密后存 SQLite，master key 放 Windows Credential Manager。
 - push 前机密信息扫描。
 
 ## 非目标
@@ -79,17 +79,23 @@ GitHub API / Git over HTTPS
 
 ## 文档
 
+- [项目状态与审批记录](docs/PROJECT_STATUS.md)
 - [产品需求文档](docs/PRD.md)
 - [项目发现记录](docs/PROJECT_DISCOVERY.md)
 - [架构设计](docs/ARCHITECTURE.md)
 - [开发说明](docs/DEVELOPMENT.md)
 - [测试计划](docs/TEST_PLAN.md)
+- [威胁模型](docs/THREAT_MODEL.md)
+- [决策记录](docs/DECISIONS.md)
+- [文档审计](docs/DOCUMENTATION_AUDIT.md)
+- [安全政策](SECURITY.md)
+- [Git 治理](docs/GIT_GOVERNANCE.md)
 - [项目操作规则](AGENTS.md)
 
 ## 当前实现状态
 
-当前仓库只有产品、架构、开发和测试文档，以及基础的 push 前机密信息检查脚本。尚无 daemon、MCP server、WebUI 或 credential helper 实现。
+当前仓库只有产品、架构、开发、测试、安全和项目治理文档，以及基础的 push 前机密信息检查脚本。尚无 daemon、MCP server、WebUI 或 credential helper 实现。
 
 ## License
 
-许可证尚未确定。虽然仓库当前为 public，但在选择并添加许可证前，不应假定本项目授予额外的再使用/再分发许可。
+本项目采用 GNU Lesser General Public License v2.1，当前按 SPDX `LGPL-2.1-only` 记录。完整许可证文本见 [LICENSE](LICENSE)。

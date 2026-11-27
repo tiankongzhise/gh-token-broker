@@ -1,0 +1,55 @@
+# DOCUMENTATION_AUDIT — GH Token Broker
+
+最近审计：2026-11-27
+
+范围：README、AGENTS、LICENSE、SECURITY、docs/PRD、ARCHITECTURE、DEVELOPMENT、TEST_PLAN、PROJECT_DISCOVERY、scripts/check_secrets.py。
+
+目的：确认文档是否覆盖项目治理、需求、架构、安全、开发、测试和交付要求，并识别缺失或不一致。
+
+## 1. 总体结论
+
+现有文档对产品目标、token 生命周期、refresh 并发、MCP/WebUI 安全约束、测试分层和秘密扫描已有较好覆盖。主要问题不是“完全缺少文档”，而是：
+
+1. 可变状态集中塞在 `AGENTS.md`，不利于持续维护。
+2. 决策、批准、发现和当前状态混在不同文档中，缺少单一事实源。
+3. 安全政策/威胁模型虽有零散内容，但缺少专门文档。
+4. 若干实现前必须回答的本地认证、数据保留、运维和权限 profile 细节仍未定义。
+
+本轮已修正高优先级治理问题；剩余缺口见第 3 节。
+
+## 2. 本轮已关闭/部分关闭的问题
+
+| ID | 问题 | 证据/影响 | 状态 |
+|---|---|---|---|
+| DOC-001 | 许可证未确定且没有许可证文本 | README 原声明“许可证尚未确定”；仓库无 LICENSE | **已关闭**：用户指定 LGPL 2.1，新增 `LICENSE`，README 和 D-0001 已更新；only/or-later 精确语义仍待确认 |
+| DOC-002 | `AGENTS.md` 同时包含长期规则、当前阶段、批准、角色状态、验证状态等可变内容 | 可变状态容易过期，agent 不知道更新哪里 | **已关闭**：AGENTS 改为框架约束 + 文档地图；可变状态迁入 `docs/PROJECT_STATUS.md` |
+| DOC-003 | 缺少决策日志/ADR 入口 | license、secret store、并行 worktree 等选择无统一状态 | **已关闭**：新增 `docs/DECISIONS.md` |
+| DOC-004 | secret store 表述不一致/矛盾 | 用户初始目标是加密 SQLite；发现文档曾倾向直接 Credential Manager；测试计划已包含加密测试 | **已关闭**：用户已批准 D-0002，MVP 采用加密 SQLite + WCM master key |
+| DOC-005 | 缺少独立安全政策和泄露响应入口 | 秘密约束分散在 README/AGENTS/DEVELOPMENT | **已关闭**：新增根 `SECURITY.md` |
+| DOC-006 | 缺少结构化威胁模型 | 安全边界散见于发现/架构，缺少资产/攻击者/信任边界视图 | **已关闭**：新增 `docs/THREAT_MODEL.md` |
+| DOC-007 | AI 署名和贡献者身份政策的详细记录占用 AGENTS 顶部且难以演进 | 推送前必须可见，但历史证据不应挤占主规则 | **已关闭**：新增 `docs/GIT_GOVERNANCE.md`，AGENTS 保留简要硬约束 |
+
+## 3. 仍开放的文档缺口
+
+| ID | 严重程度 | 缺失/不一致 | 建议处理方式 |
+|---|---|---|---|
+| DOC-101 | 高 | WebUI localhost 认证、session、CSRF、DNS rebinding 细节不完整 | 在低保真前至少补充架构约束；实现前形成明确设计 |
+| DOC-102 | 高 | helper/shim ↔ daemon IPC 的认证、ACL、transport context 绑定方式不完整 | 后端 Phase 2 前补架构；影响 API 时建 CR |
+| DOC-103 | 高 | scoped token 父/子失效语义没有实测矩阵 | 后端核心 POC 中用真实测试 app/repo 验证并记录到 PROJECT_DISCOVERY/TEST_PLAN |
+| DOC-104 | 中 | 审计、token inventory、日志的保留期限、清理、导出和删除策略未定义 | 增补 PRD/ARCHITECTURE；批准前作为需求问题确认 |
+| DOC-105 | 中 | permission profile 只有示例，没有 canonical catalog、高风险权限确认矩阵和 GitHub permission 映射 | 低保真/后端 policy 设计前补 PRD 附录或专门文档 |
+| DOC-106 | 中 | 安装、启动、停止、卸载、升级、故障恢复 runbook 缺失 | 实现达到可运行阶段前新增 `docs/OPERATIONS.md` |
+| DOC-107 | 中 | master key rotation、丢失恢复、备份恢复演练只有原则，没有操作流程 | 后端实现/运维文档阶段补架构与 OPERATIONS |
+| DOC-108 | 中 | WebUI 可访问性、键盘操作、密度、语言和错误文案 baseline 未定义 | 低保真阶段补 `docs/WIREFRAMES.md` 或设计约束 |
+| DOC-109 | 中 | CI、依赖扫描、构建复现、发布签名/校验和供应链策略未定义 | Go module 初始化后补 DEVELOPMENT/TEST_PLAN；发布前必须完成 |
+| DOC-110 | 低 | GitHub Enterprise host 支持优先级未确认 | 保留在 PROJECT_STATUS 未决事项 |
+| DOC-111 | 低 | raw token 兼容模式的默认态和审计级别未最终确认 | 作为专门决策项，不应在实现中偷偷加入 |
+| DOC-112 | 低 | 漏洞报告渠道未配置 | 首次发布前更新 SECURITY.md；不要虚构联系渠道 |
+
+## 4. 文档一致性维护规则
+
+- 当前状态只写 `docs/PROJECT_STATUS.md`；其他文档需要引用状态时链接到该文件。
+- 决策理由和状态只写 `docs/DECISIONS.md`；其他文档可以引用决策，不复制大段备选分析。
+- 已批准基线的实质变化必须有 `docs/changes/CR-<id>.md`。
+- 文档新增/删除/改归属后，更新本审计和 AGENTS 文档地图。
+- 不得为了“看起来完整”把未实现命令、未运行测试或未获得批准写成事实。

@@ -1,8 +1,8 @@
 # DEVELOPMENT — GH Token Broker
 
-## 1. 当前开发状态
+## 1. 开发状态入口
 
-当前仓库处于文档与项目初始化阶段，还没有产品代码、构建脚本、测试框架或 CI。本文记录已定开发约定和实现启动后的推荐顺序。
+本文记录相对稳定的开发环境、目录约定、实现顺序、代码风格和命令来源。当前阶段、批准范围、产品实现状态和最近一次验证结果见 [PROJECT_STATUS](PROJECT_STATUS.md)。
 
 不要因为本文存在而假定任何启动/测试命令已经可用；每条命令必须区分“已配置”“计划配置”和“本轮是否验证”。
 
@@ -22,9 +22,9 @@
 
 方向：
 
-- SQLite：元数据、策略、审计、token inventory。
-- Windows Credential Manager：长期秘密或 master key。
-- 是否字段级加密 SQLite 待实现前最终确定。
+- SQLite：元数据、策略、审计、token inventory 和已批准方案中的加密 secret payload。
+- Windows Credential Manager：已批准方案中只保存 master key。
+- MVP secret store 已批准为加密 SQLite + master key in Credential Manager；批准证据见 [DECISIONS](DECISIONS.md#d-0002-secret-store-mvp)。
 
 ### 2.3 WebUI
 
@@ -115,7 +115,7 @@ python scripts/check_secrets.py
 
 ## 6. 实现顺序建议
 
-### Phase 0：文档基线（当前）
+### Phase 0：文档基线
 
 交付：
 
@@ -136,7 +136,7 @@ python scripts/check_secrets.py
 
 - 初始化 Go module。
 - 实现配置加载。
-- 实现 secret store 抽象。
+- 实现 secret store 抽象；按已批准 D-0002 实现加密 SQLite + Windows Credential Manager master key。
 - 实现 device flow 授权。
 - 实现 refresh token 持久化和互斥刷新。
 - 实现 parent token memory/cache。

@@ -262,9 +262,9 @@ create -> active -> redeemed -> expired/revoked
 
 ### 3.8 Secret Store
 
-负责长期秘密和必要 child token 的保密存储。
+负责长期秘密和必要 child token 的保密存储。已批准的 MVP 方案是 D-0002：**秘密材料字段级加密后存 SQLite，master key 存 Windows Credential Manager**。
 
-两种候选模式见 PROJECT_DISCOVERY。无论选择哪种，接口应抽象为：
+接口仍应抽象为：
 
 ```text
 PutSecret(ref, secret, metadata)
@@ -273,12 +273,21 @@ DeleteSecret(ref)
 RotateSecretRef(ref, newSecret)
 ```
 
+推荐数据形态：
+
+- SQLite secret payload：`secret_ref`、`key_version`、`nonce`、`ciphertext`、`associated_data_context`、created/updated/revoked metadata。
+- Windows Credential Manager：只保存 master key 值；target name 可公开，key 值不可公开。
+- 加密算法使用 AEAD（例如 AES-256-GCM）；每条记录唯一随机 nonce。
+- associated data 至少绑定 record type、account/secret ref 和 key version，防止密文错位。
+
 要求：
 
 - secret 不进入普通配置。
 - 内存中尽量缩短明文驻留时间。
 - 日志中脱敏。
 - secret ref 可出现在数据库和审计中，secret value 不可。
+- refresh token 密文和 refresh metadata 必须在同一 SQLite 事务中更新。
+- child token 若为主动 revoke 而持久化，也必须与其 inventory 状态保持事务一致。
 
 ### 3.9 SQLite Store
 
@@ -568,7 +577,7 @@ security:
   raw_token_output: disabled
 storage:
   sqlite_path: <local-app-data-path>
-  secret_backend: windows-credential-manager
+  secret_backend: encrypted-sqlite-with-wcm-master-key
 github_apps:
   - name: example
     host: github.com
