@@ -7,13 +7,13 @@
 | 项目 | 事实 |
 |---|---|
 | 仓库类型 | 新建 Git 仓库 |
-| 当前阶段 | 发现/需求/架构文档阶段 |
+| 当前阶段 | 见 [PROJECT_STATUS](PROJECT_STATUS.md) |
 | 产品形态 | Windows 本地 daemon + MCP 控制面 + CLI/exec/git credential helper + localhost WebUI |
 | 主要语言方向 | Go（建议，尚未开始实现） |
-| 持久化方向 | SQLite 元数据/审计 + Windows Credential Manager 或加密 SQLite 秘密存储 |
+| 持久化方向 | SQLite 元数据/审计；加密 SQLite secret payload + Windows Credential Manager 保存 master key（D-0002 已批准） |
 | 部署形态 | 本地单用户，不公网暴露 |
-| 许可证 | 待确认 |
-| 实现状态 | 未开始 |
+| 许可证 | `LGPL-2.1-only`（用户已确认） |
+| 实现状态 | 见 [PROJECT_STATUS](PROJECT_STATUS.md) |
 
 ## 2. 用户明确目标
 
@@ -174,27 +174,28 @@ Windows Credential Manager/DPAPI 能保护静态秘密不被其他用户或离�
 需要后续确定：
 
 - SQLite 驱动。
-- 是否使用 SQLCipher 或字段级 AEAD。
 - schema migration 方案。
+- D-0002 已批准，秘密字段采用字段级 AEAD；SQLCipher 不再是主路径，除非未来用新的 decision/CR 重新评估整库加密、备份和 key 管理语义。
 
-### 5.3 秘密存储：两种候选
+### 5.3 秘密存储：建议加密 SQLite + master key in Credential Manager
 
-**判断类型：待确认**
+**判断类型：技术选择；状态：已批准为 D-0002**
 
-候选 A：秘密直接存 Windows Credential Manager。
+候选 A：秘密直接逐条存 Windows Credential Manager。
 
-- 简单。
-- 不需要 master key。
+- 简单，不需要 master key。
 - generic credential blob 有大小限制，但 parent/refresh/client secret 通常足够。
-- 大量 child token inventory 不适合全部塞入 Credential Manager。
+- 与 SQLite 元数据分散在两个存储中，refresh chain 和 inventory 更新无法同事务提交。
+- 大量 child token inventory 不适合全部塞入 Credential Manager，容易产生孤儿项和清理问题。
 
-候选 B：加密 SQLite + master key in Credential Manager。
+候选 B：秘密材料字段级加密后存 SQLite，master key 存 Windows Credential Manager。
 
-- 更适合结构化秘密与 child token inventory。
-- 支持 key version 与事务。
-- 实现复杂度更高。
+- 更适合结构化秘密、refresh chain 与 child token inventory。
+- 可以把密文、expiry、状态和审计元数据放进同一 SQLite 事务。
+- 支持 key version、AEAD associated data 和较清晰的备份语义。
+- 实现复杂度更高，必须正确处理 nonce、key rotation 和恢复。
 
-当前建议：MVP 优先候选 A 存长期秘密，SQLite 只存非秘密元数据；需要主动 revoke child token 时再评估候选 B。最终决定记录在架构或 ADR 中。
+当前决策：MVP 采用候选 B，已由用户批准为 D-0002。直接 Credential Manager 是被比较后未采用的备选方案；若未来要重新启用，必须重新评估 refresh chain 事务一致性、token inventory、主动撤销和孤儿 credential 清理。详细理由和批准证据见 [DECISIONS](DECISIONS.md#d-0002-secret-store-mvp)。
 
 ### 5.4 前端复杂度：低到中
 
@@ -260,14 +261,12 @@ python scripts/check_secrets.py
 
 ## 8. 未决事项
 
-1. 许可证选择。
-2. scoped token 父子失效语义在目标 GitHub App 上的实测结果。
-3. secret store MVP 最终选择：直接 Credential Manager 还是加密 SQLite。
-4. SQLite 驱动与 schema migration 方案。
-5. WebUI 技术栈与页面范围。
-6. 是否支持 GitHub Enterprise host 的优先级。
-7. raw token 兼容模式是否默认存在，还是仅编译/配置为高级模式。
-8. 是否需要 operation-only MCP 作为第一交付通道。
+1. scoped token 父子失效语义在目标 GitHub App 上的实测结果。
+2. SQLite 驱动与 schema migration 方案。
+3. WebUI 技术栈与页面范围。
+4. 是否支持 GitHub Enterprise host 的优先级。
+5. raw token 兼容模式是否默认存在，还是仅编译/配置为高级模式。
+6. 是否需要 operation-only MCP 作为第一交付通道。
 
 ## 9. 置信度摘要
 

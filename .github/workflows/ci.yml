@@ -1,0 +1,68 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - "feat/**"
+      - "fix/**"
+      - "chore/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    name: ci
+    runs-on: windows-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: "3.x"
+
+      - name: Set up Go
+        uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5.6.0
+        with:
+          go-version: stable
+          cache: false
+
+      - name: Repository hygiene
+        shell: pwsh
+        run: |
+          python scripts/check_secrets.py
+          python scripts/check_markdown_links.py
+          python scripts/check_repo_hygiene.py
+
+      - name: Go checks
+        shell: pwsh
+        run: |
+          if (Test-Path go.mod) {
+            go version
+            $unformatted = gofmt -l cmd internal
+            if ($unformatted) {
+              Write-Host "gofmt needed:"
+              $unformatted | ForEach-Object { Write-Host $_ }
+              exit 1
+            }
+            go test -count=1 -timeout=90s ./...
+            go vet ./...
+            go build ./...
+            if ((Get-Command gcc -ErrorAction SilentlyContinue) -and (Test-Path internal/tokenchain) -and (Test-Path internal/platform/winmutex)) {
+              go test -race -count=1 -timeout=90s ./internal/tokenchain ./internal/platform/winmutex
+            } else {
+              Write-Host "race spot check skipped: gcc or race target packages unavailable"
+            }
+          } else {
+            Write-Host "go.mod not present; Go checks not applicable on this branch"
+          }
