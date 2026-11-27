@@ -165,25 +165,29 @@ python scripts/check_secrets.py
 - scoped token
 - 多 agent 策略
 
-### Phase 2：安全交付通道
+### Phase 2：scoped/grant 基础 + 安全交付通道
 
-目标：
+目标（顺序已按 CR-0001 调整）：
 
+- client secret 安全配置/加密存储与 scoped token client 适配层。
+- scoped child token mint、inventory、`min_ttl` 检查。
+- 最小 grant id 生命周期，先服务 CLI/exec/credential helper。
 - `exec` wrapper。
 - git credential helper。
-- `min_ttl` 检查。
 - 基础审计。
 - Windows 手动/集成验证。
 
-### Phase 3：policy + scoped token + grant
+约束：exec/helper 不得注入或返回 parent token；scoped token 不可用时必须失败关闭。
+
+### Phase 3：policy + approval integration
 
 目标：
 
 - per-agent credential hash。
 - repo/profile policy engine。
-- scoped child token mint/check/revoke。
-- grant id 生命周期。
-- token inventory。
+- scoped child token check/revoke 完整化。
+- grant 与 agent credential/transport context 的完整绑定。
+- token inventory 完整化。
 
 ### Phase 4：MCP
 
