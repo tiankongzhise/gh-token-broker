@@ -8,7 +8,7 @@
 
 | 字段 | 当前值 | 证据/备注 |
 |---|---|---|
-| 当前阶段 | WebUI B 高保真与后端 Phase 2 已获开始授权；正在补齐 open-main-PR 与 feature freshness 门禁基线 | 2026-11-27 用户明确要求完成分支处理后开始高保真和后端阶段2；见 D-0016；悬空 main PR 暴露后用户批准 D-0019 |
+| 当前阶段 | WebUI B 高保真与后端 Phase 2 已获开始授权；治理门禁基线已集成并同步到两个 feature 分支 | 2026-11-27 用户明确要求完成分支处理后开始高保真和后端阶段2；见 D-0016、D-0019、D-0020、D-0021、D-0022 |
 | 批准状态 | **有限授权，不是完整产品基线批准** | 后端 token chain 已接受为 Phase 2 技术地基；审批优先低保真已确认；仍不视为高保真、Demo、完整后端、raw token 策略或 WebUI 技术栈批准 |
 | 后端核心解释 | 已确认采用保守解释：按 [DEVELOPMENT](DEVELOPMENT.md) Phase 1 的核心 token chain POC 边界执行 | 2026-11-27 用户确认“采取保守解释”；不自动包含 MCP、WebUI、scoped token、多 agent policy |
 | 产品实现状态 | 已批准低保真 wireframes 与 Phase 1 core token chain POC 均已集成进 `main` | WebUI integration PR #9 已合并且 main CI 通过；backend integration PR #10 已合并且 main CI 通过；仍无完整 daemon、MCP server、WebUI 或 credential helper 实现 |
@@ -54,14 +54,18 @@
 
 规则：同一时刻只处理一个 integration；main CI 通过后再同步另一个分支。权威原则见 [BRANCHING](BRANCHING.md)。
 
-## 3.2 当前治理收敛点（2026-11-27）
+## 3.2 当前 rollout 状态（2026-11-27）
 
-用户已从暂停状态恢复，并要求把人工审核集中到根 `AGENTS.md` 的公共约束。当前工作仍在 PR #14 `chore/main-pr-gate`：
+PR #14 `chore/main-pr-gate` 已合并进 `main`（merge commit `cc6c107`），merge 后 main CI 成功。该 PR 落地了 open-main-PR gate、feature freshness、异常触发型 push 身份检查、`AGENTS.md` mutation evidence check 和根/领域规则分层机制。
 
-1. PR #14 已包含 open-main-PR gate/freshness、push 前身份确认异常触发修正、推送守卫机器可读约定对齐；`3ae497c` 的 PR CI 已成功。
-2. 本轮新增范围是窄范围 `AGENTS.md` mutation guard，以及根/领域 agent 规则分层与经验晋升机制；不建立泛化 control-plane 人工审核机制。
-3. `scripts/check_agents_mutation.py` 已保存，正在补 CI 接入、D-0021/D-0022 和领域规则 registry。
-4. 在 PR #14 合并前，不得继续 feature 新实现；这是 open-main-PR gate 要强制执行的场景本身。
+短生命周期分支清理已完成：`chore/process-governance` 与 `chore/main-pr-gate` 的远端和本地分支均已删除。
+
+两个 active feature 分支已同步最新 main 并推送：
+
+- `feat/webui-high-fidelity`：`7583671f`，push CI 成功。
+- `feat/backend-safe-delivery`：`f13a3777`，push CI 成功。
+
+feature 新实现可在各自 ownership 与 domain rules 内继续；任何新的 base 为 `main` 的 open PR 会再次触发 feature 暂停规则。
 
 ## 4. 未决事项
 
@@ -85,10 +89,10 @@
 | 秘密扫描 | 仓库根：`python scripts/check_secrets.py` | 已配置；每次 push 前必须运行 | 2026-11-27 后端提交前通过；WebUI 提交前通过 |
 | 文档权威检查 | 仓库根：`python scripts/check_doc_authority.py` | 已配置，已接入 CI workflow | 2026-11-27 本地通过；PR #3 分支 CI 与 merge 后 main CI 通过 |
 | 分支 ownership 检查 | 仓库根：`python scripts/check_branch_ownership.py` | 已配置，已接入 CI workflow；本轮新增 feature freshness 规则 | 2026-11-27 本地通过；PR #7 修复后 main CI 通过；PR #9/#10 integration CI 通过 |
-| open main PR 门禁 | 仓库根：`python scripts/check_main_pr_gate.py` | 本轮新增并接入 CI workflow；只对 `feat/**` 生效 | 2026-11-27 本地已实现；远端 CI 尚无结果 |
-| 高摩擦政策证据检查 | 仓库根：`python scripts/check_policy_evidence.py` | 本轮新增并接入 CI workflow | 2026-11-27 本地已实现；远端 CI 尚无结果 |
-| agent rules registry 检查 | 仓库根：`python scripts/check_agent_rules.py` | 本轮新增并接入 CI workflow | 2026-11-27 本地已实现；远端 CI 尚无结果 |
-| AGENTS mutation 检查 | 仓库根：`python scripts/check_agents_mutation.py` | 本轮新增并接入 CI workflow；只在既有 `AGENTS.md` 行被删除/改写时要求 D 证据 | 2026-11-27 本地已实现；远端 CI 尚无结果 |
+| open main PR 门禁 | 仓库根：`python scripts/check_main_pr_gate.py` | 已接入 CI workflow；只对 `feat/**` 生效 | 2026-11-27 PR #14 与两个 feature push CI 通过 |
+| 高摩擦政策证据检查 | 仓库根：`python scripts/check_policy_evidence.py` | 已接入 CI workflow | 2026-11-27 PR #14 与两个 feature push CI 通过 |
+| agent rules registry 检查 | 仓库根：`python scripts/check_agent_rules.py` | 已接入 CI workflow | 2026-11-27 PR #14 与两个 feature push CI 通过 |
+| AGENTS mutation 检查 | 仓库根：`python scripts/check_agents_mutation.py` | 已接入 CI workflow；只在既有 `AGENTS.md` 行被删除/改写时要求 D 证据 | 2026-11-27 PR #14 与两个 feature push CI 通过 |
 | 版本格式检查 | 仓库根：`python scripts/check_version.py` | 已接入 CI workflow；tag 上下文校验 tag 与 VERSION 一致 | 2026-11-27 本地通过 |
 | commit message 检查 | 仓库根：`python scripts/check_commit_messages.py` | 本轮新增并接入 CI workflow；GitHub merge commit 豁免 | 2026-11-27 本地通过 |
 | CI workflow | `.github/workflows/ci.yml` 已配置；GitHub Actions job/context 为 `ci` | PR #1 分支 CI 与 merge 后 main CI 已通过；backend 首次同步 CI 暴露 Windows CRLF/gofmt 问题，本轮用 `.gitattributes` 修复 | 已真实运行 |
@@ -143,3 +147,4 @@
 | 2026-11-27 | 用户指出悬空 main PR 会击穿仅靠 Git 历史的同步机制 | D-0019 approved；采用通用 open-main-PR gate 与 feature freshness；feature 工作必须先处理/同步 main PR |
 | 2026-11-27 | 用户要求修正 push 前每次确认政策并沉淀防复发机制 | D-0020 approved；改为异常触发型署名/身份政策，新增高摩擦政策证据检查 |
 | 2026-11-27 | 用户要求审核集中于 AGENTS 公共约束，并批准规则分层修正方案 | D-0021/D-0022 approved；只保护根 AGENTS 既有约束 mutation，局部经验沉淀到领域规则；阶段审核门统一由 PROJECT_STATUS 记录 |
+| 2026-11-27 | PR #14 治理门禁与规则分层基线完成 rollout | merge `cc6c107` 后 main CI 通过；chore/process-governance 与 chore/main-pr-gate 已清理；两个 active feature 分支已同步并推送且 CI 通过 |
