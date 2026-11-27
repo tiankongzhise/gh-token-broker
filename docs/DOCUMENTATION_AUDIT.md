@@ -2,7 +2,7 @@
 
 最近审计：2026-11-27
 
-范围：README、AGENTS、LICENSE、SECURITY、docs/PRD、ARCHITECTURE、DEVELOPMENT、TEST_PLAN、PROJECT_DISCOVERY、CI_CD、GITIGNORE_POLICY、INFORMATION_AUTHORITY、authority-registry.json、scripts/check_secrets.py。
+范围：README、AGENTS、LICENSE、SECURITY、VERSION、docs/PRD、ARCHITECTURE、DEVELOPMENT、TEST_PLAN、PROJECT_DISCOVERY、CI_CD、VERSIONING、BRANCHING、GITIGNORE_POLICY、INFORMATION_AUTHORITY、authority-registry.json、branch-ownership.json、scripts/check_secrets.py。
 
 目的：确认文档是否覆盖项目治理、需求、架构、安全、开发、测试和交付要求，并识别缺失或不一致。
 
@@ -15,6 +15,7 @@
 1. 同一可变事实在 artifact、policy、决策和状态文档中重复登记，导致状态漂移。
 2. 若干实现前必须回答的本地认证、数据保留、运维和权限 profile 细节仍未定义。
 3. CI 已落地但供应链、发布和完整安全门禁尚未实现。
+4. 版本控制基础刚建立，但 release notes、artifact packaging 和自动发布流程仍未设计或批准。
 
 本轮已新增单一权威来源机制来降低第一类风险；剩余缺口见第 3 节。
 
@@ -48,6 +49,8 @@
 | DOC-110 | 低 | GitHub Enterprise host 支持优先级未确认 | 保留在 PROJECT_STATUS 未决事项 |
 | DOC-111 | 低 | raw token 兼容模式的默认态和审计级别未最终确认 | 作为专门决策项，不应在实现中偷偷加入 |
 | DOC-112 | 低 | 漏洞报告渠道未配置 | 首次发布前更新 SECURITY.md；不要虚构联系渠道 |
+| DOC-113 | 中 | 版本控制基础已建立，但 release notes/changelog、artifact packaging、签名/SBOM 与自动发布流程仍未设计或批准 | 首次 release preparation 前补专门流程；不得把 VERSION/tag checker 当作发布自动化 |
+| DOC-114 | 低 | merged branch cleanup 已写入 BRANCHING，但 GitHub auto-delete merged branches 尚未配置 | 后续可由用户明确授权启用仓库级 auto-delete；当前按人工确认后的及时删除执行 |
 
 ## 4. 文档一致性维护规则
 

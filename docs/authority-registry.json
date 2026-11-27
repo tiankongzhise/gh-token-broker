@@ -68,6 +68,24 @@
       "required": true
     },
     {
+      "id": "versioning.policy",
+      "fact": "semantic versioning, release tag, build injection and release-control boundaries",
+      "authority": "docs/VERSIONING.md",
+      "required": true
+    },
+    {
+      "id": "versioning.executable-target",
+      "fact": "current development target version recorded in the repository",
+      "authority": "VERSION",
+      "required": true
+    },
+    {
+      "id": "versioning.executable-check",
+      "fact": "actual version format and tag consistency validation script",
+      "authority": "scripts/check_version.py",
+      "required": true
+    },
+    {
       "id": "webui.low-fidelity.approval",
       "fact": "approval status and evidence for the low-fidelity WebUI baseline",
       "authority": "docs/DECISIONS.md#d-0007-审批降权语义修正与低保真批准",

@@ -42,6 +42,13 @@ def main() -> int:
         return 1
 
     branches = registry.get("branches", {})
+    allowed_statuses = {"active", "integrated", "inactive"}
+    for name, cfg in branches.items():
+        status = cfg.get("status")
+        if status not in allowed_statuses:
+            failures.append(f"{name}: unsupported branch status {status!r}")
+        if not isinstance(cfg.get("write", []), list):
+            failures.append(f"{name}: write must be a list")
     active = {name: cfg for name, cfg in branches.items() if cfg.get("status") == "active"}
 
     owners = list(active.items())

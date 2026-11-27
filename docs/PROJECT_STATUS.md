@@ -8,13 +8,13 @@
 
 | 字段 | 当前值 | 证据/备注 |
 |---|---|---|
-| 当前阶段 | WebUI 审批优先低保真已获用户确认；后端 Phase 1 core token chain POC 已通过审查；下一阶段入口为 B 高保真，但尚未开始 | 2026-11-27 用户修正降权语义并确认“低保真确认”；高保真未获开始指令 |
+| 当前阶段 | WebUI B 高保真与后端 Phase 2 已获开始授权；正在先同步 merged-branch cleanup 与版本管理治理基线 | 2026-11-27 用户明确要求完成分支处理后开始高保真和后端阶段2；见 D-0016 |
 | 批准状态 | **有限授权，不是完整产品基线批准** | 后端 token chain 已接受为 Phase 2 技术地基；审批优先低保真已确认；仍不视为高保真、Demo、完整后端、raw token 策略或 WebUI 技术栈批准 |
 | 后端核心解释 | 已确认采用保守解释：按 [DEVELOPMENT](DEVELOPMENT.md) Phase 1 的核心 token chain POC 边界执行 | 2026-11-27 用户确认“采取保守解释”；不自动包含 MCP、WebUI、scoped token、多 agent policy |
 | 产品实现状态 | 已批准低保真 wireframes 与 Phase 1 core token chain POC 均已集成进 `main` | WebUI integration PR #9 已合并且 main CI 通过；backend integration PR #10 已合并且 main CI 通过；仍无完整 daemon、MCP server、WebUI 或 credential helper 实现 |
 | 许可证 | **已确认**：`LGPL-2.1-only` | 2026-11-27 用户明确选择；见 [DECISIONS](DECISIONS.md#d-0001-license-lgpl-21) |
 | secret store MVP | **已批准**：加密 SQLite + Windows Credential Manager 保存 master key | 2026-11-27 用户批准 D-0002；见 [DECISIONS](DECISIONS.md#d-0002-secret-store-mvp) |
-| 当前审核门 | **低保真已通过；高保真开始前的显式工作指令门** | 后端 POC 已通过但仍未启动 Phase 2；低保真确认不等于高保真/Demo/Phase 2 开始指令 |
+| 当前审核门 | **B 高保真与后端 Phase 2 进行中；高保真完成后停在人工审核门，Phase 2 完成后停在集成/验证审核门** | 用户已明确授权开始；不自动批准 Demo、正式 WebUI 技术栈、MCP、scoped token 完整实现或自动发布 |
 
 ## 2. 批准与授权记录
 
@@ -30,6 +30,9 @@
 | 2026-11-27 | “后端通过，token chain 当作 Phase 2 的技术地基” | 接受 Phase 1 token chain 核心语义作为 Phase 2 地基 | 不表示 Phase 2 已启动，不批准所有实现细节或真实 GitHub 语义 |
 | 2026-11-27 | 审批模式交互细化 | 授权码一次性/短寿命；第一版不开放原子权限编辑；discovery 严格 127.0.0.1；审批/人工两套 UI 顶部切换且默认审批模式 | 不批准高保真、Demo、最终 API schema 或高风险权限确认文案 |
 | 2026-11-27 | 用户修正降权语义并确认“低保真确认” | 第一版允许按仓库批准/拒绝并降权 permission profile；低保真信息架构与审批交互方向通过 | 不批准最终视觉、前端技术栈、后端 API schema 或自动开始高保真 |
+| 2026-11-27 | 用户要求 merged branches 及时清理，并选择只删除短分支 | 已合并 chore/fix 分支清理；feature 分支暂存但失去 active 写入权 | 不授权删除仍有未合并工作的分支或改写历史 |
+| 2026-11-27 | 用户选择推荐版本管理方案 | SemVer + VERSION + vX.Y.Z tag + CI consistency check + Go ldflags 注入 | 不批准自动 release/CD、签名、SBOM 或 artifact 上传 |
+| 2026-11-27 | 用户要求治理基线同步后开始高保真和后端阶段2 | 启动 B 高保真与 backend Phase 2 safe delivery | 不批准 Demo、正式 WebUI 技术栈、MCP、scoped token 完整实现或 raw token 兼容模式 |
 
 没有任何记录表明以下内容已批准：完整 PRD/架构基线、WebUI 技术栈、高保真设计、Demo、raw token 兼容模式、GitHub Enterprise 优先级、完整发布流程。
 
@@ -38,17 +41,16 @@
 | 工作流 | 路径 | 分支 | 允许修改/目标 | 禁止事项 |
 |---|---|---|---|---|
 | 主文档/治理 | `E:\github\gh-token-broker` | `main` | 根文档、`docs/`、`scripts/check_secrets.py`、`.gitignore`、许可证与本阶段用户明确要求的文档治理 | 不开始产品实现；首个 CI workflow 已配置 |
-| WebUI 低保真 | `E:\github\gh-token-broker-webui` | `feat/webui-wireframes` | `design/wireframes/`、`docs/WIREFRAMES.md` 及低保真所需文档索引 | 不定最终视觉、不实现后端、不改后端核心文件 |
-| 后端核心 | `E:\github\gh-token-broker-backend` | `feat/backend-core` | 按 Phase 1：Go module、配置、secret store 抽象/实现、device flow、refresh chain、mock GitHub 单元测试 | 不做 MCP/WebUI/scoped token/多 agent policy；不返回 raw token 给模型上下文 |
+| WebUI 高保真 | `E:\github\gh-token-broker-webui` | planned: `feat/webui-high-fidelity` | `design/high-fidelity/`、`docs/DESIGN_SPEC.md` | 不定正式前端技术栈、不进入 Demo、不改后端核心文件 |
+| 后端 Phase 2 | `E:\github\gh-token-broker-backend` | planned: `feat/backend-safe-delivery` | `cmd/`、`internal/`、`go.mod`、`go.sum`、`config.example.yaml`；范围为 exec wrapper、credential helper、min_ttl、基础审计与 Windows 验证 | 不做 MCP/WebUI/scoped token 完整实现；不返回 raw token 给模型上下文 |
 
-注意：两个工作流 worktree 创建时基于 `main` 的 commit `c55ea97`；2026-11-27 文档治理基线提交后，两个分支曾 fast-forward 到同一文档基线。WebUI 与 backend 的已验收产物现已分别通过 PR #9/#10 集成回 `main`；后续实时分支状态以 `git worktree list` 为准。
+注意：`feat/webui-wireframes` 与 `feat/backend-core` 已按用户选择暂存，但在 ownership registry 中为 `integrated`，不再拥有写入权。后续高保真与 Phase 2 使用新 active 分支；实时状态以 `git worktree list` 和 `docs/branch-ownership.json` 为准。
 
 ## 3.1 当前 integration queue
 
 | 顺序 | 分支 | 集成内容 | 当前状态 |
 |---|---|---|---|
-| 1 | `feat/webui-wireframes` | 已批准低保真 wireframes 与讲解 artifact | **已集成**：PR #9 已合并，main CI 通过；不表示高保真开始 |
-| 2 | `feat/backend-core` | 已接受为 Phase 2 技术地基的 core token chain POC | **已集成**：PR #10 已合并，main CI 通过；不表示 Phase 2 开始 |
+| — | 当前无进行中 integration | merged-branch/versioning 治理基线合并后，再按 queue 处理高保真/Phase 2 成果 | 等待新 feature 分支产生可集成成果 |
 
 规则：同一时刻只处理一个 integration；main CI 通过后再同步另一个分支。权威原则见 [BRANCHING](BRANCHING.md)。
 
@@ -64,7 +66,8 @@
 6. GitHub Enterprise host 支持优先级。
 7. operation-only MCP 是否作为第一交付通道。
 8. SQLite schema migration 方案；Phase 1 POC 已选用 `modernc.org/sqlite` 作为纯 Go 驱动，但该选型尚未被批准为长期架构决策。
-9. 依赖扫描、构建复现、SBOM/签名/校验和与发布自动化仍未配置；首个 GitHub Actions CI 已配置并完成首轮真实验证；原则见 [CI_CD](CI_CD.md)。
+9. 依赖扫描、构建复现、SBOM/签名/校验和与发布自动化仍未配置；版本控制基础已建立但 release notes/artifact/CD 未批准；原则见 [CI_CD](CI_CD.md) 与 [VERSIONING](VERSIONING.md)。
+10. GitHub 仓库级 auto-delete merged branches 尚未配置；当前按用户确认后的及时删除执行。
 
 ## 5. 当前验证状态
 
@@ -73,6 +76,7 @@
 | 秘密扫描 | 仓库根：`python scripts/check_secrets.py` | 已配置；每次 push 前必须运行 | 2026-11-27 后端提交前通过；WebUI 提交前通过 |
 | 文档权威检查 | 仓库根：`python scripts/check_doc_authority.py` | 已配置，已接入 CI workflow | 2026-11-27 本地通过；PR #3 分支 CI 与 merge 后 main CI 通过 |
 | 分支 ownership 检查 | 仓库根：`python scripts/check_branch_ownership.py` | 已配置，已接入 CI workflow | 2026-11-27 本地通过；PR #7 修复后 main CI 通过；PR #9/#10 integration CI 通过 |
+| 版本格式检查 | 仓库根：`python scripts/check_version.py` | 本轮新增并接入 CI workflow；tag 上下文校验 tag 与 VERSION 一致 | 2026-11-27 本地通过 |
 | CI workflow | `.github/workflows/ci.yml` 已配置；GitHub Actions job/context 为 `ci` | PR #1 分支 CI 与 merge 后 main CI 已通过；backend 首次同步 CI 暴露 Windows CRLF/gofmt 问题，本轮用 `.gitattributes` 修复 | 已真实运行 |
 | main 分支保护 | GitHub branch protection | 已配置：要求 PR、要求 `ci` 且 strict、enforce admins、禁止 force push/deletion | 2026-11-27 API 验证 |
 | Go 格式检查 | 后端 worktree：`gofmt -l cmd internal`（应无输出） | 已在 `feat/backend-core` 验证 | 2026-11-27 通过 |
@@ -119,3 +123,4 @@
 | 2026-11-27 | 用户批准两个已验收 feature 分支均集成，并选择实用严格 ownership 模式 | D-0013 approved；建立 integration queue 与 branch ownership registry |
 | 2026-11-27 | WebUI integration 完成 | PR #9 已合并；main CI 通过；低保真成果成为共同 main 基线，但不启动高保真 |
 | 2026-11-27 | backend integration 完成 | PR #10 已合并；main CI 通过；Phase 1 POC 成为共同 main 基线，但不启动 Phase 2 |
+| 2026-11-27 | 用户要求 merged branch cleanup、指出版本管理缺失，并授权之后开始高保真与后端 Phase 2 | 已删除已合并 chore/fix 短分支；feature 分支按用户选择暂存但转为 integrated；D-0014/D-0015/D-0016 记录 |

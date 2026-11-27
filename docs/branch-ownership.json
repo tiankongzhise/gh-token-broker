@@ -2,13 +2,33 @@
   "version": 1,
   "branches": {
     "feat/webui-wireframes": {
-      "status": "active",
+      "status": "integrated",
       "write": [
         "design/wireframes/**",
         "docs/WIREFRAMES.md"
-      ]
+      ],
+      "note": "低保真成果已通过 PR #9 集成；分支按用户选择暂存，但不再拥有写入权"
     },
     "feat/backend-core": {
+      "status": "integrated",
+      "write": [
+        "cmd/**",
+        "internal/**",
+        "go.mod",
+        "go.sum",
+        "config.example.yaml"
+      ],
+      "note": "Phase 1 POC 已通过 PR #10 集成；分支按用户选择暂存，但不再拥有写入权"
+    },
+    "feat/webui-high-fidelity": {
+      "status": "active",
+      "write": [
+        "design/high-fidelity/**",
+        "docs/DESIGN_SPEC.md"
+      ],
+      "note": "B 高保真阶段工作分支；不拥有低保真 wireframes 或后端路径"
+    },
+    "feat/backend-safe-delivery": {
       "status": "active",
       "write": [
         "cmd/**",
@@ -16,7 +36,8 @@
         "go.mod",
         "go.sum",
         "config.example.yaml"
-      ]
+      ],
+      "note": "后端 Phase 2 安全交付通道工作分支；版本治理文件仍归 main/governance 流程"
     }
   },
   "exceptions": []

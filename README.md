@@ -1,8 +1,8 @@
 # GH Token Broker
 
-`gh-token-broker` 是一个规划中的 **Windows 本地 GitHub 凭据代理（Token Broker）**：它为本地 AI coding agents、CLI 和 Git 操作按需签发短期、最小权限、可审计的 GitHub 访问凭据，避免在开发机上长期保存和传播 PAT。
+`gh-token-broker` 是一个开发中的 **Windows 本地 GitHub 凭据代理（Token Broker）**：它为本地 AI coding agents、CLI 和 Git 操作按需签发短期、最小权限、可审计的 GitHub 访问凭据，避免在开发机上长期保存和传播 PAT。
 
-> 当前状态：需求与架构文档阶段。仓库尚未包含产品实现。
+> 当前状态：低保真 wireframes 与后端 Phase 1 core token chain POC 已集成进 `main`，但仓库仍不包含完整 daemon、MCP server、正式 WebUI 或 credential helper 实现。权威当前状态见 [PROJECT_STATUS](docs/PROJECT_STATUS.md)。
 
 ## 要解决的问题
 
@@ -86,6 +86,7 @@ GitHub API / Git over HTTPS
 - [开发说明](docs/DEVELOPMENT.md)
 - [测试计划](docs/TEST_PLAN.md)
 - [CI/CD 策略](docs/CI_CD.md)
+- [版本管理与发布控制](docs/VERSIONING.md)
 - [.gitignore 维护策略](docs/GITIGNORE_POLICY.md)
 - [威胁模型](docs/THREAT_MODEL.md)
 - [决策记录](docs/DECISIONS.md)
