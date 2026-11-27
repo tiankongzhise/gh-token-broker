@@ -32,6 +32,18 @@
       "required": true
     },
     {
+      "id": "git.signature-policy",
+      "fact": "AI attribution policy and push-time signature handling",
+      "authority": "docs/GIT_GOVERNANCE.md",
+      "required": true
+    },
+    {
+      "id": "git.author-identity-policy",
+      "fact": "allowed author identities and handling of author drift before push",
+      "authority": "docs/GIT_GOVERNANCE.md",
+      "required": true
+    },
+    {
       "id": "gitignore.policy",
       "fact": "when and how ignore rules should be changed",
       "authority": "docs/GITIGNORE_POLICY.md",
