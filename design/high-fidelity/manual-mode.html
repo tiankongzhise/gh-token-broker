@@ -1,1 +1,39 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>人工模式 · GH Token Broker</title><link rel="stylesheet" href="styles.css"></head><body><div class="app"><header class="topbar"><div class="logo">GH Token Broker</div><span class="chip">高级管理</span><nav class="mode"><a href="approval-inbox.html">Agent 审批模式</a><span class="on">人工模式</span></nav></header><div class="shell"><aside class="nav"><a href="#">Dashboard</a><a href="#">GitHub Apps</a><a class="on" href="manual-mode.html">Agents</a><a href="#">Token / Grants</a><a href="states.html">Audit</a><a href="states.html">Settings</a></aside><main class="main"><div class="pagehead"><div><div class="eyebrow">Manual mode</div><h1>Agents 与策略</h1><div class="sub">人工模式用于高级修正、排障、rotate/disable/revoke；不是默认接入路径。</div></div><a class="btn primary" href="#">创建 credential</a></div><div class="grid cols2"><section class="card"><div class="between"><h2>agent credentials</h2><span class="chip">4 active</span></div><table class="table"><thead><tr><th>agent</th><th>fingerprint</th><th>范围</th><th>状态</th></tr></thead><tbody><tr><td>safe-agent</td><td class="code">sha256:9f…c2</td><td>2 repos</td><td><span class="chip ok">enabled</span></td></tr><tr><td>repo-reader</td><td class="code">sha256:71…aa</td><td>1 repo</td><td><span class="chip ok">enabled</span></td></tr><tr><td>legacy-agent</td><td class="code">sha256:af…10</td><td>pattern acme/*</td><td><span class="chip danger">disabled</span></td></tr></tbody></table></section><section class="grid"><div class="card emph"><h2>safe-agent policy</h2><div class="small muted">credential 明文只在创建时显示一次；此处只显示 fingerprint。</div><div class="footerpad"></div><table class="table"><tbody><tr><td>host</td><td>github.com</td></tr><tr><td>repos</td><td>acme/repo-a, acme/repo-b</td></tr><tr><td>profile</td><td>issue-read</td></tr><tr><td>min_ttl</td><td>2h</td></tr><tr><td>rate limit</td><td>30 token issues / hour</td></tr></tbody></table><div class="row" style="justify-content:flex-end"><a class="btn" href="#">编辑</a><a class="btn danger" href="states.html">Disable</a></div></div><div class="banner">高风险权限默认禁用。启用、rotate、disable 和 revoke 都需要显著确认并写审计。</div></section></div></main></div></div></body></html>
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>人工模式 — GH Token Broker</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <a class="logo" href="index.html">GH Token Broker</a>
+    <span class="chip">高保真设计评审</span>
+    <nav class="mode" aria-label="模式切换"><a href="dashboard.html">Agent 审批模式</a><span class="on">人工模式</span></nav>
+  </header>
+  <div class="shell">
+    <nav class="nav" aria-label="主导航"><a class="on" href="github-apps.html">GitHub Apps</a><a class="" href="agents.html">Agents</a><a class="" href="token-grants.html">Token / Grants</a><a class="" href="audit-manual.html">Audit</a><a class="" href="settings-manual.html">Settings</a></nav>
+    <main class="main">
+      <div class="pagehead">
+        <div>
+          <div class="eyebrow">Manual Mode</div>
+          <h1>人工模式总览</h1>
+          <div class="sub">高级管理界面，侧栏始终停留在人工模式；不会因为在人工模式点击 Audit 或 Settings 而跳回 Agent 模式。</div>
+        </div>
+      </div>
+
+<div class="grid cols2">
+  <a class="card linkcard" href="github-apps.html"><h2>GitHub Apps</h2><p class="muted">App client id、授权账号、refresh chain 状态和 secret ref 元数据。</p></a>
+  <a class="card linkcard" href="agents.html"><h2>Agents</h2><p class="muted">agent credential fingerprint、启用状态和策略入口。</p></a>
+  <a class="card linkcard" href="token-grants.html"><h2>Token / Grants</h2><p class="muted">scoped token inventory、grant lifecycle、revoke 与过期状态。</p></a>
+  <a class="card linkcard" href="audit-manual.html"><h2>Audit</h2><p class="muted">完整审计筛选、导出与排障入口。</p></a>
+</div>
+<div class="banner info" style="margin-top:16px">人工模式是高级路径，不改变默认审批优先 UX；秘密值永不显示。</div>
+
+    </main>
+  </div>
+</div>
+</body>
+</html>

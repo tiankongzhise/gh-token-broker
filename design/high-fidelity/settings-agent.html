@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Settings — GH Token Broker</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <a class="logo" href="index.html">GH Token Broker</a>
+    <span class="chip">高保真设计评审</span>
+    <nav class="mode" aria-label="模式切换"><span class="on">Agent 审批模式</span><a href="manual-mode.html">人工模式</a></nav>
+  </header>
+  <div class="shell">
+    <nav class="nav" aria-label="主导航"><a class="" href="dashboard.html">Dashboard</a><a class="" href="approval-inbox.html">Approvals</a><a class="" href="audit-agent.html">Audit</a><a class="on" href="settings-agent.html">Settings</a></nav>
+    <main class="main">
+      <div class="pagehead">
+        <div>
+          <div class="eyebrow">Approval Mode Settings</div>
+          <h1>审批模式设置</h1>
+          <div class="sub">默认模式只暴露低风险偏好；高风险策略和 GitHub App 管理留在人工模式。</div>
+        </div>
+      </div>
+
+<div class="grid cols2">
+  <div class="card"><h2>审批偏好</h2><table class="table"><tr><td>默认 min_ttl</td><td><select><option>2 小时</option><option>1 小时</option><option>30 分钟</option></select></td></tr><tr><td>高风险权限默认</td><td><select><option>默认拒绝/不勾选</option><option>每次单独确认</option></select></td></tr><tr><td>批量申请提醒</td><td><select><option>强提醒</option><option>普通提醒</option></select></td></tr></table><div class="row" style="margin-top:12px"><a class="btn primary" href="#saved">保存设置</a></div><div id="saved" class="target-note">保存示意：真实实现只保存非秘密偏好。</div></div>
+  <div class="card"><h2>安全边界（只读）</h2><table class="table"><tr><td>Discovery</td><td><span class="chip ok">仅 127.0.0.1</span></td></tr><tr><td>raw token 返回</td><td><span class="chip danger">未批准</span></td></tr><tr><td>client secret 管理</td><td><a href="manual-mode.html">人工模式</a></td></tr></table><div class="banner info" style="margin-top:12px">模式切换只能由顶部显式切换；侧栏页面不会让你误入另一模式。</div></div>
+</div>
+
+    </main>
+  </div>
+</div>
+</body>
+</html>

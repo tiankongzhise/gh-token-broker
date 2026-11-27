@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>人工模式重新授权 — GH Token Broker</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <a class="logo" href="index.html">GH Token Broker</a>
+    <span class="chip">高保真设计评审</span>
+    <nav class="mode" aria-label="模式切换"><a href="dashboard.html">Agent 审批模式</a><span class="on">人工模式</span></nav>
+  </header>
+  <div class="shell">
+    <nav class="nav" aria-label="主导航"><a class="on" href="github-apps.html">GitHub Apps</a><a class="" href="agents.html">Agents</a><a class="" href="token-grants.html">Token / Grants</a><a class="" href="audit-manual.html">Audit</a><a class="" href="settings-manual.html">Settings</a></nav>
+    <main class="main">
+      <div class="pagehead">
+        <div>
+          <div class="eyebrow">Manual / Reauthorization</div>
+          <h1>GitHub App 授权恢复</h1>
+          <div class="sub">人工模式下的显式重新授权页面；不会跳回 Agent 审批模式，也不会自动启动 device flow。</div>
+        </div>
+      </div>
+
+<div class="grid cols2"><div class="card emph"><h2>gh-token-broker-dev / octo</h2><p class="muted">refresh chain 处于 reauth_required。必须由用户显式确认后才能启动 device flow。</p><div class="row wrap"><a class="btn primary" href="#start-flow">显式启动 device flow</a><a class="btn" href="github-apps.html">返回 GitHub Apps</a><a class="btn danger" href="#pause-account">暂停账号</a></div><div id="start-flow" class="target-note">device flow 启动示意：显示 verification URI 和 user code；这不是自动后台续期。</div><div id="pause-account" class="target-note danger-note">暂停确认示意：后续 scoped mint、grant 和 helper 请求失败关闭。</div></div><div class="card"><h2>审计要求</h2><table class="table"><tr><td>reauth_started</td><td>记录 actor 与 account</td></tr><tr><td>reauth_completed</td><td>不记录 token</td></tr><tr><td>reauth_failed</td><td>记录错误码，不记录秘密</td></tr></table><a class="btn" href="audit-manual.html" style="margin-top:10px">查看相关审计</a></div></div>
+
+    </main>
+  </div>
+</div>
+</body>
+</html>

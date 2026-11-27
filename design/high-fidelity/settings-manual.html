@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Manual Settings — GH Token Broker</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <a class="logo" href="index.html">GH Token Broker</a>
+    <span class="chip">高保真设计评审</span>
+    <nav class="mode" aria-label="模式切换"><a href="dashboard.html">Agent 审批模式</a><span class="on">人工模式</span></nav>
+  </header>
+  <div class="shell">
+    <nav class="nav" aria-label="主导航"><a class="" href="github-apps.html">GitHub Apps</a><a class="" href="agents.html">Agents</a><a class="" href="token-grants.html">Token / Grants</a><a class="" href="audit-manual.html">Audit</a><a class="on" href="settings-manual.html">Settings</a></nav>
+    <main class="main">
+      <div class="pagehead">
+        <div>
+          <div class="eyebrow">Manual / Settings</div>
+          <h1>人工模式高级设置</h1>
+          <div class="sub">高级设置仍不显示秘密；影响安全默认值的变化需要明确确认和审计。</div>
+        </div>
+      </div>
+
+<div class="grid cols2"><div class="card"><h2>本地服务</h2><table class="table"><tr><td>discovery bind</td><td><span class="chip ok">127.0.0.1 only</span></td></tr><tr><td>WebUI bind</td><td><select><option>127.0.0.1</option><option>localhost</option></select></td></tr><tr><td>日志级别</td><td><select><option>info</option><option>debug（不脱敏禁止）</option></select></td></tr></table><a class="btn primary" href="#saved-local">保存本地设置</a><div id="saved-local" class="target-note">保存示意：不能配置成 LAN 暴露 discovery。</div></div><div class="card"><h2>安全默认值</h2><table class="table"><tr><td>grant 默认寿命</td><td><select><option>10 分钟</option><option>5 分钟</option></select></td></tr><tr><td>grant 默认次数</td><td><span class="chip">单次</span></td></tr><tr><td>raw token 兼容模式</td><td><span class="chip danger">未批准</span></td></tr></table><a class="btn danger" href="#danger-save">修改高风险默认值</a><div id="danger-save" class="target-note danger-note">高风险设置变更确认示意：真实实现需要单独确认并写审计。</div></div></div>
+
+    </main>
+  </div>
+</div>
+</body>
+</html>

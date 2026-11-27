@@ -1,1 +1,39 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>部分批准 · GH Token Broker</title><link rel="stylesheet" href="styles.css"></head><body><div class="app"><header class="topbar"><div class="logo">GH Token Broker</div><span class="chip warn">审批确认</span><nav class="mode"><span class="on">Agent 审批模式</span><a href="manual-mode.html">人工模式</a></nav></header><div class="shell"><aside class="nav"><a href="#">Dashboard</a><a class="on" href="approval-inbox.html">Approvals</a><a href="states.html">Audit</a><a href="states.html">Settings</a></aside><main class="main"><div class="pagehead"><div><div class="eyebrow">Partial approval</div><h1>部分批准与降权</h1><div class="sub">按仓库批准、拒绝或降低 permission profile；不开放 GitHub 原子权限逐项编辑。</div></div><span class="chip danger">批量高风险申请</span></div><div class="banner danger"><strong>注意：</strong>agent 一次性申请 6 个仓库。repo-admin 默认不勾选；你必须逐项确认最终结果。</div><div class="footerpad"></div><div class="grid cols2"><section class="card"><h2>逐仓库决定</h2><table class="table"><thead><tr><th>仓库</th><th>申请</th><th>决定</th><th>最终 profile</th></tr></thead><tbody><tr><td><strong>acme/repo-a</strong></td><td>pr-write</td><td><select><option>批准</option><option>拒绝</option></select></td><td><select><option>issue-read（已降权）</option><option>read-only</option><option>pr-write</option></select></td></tr><tr><td><strong>acme/repo-b</strong></td><td>issue-read</td><td><select><option>批准</option><option>拒绝</option></select></td><td><select><option>issue-read</option><option>read-only</option></select></td></tr><tr><td><strong>acme/repo-c</strong></td><td>repo-admin</td><td><select><option>拒绝</option><option>批准</option></select></td><td><select><option>不授予</option><option>read-only</option></select></td></tr><tr><td><strong>acme/repo-d</strong></td><td>pr-write</td><td><select><option>拒绝</option><option>批准</option></select></td><td><select><option>不授予</option><option>issue-read</option></select></td></tr></tbody></table></section><section class="grid"><div class="card emph"><h2>确认前最终差异</h2><div class="diff"><div><div class="small muted">申请</div><strong>6 repos</strong><div class="small muted">2× pr-write · 1× repo-admin</div></div><div class="arrow">→</div><div><div class="small muted">最终授予</div><strong>2 repos</strong><div class="small muted">1× issue-read 降权 · 1× issue-read</div></div></div><div class="footerpad"></div><div class="banner info">不会授予 repo-admin；不会开放原子权限编辑；所有决定都会写入审计。</div></div><div class="card"><h2>高风险确认</h2><div class="small muted">输入最终授权仓库数量，确认你理解授权范围。</div><div class="footerpad"></div><input class="input" value="2"><div class="footerpad"></div><div class="row" style="justify-content:flex-end"><a class="btn ghost" href="approval-inbox.html">返回</a><a class="btn danger" href="#">确认部分批准</a></div></div><div class="card"><h3>为什么不直接全部批准？</h3><div class="small muted">agent 的自述用途无法强制验证。真正生效的是仓库范围与最终 permission profile。</div></div></section></div></main></div></div></body></html>
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>部分批准与细粒度授权 — GH Token Broker</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <a class="logo" href="index.html">GH Token Broker</a>
+    <span class="chip">高保真设计评审</span>
+    <nav class="mode" aria-label="模式切换"><span class="on">Agent 审批模式</span><a href="manual-mode.html">人工模式</a></nav>
+  </header>
+  <div class="shell">
+    <nav class="nav" aria-label="主导航"><a class="" href="dashboard.html">Dashboard</a><a class="on" href="approval-inbox.html">Approvals</a><a class="" href="audit-agent.html">Audit</a><a class="" href="settings-agent.html">Settings</a></nav>
+    <main class="main">
+      <div class="pagehead">
+        <div>
+          <div class="eyebrow">Partial Approval</div>
+          <h1>部分批准与细粒度授权</h1>
+          <div class="sub">用户可以在 agent 申请的权限组上限内逐项降低权限；不能扩展到申请之外的权限。</div>
+        </div>
+      </div>
+
+<div class="banner danger">申请 profile：repo-admin。页面展示该 profile 覆盖的权限上限；你只能在这个上限内降低或关闭权限，不能新增 repo-admin 未包含的权限。</div>
+<div class="grid cols2" style="margin-top:16px">
+  <div class="card"><h2>仓库决定</h2><table class="table"><tr><th>仓库</th><th>决定</th><th>最终范围</th></tr><tr><td>octo/repo-a</td><td><select><option>批准后细粒度调整</option><option>拒绝</option></select></td><td>自定义子集</td></tr><tr><td>octo/repo-b</td><td><select><option>拒绝</option><option>批准并调整</option></select></td><td>无权限</td></tr><tr><td>octo/repo-c</td><td><select><option>批准后细粒度调整</option><option>拒绝</option></select></td><td>自定义子集</td></tr></table></div>
+  <div class="card emph"><h2>权限上限内的细粒度调整</h2><p class="muted small">勾选状态可点击，用于评审交互；静态稿不会保存。</p><div class="permgrid"><div class="permhead">GitHub 权限</div><div class="permhead">申请上限</div><div class="permhead">最终授予</div><div>Contents</div><div>write</div><select><option selected>write</option><option>read</option><option>none</option></select><div>Pull requests</div><div>write</div><select><option selected>write</option><option>read</option><option>none</option></select><div>Issues</div><div>write</div><select><option selected>write</option><option>read</option><option>none</option></select><div>Actions</div><div>write</div><select><option>write</option><option>read</option><option selected>none</option></select><div>Administration</div><div>write</div><select><option>write</option><option>read</option><option selected>none（高风险默认关闭）</option></select><div>Environments</div><div class="muted">不在申请组内</div><select disabled><option>不可选择</option></select></div>
+  <div class="diff" style="margin-top:14px"><div class="item"><b>申请</b><div class="muted small">repo-admin 全量</div></div><div class="arrow">→</div><div class="item"><b>最终</b><div class="muted small">contents/pr/issues write；actions/administration none</div></div></div></div>
+</div>
+<div class="card" style="margin-top:16px"><h2>确认最终授权</h2><p class="muted">确认前必须展示最终差异。真实实现可要求输入授权仓库数量或勾选高风险确认。</p><div class="row wrap"><a class="btn primary" href="#confirmed">确认 2 个仓库的自定义授权</a><a class="btn" href="approval-inbox.html">返回 inbox</a><a class="btn danger" href="#reject-all">全部拒绝</a></div><div id="confirmed" class="target-note">确认示意：最终授权只包含上限内被勾选的权限，决定会写审计。</div><div id="reject-all" class="target-note danger-note">全部拒绝示意：不会创建 agent credential 或 grant。</div></div>
+
+    </main>
+  </div>
+</div>
+</body>
+</html>

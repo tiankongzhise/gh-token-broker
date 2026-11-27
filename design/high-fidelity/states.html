@@ -1,1 +1,38 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>状态与危险确认 · GH Token Broker</title><link rel="stylesheet" href="styles.css"></head><body><div class="app"><header class="topbar"><div class="logo">GH Token Broker</div><span class="chip danger">状态矩阵</span><nav class="mode"><span class="on">Agent 审批模式</span><a href="manual-mode.html">人工模式</a></nav></header><div class="shell"><aside class="nav"><a href="#">Dashboard</a><a href="approval-inbox.html">Approvals</a><a class="on" href="states.html">Audit</a><a href="states.html">Settings</a></aside><main class="main"><div class="pagehead"><div><div class="eyebrow">States</div><h1>状态与危险确认</h1><div class="sub">覆盖空状态、错误恢复和高风险确认；完整状态矩阵仍以低保真信息架构为基线。</div></div></div><div class="grid cols2"><section class="card"><h2>reauth required</h2><div class="banner danger"><strong>refresh token 已失效。</strong> broker 不会自动弹出 device flow；必须显式重新授权。</div><div class="footerpad"></div><div class="row"><a class="btn primary" href="#">显式重新授权</a><a class="btn ghost" href="#">查看审计</a></div></section><section class="card"><h2>policy denied</h2><div class="empty"><strong>agent 请求被拒绝</strong><p>repo/profile 不在最终批准范围内。错误不包含 token 或 secret。</p><span class="chip warn">policy_denied</span></div></section><section class="card"><h2>revoke token issue</h2><div class="small muted">将撤销 issue <span class="code">ti_01J…</span> 对应的 scoped token。agent 正在进行的 git 操作可能失败。</div><div class="footerpad"></div><div class="banner danger">确认后写审计；pending 状态防止重复点击。</div><div class="footerpad"></div><div class="row" style="justify-content:flex-end"><a class="btn ghost" href="#">取消</a><a class="btn danger" href="#">确认撤销</a></div></section><section class="card"><h2>secret store unavailable</h2><div class="banner danger">无法读取 Windows Credential Manager 中的 master key。不会显示或输出任何 secret。</div><div class="footerpad"></div><div class="steps"><div class="step"><div class="num">1</div><div>检查 Windows 用户上下文是否一致</div></div><div class="step"><div class="num">2</div><div>查看恢复 runbook</div></div><div class="step"><div class="num">3</div><div>必要时执行显式 reauth</div></div></div></section></div></main></div></div></body></html>
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>状态与危险确认 — GH Token Broker</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <a class="logo" href="index.html">GH Token Broker</a>
+    <span class="chip">高保真设计评审</span>
+    <nav class="mode" aria-label="模式切换"><span class="on">Agent 审批模式</span><a href="manual-mode.html">人工模式</a></nav>
+  </header>
+  <div class="shell">
+    <nav class="nav" aria-label="主导航"><a class="on" href="dashboard.html">Dashboard</a><a class="" href="approval-inbox.html">Approvals</a><a class="" href="audit-agent.html">Audit</a><a class="" href="settings-agent.html">Settings</a></nav>
+    <main class="main">
+      <div class="pagehead">
+        <div>
+          <div class="eyebrow">Safety States</div>
+          <h1>异常状态与危险确认</h1>
+          <div class="sub">集中展示空、错误、reauth、policy denied、secret store 和 revoke 的设计语言。</div>
+        </div>
+      </div>
+
+<div class="grid cols2">
+  <div class="card"><h2>空状态</h2><div class="empty">暂无待审批申请<br><a class="btn primary" href="authorization-code.html" style="margin-top:10px;display:inline-block">生成授权码</a></div></div>
+  <div class="card"><h2>policy denied</h2><div class="banner danger">agent 请求 repo-admin，但批准边界只允许自定义子集。未 mint token。</div><a class="btn" href="audit-agent.html">查看审计</a></div>
+  <div class="card"><h2>secret store 错误</h2><div class="banner danger">无法解密 refresh token。不会回退到 plaintext，也不会请求 parent token。</div><a class="btn" href="manual-mode.html">去人工模式排障</a></div>
+  <div class="card"><h2>revoke 确认</h2><p class="muted">区分 grant revoke 与 token revoke；grant revoke 不代表已签发 GitHub token 立即失效。</p><a class="btn danger" href="token-grants.html#revoke-token">查看 token revoke 确认</a></div>
+</div>
+
+    </main>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Manual Audit — GH Token Broker</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <a class="logo" href="index.html">GH Token Broker</a>
+    <span class="chip">高保真设计评审</span>
+    <nav class="mode" aria-label="模式切换"><a href="dashboard.html">Agent 审批模式</a><span class="on">人工模式</span></nav>
+  </header>
+  <div class="shell">
+    <nav class="nav" aria-label="主导航"><a class="" href="github-apps.html">GitHub Apps</a><a class="" href="agents.html">Agents</a><a class="" href="token-grants.html">Token / Grants</a><a class="on" href="audit-manual.html">Audit</a><a class="" href="settings-manual.html">Settings</a></nav>
+    <main class="main">
+      <div class="pagehead">
+        <div>
+          <div class="eyebrow">Manual / Audit</div>
+          <h1>完整审计与排障</h1>
+          <div class="sub">人工模式审计页保留在人工模式；支持更完整筛选、导出和关联对象跳转。</div>
+        </div>
+      </div>
+
+<div class="card"><h2>筛选</h2><div class="grid cols3"><select><option>全部 actor</option><option>agent</option><option>user</option><option>system</option></select><select><option>全部事件</option><option>token</option><option>grant</option><option>webui_admin_action</option></select><input class="input" value="correlation id / repo / fingerprint prefix"></div></div>
+<div class="card" style="margin-top:16px"><table class="table"><tr><th>时间</th><th>actor</th><th>事件</th><th>subject</th><th>outcome</th><th>操作</th></tr><tr><td>10:42</td><td>user</td><td>approval_decision</td><td>application app_01</td><td><span class="chip warn">partial</span></td><td><a href="#detail-1">详情</a></td></tr><tr><td>10:45</td><td>system</td><td>token_scoped_minted</td><td>tok_a91…</td><td><span class="chip ok">success</span></td><td><a href="token-grants.html">inventory</a></td></tr><tr><td>10:47</td><td>agent</td><td>grant_redeemed</td><td>sha256:88aa…</td><td><span class="chip ok">success</span></td><td><a href="token-grants.html">grant</a></td></tr><tr><td>10:51</td><td>user</td><td>webui_admin_action</td><td>agent sha256:9f2a…</td><td><span class="chip danger">disabled</span></td><td><a href="agents-edit.html">agent</a></td></tr></table></div>
+<div class="card" id="detail-1" style="margin-top:16px"><h2>审批决定详情</h2><p class="muted">repo-a/repo-c 被授予申请上限内的自定义权限子集；repo-b 被拒绝。审计 metadata 不包含 token 或 credential。</p><a class="btn" href="#exported">导出脱敏 JSON</a><div id="exported" class="target-note">导出示意：导出内容必须继续脱敏。</div></div>
+
+    </main>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>GitHub Apps — GH Token Broker</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <a class="logo" href="index.html">GH Token Broker</a>
+    <span class="chip">高保真设计评审</span>
+    <nav class="mode" aria-label="模式切换"><a href="dashboard.html">Agent 审批模式</a><span class="on">人工模式</span></nav>
+  </header>
+  <div class="shell">
+    <nav class="nav" aria-label="主导航"><a class="on" href="github-apps.html">GitHub Apps</a><a class="" href="agents.html">Agents</a><a class="" href="token-grants.html">Token / Grants</a><a class="" href="audit-manual.html">Audit</a><a class="" href="settings-manual.html">Settings</a></nav>
+    <main class="main">
+      <div class="pagehead">
+        <div>
+          <div class="eyebrow">Manual / GitHub Apps</div>
+          <h1>GitHub App 管理</h1>
+          <div class="sub">管理 GitHub App 元数据、授权账号和 secret ref；不显示 client secret、refresh token 或 private key。</div>
+        </div>
+      </div>
+
+<div class="row wrap" style="margin-bottom:14px"><a class="btn primary" href="#add-app">添加 GitHub App</a><a class="btn" href="audit-manual.html">查看授权审计</a></div>
+<div class="grid cols2"><div class="card"><h2>gh-token-broker-dev</h2><table class="table"><tr><td>client_id</td><td>Iv1.example</td></tr><tr><td>host</td><td>github.com</td></tr><tr><td>client secret</td><td><span class="chip ok">secret ref configured</span></td></tr><tr><td>授权账号</td><td>octo</td></tr><tr><td>refresh chain</td><td><span class="chip warn">reauth_required</span></td></tr></table><div class="row wrap"><a class="btn" href="reauth-manual.html">重新授权</a><a class="btn ghost" href="#app-detail">详情</a></div></div><div class="card" id="add-app"><h2>添加 App（表单示意）</h2><input class="input" value="Client ID" style="margin-bottom:8px"><input class="input" value="secret ref（不是 secret 明文）" style="margin-bottom:8px"><select><option>加密 SQLite secret ref</option><option>Windows Credential Manager ref</option></select><div class="row" style="margin-top:10px"><a class="btn primary" href="#saved-app">保存元数据</a></div><div id="saved-app" class="target-note">保存示意：secret 明文不能粘贴到普通配置。</div></div></div>
+<div class="card" id="app-detail" style="margin-top:16px"><h2>App 详情</h2><p class="muted">只显示元数据、错误码和最近授权状态；秘密材料只能从 secret store 内部读取。</p></div>
+
+    </main>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Audit — GH Token Broker</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <a class="logo" href="index.html">GH Token Broker</a>
+    <span class="chip">高保真设计评审</span>
+    <nav class="mode" aria-label="模式切换"><span class="on">Agent 审批模式</span><a href="manual-mode.html">人工模式</a></nav>
+  </header>
+  <div class="shell">
+    <nav class="nav" aria-label="主导航"><a class="" href="dashboard.html">Dashboard</a><a class="" href="approval-inbox.html">Approvals</a><a class="on" href="audit-agent.html">Audit</a><a class="" href="settings-agent.html">Settings</a></nav>
+    <main class="main">
+      <div class="pagehead">
+        <div>
+          <div class="eyebrow">Audit Log</div>
+          <h1>审计记录</h1>
+          <div class="sub">默认模式只展示与审批、安全状态和 grant/token 生命周期相关的审计，不显示秘密。</div>
+        </div>
+      </div>
+
+<div class="row wrap" style="margin-bottom:14px"><a class="btn" href="#filters">筛选</a><a class="btn" href="reauth.html">处理重新授权</a><a class="btn ghost" href="dashboard.html">返回 Dashboard</a></div>
+<div class="card" id="filters"><h2>筛选条件</h2><div class="grid cols3"><select><option>全部事件</option><option>grant</option><option>reauth</option></select><select><option>全部结果</option><option>success</option><option>denied</option></select><input class="input" value="octo/repo-a"></div></div>
+<div class="card" style="margin-top:16px"><h2>事件列表</h2><table class="table"><tr><th>时间</th><th>事件</th><th>对象</th><th>结果</th><th>操作</th></tr><tr><td>10:42</td><td>permission application</td><td>devin / 3 repos</td><td><span class="chip warn">pending</span></td><td><a href="approval-inbox.html">去审批</a></td></tr><tr><td>09:58</td><td>refresh failed</td><td>github.com/octo</td><td><span class="chip danger">reauth_required</span></td><td><a href="reauth.html">重新授权</a></td></tr><tr><td>09:12</td><td>policy denied</td><td>repo-c / repo-admin</td><td><span class="chip danger">denied</span></td><td><a href="#denied-detail">查看原因</a></td></tr><tr><td>08:46</td><td>token_scoped_minted</td><td>repo-a</td><td><span class="chip ok">success</span></td><td><a href="#token-detail">查看元数据</a></td></tr></table></div>
+<div class="grid cols2" style="margin-top:16px"><div class="card" id="denied-detail"><h2>policy denied 详情</h2><p class="muted">repo-admin 超出该 agent 已批准 profile；未返回 token。</p></div><div class="card" id="token-detail"><h2>token issue 元数据</h2><p class="muted">只显示 issue id、hash prefix、expires_at 和权限摘要；不显示 token。</p></div></div>
+
+    </main>
+  </div>
+</div>
+</body>
+</html>

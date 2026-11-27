@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Token / Grants — GH Token Broker</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <a class="logo" href="index.html">GH Token Broker</a>
+    <span class="chip">高保真设计评审</span>
+    <nav class="mode" aria-label="模式切换"><a href="dashboard.html">Agent 审批模式</a><span class="on">人工模式</span></nav>
+  </header>
+  <div class="shell">
+    <nav class="nav" aria-label="主导航"><a class="" href="github-apps.html">GitHub Apps</a><a class="" href="agents.html">Agents</a><a class="on" href="token-grants.html">Token / Grants</a><a class="" href="audit-manual.html">Audit</a><a class="" href="settings-manual.html">Settings</a></nav>
+    <main class="main">
+      <div class="pagehead">
+        <div>
+          <div class="eyebrow">Manual / Token Inventory</div>
+          <h1>Token 与 Grant inventory</h1>
+          <div class="sub">只显示 hash prefix、状态和过期时间；不显示 parent token、refresh token、scoped token 明文或 grant id 明文。</div>
+        </div>
+      </div>
+
+<div class="grid cols2">
+  <div class="card"><h2>Scoped token inventory</h2><table class="table"><tr><th>issue</th><th>repo</th><th>hash</th><th>expires</th><th>状态</th></tr><tr><td>tok_a91…</td><td>repo-a</td><td>sha256:71ab…</td><td>11:58</td><td><span class="chip ok">active</span></td></tr><tr><td>tok_c42…</td><td>repo-b</td><td>sha256:0fe1…</td><td>expired</td><td><span class="chip">expired</span></td></tr></table><div class="row" style="margin-top:10px"><a class="btn danger" href="#revoke-token">撤销选中 token</a></div><div id="revoke-token" class="target-note danger-note">revoke 确认示意：真实 GitHub revoke 语义未实测前，界面必须标注不确定结果。</div></div>
+  <div class="card"><h2>Grant lifecycle</h2><table class="table"><tr><th>grant hash</th><th>agent</th><th>repo</th><th>status</th><th>用途</th></tr><tr><td>sha256:88aa…</td><td>devin</td><td>repo-a</td><td><span class="chip ok">active</span></td><td>0/1</td></tr><tr><td>sha256:19ff…</td><td>cli</td><td>repo-b</td><td><span class="chip warn">redeemed</span></td><td>1/1</td></tr><tr><td>sha256:52cd…</td><td>research</td><td>repo-c</td><td><span class="chip danger">revoked</span></td><td>0/1</td></tr></table><div class="row wrap" style="margin-top:10px"><a class="btn danger" href="#revoke-grant">撤销 active grant</a><a class="btn" href="audit-manual.html">查看 grant 审计</a></div><div id="revoke-grant" class="target-note danger-note">grant revoke 确认示意：grant 不是 GitHub token，撤销它不会直接 revoke 已签发 token。</div></div>
+</div>
+
+    </main>
+  </div>
+</div>
+</body>
+</html>

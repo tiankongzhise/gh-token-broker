@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>生成授权码 — GH Token Broker</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <a class="logo" href="index.html">GH Token Broker</a>
+    <span class="chip">高保真设计评审</span>
+    <nav class="mode" aria-label="模式切换"><span class="on">Agent 审批模式</span><a href="manual-mode.html">人工模式</a></nav>
+  </header>
+  <div class="shell">
+    <nav class="nav" aria-label="主导航"><a class="on" href="dashboard.html">Dashboard</a><a class="" href="approval-inbox.html">Approvals</a><a class="" href="audit-agent.html">Audit</a><a class="" href="settings-agent.html">Settings</a></nav>
+    <main class="main">
+      <div class="pagehead">
+        <div>
+          <div class="eyebrow">One-time Agent Authorization</div>
+          <h1>生成一次性授权码</h1>
+          <div class="sub">授权码只用于 agent 提交权限申请；它本身不是 GitHub token，也不会让 agent 直接访问仓库。</div>
+        </div>
+      </div>
+
+<div class="grid cols2">
+  <div class="card emph"><h2>新授权码</h2><p class="muted">以下示例是设计稿伪数据。真实实现中明文只显示一次，服务端只保存 hash。</p><div class="code">GTB-AGENT-EXAMPLE-ONLY-7K4Q-9M2X</div><div class="row wrap" style="margin-top:12px"><a class="btn primary" href="#copied">复制授权码</a><a class="btn" href="approval-inbox.html">等待申请</a><a class="btn danger" href="#revoked">撤销</a></div><div id="copied" class="target-note">已复制示意：真实 UI 会显示短暂 toast，不记录明文。</div><div id="revoked" class="target-note danger-note">撤销确认示意：撤销后该 code 不能提交申请。</div></div>
+  <div class="card"><h2>约束</h2><table class="table"><tr><td>有效期</td><td>10 分钟</td></tr><tr><td>使用次数</td><td>1 次</td></tr><tr><td>用途</td><td>提交 permission application</td></tr><tr><td>绑定</td><td>本地 broker + loopback discovery</td></tr><tr><td>审计</td><td>创建、使用、撤销均记录</td></tr></table><div class="banner info" style="margin-top:12px">不要把授权码粘贴到不受信聊天或 issue；泄露后可撤销。</div></div>
+</div>
+
+    </main>
+  </div>
+</div>
+</body>
+</html>

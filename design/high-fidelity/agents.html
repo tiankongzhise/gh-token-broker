@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Agents — GH Token Broker</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <a class="logo" href="index.html">GH Token Broker</a>
+    <span class="chip">高保真设计评审</span>
+    <nav class="mode" aria-label="模式切换"><a href="dashboard.html">Agent 审批模式</a><span class="on">人工模式</span></nav>
+  </header>
+  <div class="shell">
+    <nav class="nav" aria-label="主导航"><a class="" href="github-apps.html">GitHub Apps</a><a class="on" href="agents.html">Agents</a><a class="" href="token-grants.html">Token / Grants</a><a class="" href="audit-manual.html">Audit</a><a class="" href="settings-manual.html">Settings</a></nav>
+    <main class="main">
+      <div class="pagehead">
+        <div>
+          <div class="eyebrow">Manual / Agents</div>
+          <h1>Agent credential 管理</h1>
+          <div class="sub">每个 agent 有独立 credential；界面只显示 fingerprint/prefix，不显示 credential 明文。</div>
+        </div>
+      </div>
+
+<div class="row wrap" style="margin-bottom:14px"><a class="btn primary" href="#create-agent">创建 Agent credential</a><a class="btn" href="audit-manual.html">查看 agent 审计</a></div>
+<div class="card"><table class="table"><tr><th>Agent</th><th>fingerprint</th><th>状态</th><th>仓库/profile</th><th>操作</th></tr><tr><td>Devin Coding Agent</td><td><span class="code inline">sha256:9f2a…</span></td><td><span class="chip ok">enabled</span></td><td>repo-a · custom subset</td><td><a class="btn" href="agents-edit.html">编辑</a></td></tr><tr><td>Local CLI Agent</td><td><span class="code inline">sha256:71bc…</span></td><td><span class="chip warn">expiring</span></td><td>repo-b · pr-write</td><td><a class="btn" href="agents-edit.html">编辑</a></td></tr><tr><td>Research Bot</td><td><span class="code inline">sha256:aa10…</span></td><td><span class="chip danger">disabled</span></td><td>repo-c · read-only</td><td><a class="btn" href="agents-edit.html">编辑</a></td></tr></table></div>
+<div class="card" id="create-agent" style="margin-top:16px"><h2>创建 credential（示意）</h2><p class="muted">真实实现只在创建时显示一次 credential，服务端保存 hash/派生值。</p><a class="btn primary" href="#created">生成 credential</a><div id="created" class="target-note">生成示意：后续只能看到 fingerprint，不能再次查看明文。</div></div>
+
+    </main>
+  </div>
+</div>
+</body>
+</html>

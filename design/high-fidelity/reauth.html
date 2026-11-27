@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>重新授权 — GH Token Broker</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <a class="logo" href="index.html">GH Token Broker</a>
+    <span class="chip">高保真设计评审</span>
+    <nav class="mode" aria-label="模式切换"><span class="on">Agent 审批模式</span><a href="manual-mode.html">人工模式</a></nav>
+  </header>
+  <div class="shell">
+    <nav class="nav" aria-label="主导航"><a class="" href="dashboard.html">Dashboard</a><a class="" href="approval-inbox.html">Approvals</a><a class="on" href="audit-agent.html">Audit</a><a class="" href="settings-agent.html">Settings</a></nav>
+    <main class="main">
+      <div class="pagehead">
+        <div>
+          <div class="eyebrow">Explicit Reauthorization</div>
+          <h1>重新授权确认</h1>
+          <div class="sub">普通 token/grant 请求不得自动启动 device flow；必须由用户显式确认。</div>
+        </div>
+      </div>
+
+<div class="grid cols2"><div class="card emph"><h2>github.com / octo</h2><p class="muted">refresh chain 返回 reauth_required。继续前请确认这是你本人发起的授权恢复。</p><div class="row wrap"><a class="btn primary" href="#device-flow">显式启动 device flow</a><a class="btn" href="audit-agent.html">查看触发审计</a><a class="btn danger" href="#disable">暂停该账号</a></div><div id="device-flow" class="target-note">device flow 启动示意：真实 UI 会显示 verification URI 和 user code，不会自动请求权限。</div><div id="disable" class="target-note danger-note">暂停确认示意：暂停后 grant/token 请求失败关闭。</div></div><div class="card"><h2>影响范围</h2><table class="table"><tr><td>现有 refresh token</td><td>不再使用</td></tr><tr><td>agent 请求</td><td>失败关闭</td></tr><tr><td>已签发 token</td><td>按 GitHub expiry/inventory 处理</td></tr><tr><td>审计</td><td>记录 reauth started/completed/failed</td></tr></table></div></div>
+
+    </main>
+  </div>
+</div>
+</body>
+</html>
