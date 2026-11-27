@@ -1,0 +1,8 @@
+database_path: data/gh-token-broker.db
+secret_backend: encrypted-sqlite-with-wcm-master-key
+master_key_target: gh-token-broker/master-key
+github:
+  host: github.com
+  base_url: https://github.com
+token:
+  parent_refresh_skew: 10m

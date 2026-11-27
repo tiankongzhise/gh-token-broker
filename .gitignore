@@ -10,6 +10,7 @@ secrets/
 
 # Local runtime data
 data/
+config.yaml
 *.db
 *.sqlite
 *.sqlite3
