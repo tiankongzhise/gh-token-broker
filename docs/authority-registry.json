@@ -1,0 +1,101 @@
+{
+  "version": 1,
+  "records": [
+    {
+      "id": "project.decisions",
+      "fact": "decision content, approval evidence, rejected alternatives, decision status",
+      "authority": "docs/DECISIONS.md",
+      "required": true
+    },
+    {
+      "id": "project.current-state",
+      "fact": "current phase, review gate, worktree state, validation snapshot, remote rollout state, unresolved items",
+      "authority": "docs/PROJECT_STATUS.md",
+      "required": true
+    },
+    {
+      "id": "documentation.audit",
+      "fact": "documentation coverage findings and whether documentation gaps are open or closed",
+      "authority": "docs/DOCUMENTATION_AUDIT.md",
+      "required": true
+    },
+    {
+      "id": "ci.policy",
+      "fact": "CI/CD principles, gate layering, adoption timing, static pipeline ownership",
+      "authority": "docs/CI_CD.md",
+      "required": true
+    },
+    {
+      "id": "ci.executable-config",
+      "fact": "actual CI workflow steps and job names",
+      "authority": ".github/workflows/ci.yml",
+      "required": true
+    },
+    {
+      "id": "gitignore.policy",
+      "fact": "when and how ignore rules should be changed",
+      "authority": "docs/GITIGNORE_POLICY.md",
+      "required": true
+    },
+    {
+      "id": "gitignore.executable-rules",
+      "fact": "actual ignore patterns",
+      "authority": ".gitignore",
+      "required": true
+    },
+    {
+      "id": "webui.low-fidelity.approval",
+      "fact": "approval status and evidence for the low-fidelity WebUI baseline",
+      "authority": "docs/DECISIONS.md#d-0007-审批降权语义修正与低保真批准",
+      "currentState": "docs/PROJECT_STATUS.md",
+      "required": true
+    },
+    {
+      "id": "webui.low-fidelity.content",
+      "fact": "wireframe inventory, interaction boundaries, states and handoff requirements",
+      "authority": "docs/WIREFRAMES.md",
+      "required": false
+    }
+  ],
+  "rules": [
+    {
+      "id": "wireframes-no-independent-review-status",
+      "paths": [
+        "docs/WIREFRAMES.md",
+        "design/wireframes/index.html"
+      ],
+      "forbidden": [
+        "draft 0.1",
+        "待人工审核",
+        "待用户审查",
+        "待用户复审"
+      ],
+      "requiredAny": [
+        "PROJECT_STATUS",
+        "DECISIONS"
+      ],
+      "missingOk": true
+    },
+    {
+      "id": "ci-no-stale-unconfigured-claims",
+      "paths": [
+        "docs/CI_CD.md",
+        "docs/THREAT_MODEL.md",
+        "docs/DOCUMENTATION_AUDIT.md",
+        "docs/PROJECT_STATUS.md",
+        "docs/DECISIONS.md"
+      ],
+      "forbidden": [
+        "CI 平台另行决策",
+        "实际 CI workflow 仍未配置",
+        "实际 workflow、依赖扫描、签名/发布校验尚未配置",
+        "CI policy 可记录但实际 workflow 未配置",
+        "远端结果待验证",
+        "待本轮 PR 验证",
+        "当前没有配置 CI workflow"
+      ],
+      "requiredAny": [],
+      "missingOk": true
+    }
+  ]
+}

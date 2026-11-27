@@ -20,6 +20,7 @@
 | 目的/任务 | 先读 | 修改后记录到哪里 |
 |---|---|---|
 | 当前阶段、审核门、批准证据、允许目录、活跃 worktree、验证状态、未决事项 | [PROJECT_STATUS](docs/PROJECT_STATUS.md) | 立即更新 [PROJECT_STATUS](docs/PROJECT_STATUS.md) |
+| 事实归属、单一权威来源、stale 状态检查 | [INFORMATION_AUTHORITY](docs/INFORMATION_AUTHORITY.md) + [authority-registry.json](docs/authority-registry.json) | 新事实类型/文档归属变化更新 registry；原则变化更新 INFORMATION_AUTHORITY |
 | 产品目标、用户、范围、功能/非功能需求、验收标准 | [PRD](docs/PRD.md) | 未批准前修订 PRD；批准后实质变化先建 `docs/changes/CR-<id>.md` |
 | 发现证据、技术判断、参考项目分析、风险来源 | [PROJECT_DISCOVERY](docs/PROJECT_DISCOVERY.md) | 新证据写入该文件；已经形成选择的事项同步到 [DECISIONS](docs/DECISIONS.md) |
 | 架构边界、模块、数据模型、核心流程、部署、恢复 | [ARCHITECTURE](docs/ARCHITECTURE.md) | 未批准前修订架构；批准后实质变化先建 CR |
