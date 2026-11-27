@@ -348,3 +348,19 @@
 3. GitHub 自动 merge commit 豁免格式检查。
 4. 该规范不改变 AI 署名每次单独询问和贡献者身份政策。
 5. 历史 commit 不回溯改写；规范适用于后续新 commit。
+
+
+## D-0019 open main PR 阻塞门禁与 feature freshness
+
+- 日期：2026-11-27
+- 状态：`approved`
+- 批准证据：2026-11-27 用户指出，仅按内容穷举治理 PR 无法保证不遗漏，并提出更通用的规则：“如果存在 pr 到 main 分支的未合并 pr，应该先处理这个 pr，然后再同步到特性分支，再继续”；用户同时明确 base 不是 main 的 feature 子 PR 不需要阻塞。
+- 决策：采用通用 open-main-PR gate。任何 `feat/**` 分支在存在其他 base 为 `main` 的 open PR 时不得继续新增 feature 工作；必须先处理该 PR，合并或关闭后同步最新 main 再继续。`origin/main` 必须是活跃 feature 分支 HEAD 的 ancestor。
+
+### 边界
+
+1. 不按 PR 内容、标题或路径判断重要性；任何 open main PR 默认阻塞 feature 新工作，避免治理分类遗漏。
+2. 当前 feature 分支自己的 main integration PR 不阻塞自己，因为更新该分支、修复 CI 和响应 review 都属于处理该 integration；它会阻塞其他 feature 分支。
+3. base 不是 `main` 的 PR 不触发门禁，允许子代理或协作者向 feature 分支提交局部实现 PR。
+4. CI 中无法查询 GitHub open PR 状态时 fail closed；本地网络不可用时只警告，最终以 CI 为准。
+5. 该门禁不替代 integration queue、branch ownership、secret scan 或 main branch protection；它只解决 main 尚未前进但已存在悬空 main PR 的同步空窗。

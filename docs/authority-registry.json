@@ -44,6 +44,12 @@
       "required": true
     },
     {
+      "id": "branching.executable-main-pr-gate",
+      "fact": "open pull requests targeting main block unrelated feature branch work",
+      "authority": "scripts/check_main_pr_gate.py",
+      "required": true
+    },
+    {
       "id": "git.signature-policy",
       "fact": "AI attribution policy and push-time signature handling",
       "authority": "docs/GIT_GOVERNANCE.md",

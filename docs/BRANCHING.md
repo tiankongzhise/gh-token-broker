@@ -40,7 +40,16 @@
 4. 当前队列状态记录在 [PROJECT_STATUS](PROJECT_STATUS.md)；静态 ownership 规则登记在 `branch-ownership.json`。
 5. 已验收成果默认应尽快集成进 main；若暂不合入，必须在 PROJECT_STATUS 记录原因和解除条件。
 
-## 5. 文件 ownership 边界
+## 5. open main PR 阻塞门禁
+
+1. 对任何 `feat/**` 分支，只要 GitHub 上存在其他尚未关闭、base 为 `main` 的 open PR，就不得继续新增 feature 工作。必须先处理该 PR：合并或关闭；若合并，还需等待 main CI 通过并把最新 `main` 同步进 feature 分支后才能继续。
+2. 当前 feature 分支自己的 integration PR 不阻塞自己，因为更新该分支、修复 CI 和响应 review 都是在处理这个 integration。该 PR 仍会阻塞其他 feature 分支。
+3. base 不是 `main` 的 PR 不触发该门禁；例如子代理向 feature 分支提交的局部实现 PR 不需要阻塞其他 feature 工作。
+4. 该规则不按 PR 内容分类，也不要求判断 PR 是否“治理性”。任何 open main PR 都默认阻塞 feature 新工作；若 PR 已过时，应关闭而不是绕过。
+5. 该门禁用 GitHub 当前 open PR 状态作为输入，因此能覆盖“main 尚未前进但规则/需求 PR 已悬空”的场景；仅检查 Git 历史的 freshness 规则不能覆盖该场景。
+6. `origin/main` 必须是活跃 feature 分支 HEAD 的 ancestor。main 前进后，feature 分支必须先同步，再 push、开 PR 或继续实现。
+
+## 6. 文件 ownership 边界
 
 - feature 分支可以继承 main 的文件，但不得独立修改未登记路径。
 - 共享治理文件包括 AGENTS、DECISIONS、PROJECT_STATUS、CI/Git 治理、workflow 和仓库脚本；它们不归属长期 feature 分支。
@@ -48,7 +57,7 @@
 - 例外必须有原因和解除条件；集成完成后应清除临时例外。
 - 释放 ownership 不等于删除分支；只表示其他分支可按流程接管该路径。
 
-## 6. merged branch 清理
+## 7. merged branch 清理
 
 1. 短生命周期 `chore/**`、`fix/**`、docs/ci/release prep 分支在 PR 合并后必须及时删除；默认在确认 merge 成功后删除远端分支，并在本地同步 main 后删除本地分支。若必须等待 main CI，应在 main CI 通过后立即删除，不得长期堆积。
 2. 已合并短分支不得复用来提交新工作；新工作必须创建新分支。
@@ -57,13 +66,21 @@
 5. 删除分支不会删除已经合并进 main 的提交；cleanup 的目的是减少分支命名空间和所有权歧义，不是改写历史。
 6. branch cleanup 结果应同步到 PROJECT_STATUS；若保留已合并 feature 分支，必须记录保留原因。
 
-## 7. 自动检查
+## 8. 自动检查
 
 `python scripts/check_branch_ownership.py` 会：
 
 1. 校验 registry 结构和 active feature ownership 是否重叠。
 2. 基于 `origin/main...HEAD` 检查当前分支改动路径。
-3. 对 `feat/**`：只允许改动自己登记的路径或登记例外。
+3. 对 `feat/**`：只允许改动自己登记的路径或登记例外，并要求 `origin/main` 是 HEAD 的 ancestor。
 4. 对 `chore/**`/`fix/**`：禁止改动 active feature 分支登记路径。
+
+`python scripts/check_main_pr_gate.py` 会：
+
+1. 只对 `feat/**` 分支生效。
+2. 查询 GitHub 当前 open PRs。
+3. 若存在其他 base 为 `main` 的 open PR，则检查失败。
+4. 当前 feature 分支自己的 main integration PR 会被排除；base 不是 `main` 的 PR 会被忽略。
+5. CI 中无法查询 GitHub PR 状态时 fail closed；本地网络不可用时只警告，最终仍以 CI 为准。
 
 检查失败时不得 push 或合并。该检查是 merge gate，不是对本地编辑能力的绝对限制。
