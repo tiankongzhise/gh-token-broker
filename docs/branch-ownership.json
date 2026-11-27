@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "branches": {
+    "feat/webui-wireframes": {
+      "status": "active",
+      "write": [
+        "design/wireframes/**",
+        "docs/WIREFRAMES.md"
+      ]
+    },
+    "feat/backend-core": {
+      "status": "active",
+      "write": [
+        "cmd/**",
+        "internal/**",
+        "go.mod",
+        "go.sum",
+        "config.example.yaml"
+      ]
+    }
+  },
+  "exceptions": [
+    {
+      "branch": "feat/backend-core",
+      "path": ".gitignore",
+      "reason": "Backend POC introduced Go build artifact ignores before ownership enforcement existed.",
+      "removeWhen": "initial backend integration is merged into main"
+    }
+  ]
+}
