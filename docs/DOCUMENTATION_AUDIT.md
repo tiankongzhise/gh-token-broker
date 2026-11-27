@@ -42,7 +42,7 @@
 | DOC-106 | 中 | 安装、启动、停止、卸载、升级、故障恢复 runbook 缺失 | 实现达到可运行阶段前新增 `docs/OPERATIONS.md` |
 | DOC-107 | 中 | master key rotation、丢失恢复、备份恢复演练只有原则，没有操作流程 | 后端实现/运维文档阶段补架构与 OPERATIONS |
 | DOC-108 | 中 | WebUI 可访问性、键盘操作、密度、语言和错误文案 baseline 未定义 | 低保真阶段补 `docs/WIREFRAMES.md` 或设计约束 |
-| DOC-109 | 中 | CI/CD 原则已补齐，但实际 workflow、依赖扫描、构建复现、发布签名/校验和供应链实现未配置 | 首次准备远端协作/Go 合并/发布前按 `docs/CI_CD.md` 分层落实；不得把 policy 当作已配置 CI |
+| DOC-109 | 中 | 首个 CI workflow 已配置并真实运行；依赖扫描、构建复现、发布签名/校验和供应链实现仍未配置 | 发布前按 `docs/CI_CD.md` 分层落实；不得把首个 CI 当作完整供应链门禁 |
 | DOC-110 | 低 | GitHub Enterprise host 支持优先级未确认 | 保留在 PROJECT_STATUS 未决事项 |
 | DOC-111 | 低 | raw token 兼容模式的默认态和审计级别未最终确认 | 作为专门决策项，不应在实现中偷偷加入 |
 | DOC-112 | 低 | 漏洞报告渠道未配置 | 首次发布前更新 SECURITY.md；不要虚构联系渠道 |

@@ -62,7 +62,8 @@
 | 用途 | 工作目录与命令 | 状态 | 最近结果 |
 |---|---|---|---|
 | 秘密扫描 | 仓库根：`python scripts/check_secrets.py` | 已配置；每次 push 前必须运行 | 2026-11-27 后端提交前通过；WebUI 提交前通过 |
-| CI workflow | `.github/workflows/ci.yml` 已在本轮分支中添加；GitHub Actions job/context 为 `ci` | 待首次远端运行；不得提前声明通过 | 未运行 |
+| CI workflow | `.github/workflows/ci.yml` 已配置；GitHub Actions job/context 为 `ci` | PR #1 分支 CI 与 merge 后 main CI 已通过；backend 首次同步 CI 暴露 Windows CRLF/gofmt 问题，本轮用 `.gitattributes` 修复 | 已真实运行 |
+| main 分支保护 | GitHub branch protection | 已配置：要求 PR、要求 `ci` 且 strict、enforce admins、禁止 force push/deletion | 2026-11-27 API 验证 |
 | Go 格式检查 | 后端 worktree：`gofmt -l cmd internal`（应无输出） | 已在 `feat/backend-core` 验证 | 2026-11-27 通过 |
 | Go 单元测试 | 后端 worktree：`go test -count=1 -timeout=90s ./...` | 已在 `feat/backend-core` 验证 | 2026-11-27 通过，全部为 mock/test key，无真实 GitHub 调用 |
 | Go vet/build | 后端 worktree：`go vet ./... && go build ./...` | 已在 `feat/backend-core` 验证 | 2026-11-27 通过 |
@@ -100,3 +101,4 @@
 | 2026-11-27 | 用户修正降权语义并确认低保真 | D-0007 approved；第一版允许 profile 降权但不开放原子权限编辑；低保真阶段通过 |
 | 2026-11-27 | 用户指出 CI/CD 与 `.gitignore` 治理缺口 | D-0008 approved；新增 CI/CD 与 gitignore 专门规范并接入文档地图；实际 CI 未配置 |
 | 2026-11-27 | 用户要求 main 分支保护、添加 CI 并真实 push 验证 | D-0009 approved；禁止直接 push main，main 修改走分支 + PR；执行结果待远端验证后更新 |
+| 2026-11-27 | main 保护与首轮 CI 实测结果 | PR #1 CI 通过并合并；main CI 通过；main protection 已配置；backend 同步后发现并修复 CRLF/gofmt CI 兼容问题 |
