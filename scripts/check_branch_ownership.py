@@ -54,7 +54,7 @@ def main() -> int:
 
     branch = os.environ.get("GITHUB_HEAD_REF") or os.environ.get("GITHUB_REF_NAME") or run("branch", "--show-current")
     try:
-        base = os.environ.get("GITHUB_BASE_REF", "main")
+        base = os.environ.get("GITHUB_BASE_REF") or "main"
         base_ref = f"origin/{base}"
         run("rev-parse", "--verify", base_ref)
         changed = run("diff", "--name-only", f"{base_ref}...HEAD").splitlines()
