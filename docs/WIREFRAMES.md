@@ -38,32 +38,50 @@
 | WF-06 | [06-audit.svg](../design/wireframes/06-audit.svg) | 审计筛选、列表、详情 drawer | FR-24、FR-25 |
 | WF-07 | [07-settings-security.svg](../design/wireframes/07-settings-security.svg) | loopback、secret store、min_ttl、raw token、备份恢复 | FR-18、FR-21、FR-22、FR-23 |
 | WF-08 | [08-states-errors.svg](../design/wireframes/08-states-errors.svg) | 空/加载/网络错误/reauth/policy denied/secret store/Host-Origin/高风险确认状态 | PRD 第 7 章 |
+| WF-09 | [09-approval-inbox.svg](../design/wireframes/09-approval-inbox.svg) | 审批模式默认页：生成 agent 授权码、待审批列表、申请详情、全部/部分/拒绝 | agent-initiated approval 新方向 |
+| WF-10 | [10-agent-code-flow.svg](../design/wireframes/10-agent-code-flow.svg) | 授权码、agent discovery public node、权限申请提交、审批生效的跨角色流程 | agent 对接协议、授权码边界 |
+| WF-11 | [11-partial-approval.svg](../design/wireframes/11-partial-approval.svg) | 部分批准示例：按仓库/权限拒绝或降权，最终差异确认 | 部分批准粒度、高风险默认不批准 |
 
 可维护生成脚本：[generate_wireframes.py](../design/wireframes/generate_wireframes.py)。SVG 是评审主产物；脚本只是为了重新生成，不是产品代码。
 
 ## 3. 导航与页面结构
 
-左侧固定导航：
+左侧固定导航按“审批优先 + 高级人工模式保留”重新组织：
 
 1. Dashboard
-2. GitHub Apps
-3. Agents
-4. Token / Grants
-5. Audit
-6. Settings
+2. Approvals（默认 agent 接入路径）
+3. GitHub Apps
+4. Audit
+5. Settings
+6. Advanced: Agents（人工策略模式）
+7. Advanced: Tokens（人工 inventory/grant 模式）
 
 设计意图：
 
-- Dashboard 优先回答“现在是否安全/可用/需要我做什么”，而不是展示无意义统计。
+- Dashboard 优先回答“现在是否安全/可用/需要我做什么”，并突出 pending approvals 和 reauth。
+- Approvals 是默认路径：用户只生成授权码并审批 agent 主动提交的申请，不要求用户手工编写复杂 policy。
 - GitHub Apps 管理授权和 app/account 状态。
-- Agents 管理 credential 与 policy。
-- Token / Grants 管理已发放凭据和短生命周期授权。
 - Audit 用于追踪与排障。
 - Settings 只放本地运行、安全和恢复配置。
+- Advanced: Agents / Tokens 保留原人工模式，用于修正策略、rotate/disable、revoke 和高级排障，不作为默认接入路径。
 
 ## 4. 核心流程覆盖
 
-### 4.1 首次配置与授权
+### 4.1 审批模式：默认 agent 接入流程
+
+流程：
+
+1. 用户登录本地 GH Token Broker，在 Approvals 生成一次性/短寿命 agent 授权码。
+2. 用户把授权码交给 agent。授权码只代表“允许提交申请”，不代表已经获得 GitHub 权限。
+3. agent 读取 broker 的 localhost discovery public node，了解 API version、endpoint、支持的 profile 和申请格式。这里 public 指无需凭证可读协议元数据，不是公网公开。
+4. agent 根据项目上下文提交权限申请：host/owner/repo/profile/min_ttl/reason。
+5. 用户在 Approvals 查看申请和风险提示，可以全部批准、部分批准/降权或拒绝。
+6. 批准后 broker 自动生成或更新 agent credential、policy 和后续 grant/token 边界；结果写 audit。
+7. agent 后续按公开协议请求 token；用户不需要手工配置每个 repo pattern/profile。
+
+覆盖图：WF-00、WF-09、WF-10、WF-11。
+
+### 4.2 首次配置与授权
 
 入口：Dashboard 空状态或 GitHub Apps 空状态。
 
@@ -78,7 +96,7 @@
 
 覆盖图：WF-02、WF-03、WF-08。
 
-### 4.2 reauth
+### 4.3 reauth
 
 触发：refresh token 失效、授权撤销、组织/SAML 策略变化或 unknown_error。
 
@@ -90,7 +108,7 @@
 
 覆盖图：WF-01、WF-03、WF-08。
 
-### 4.3 agent credential 与 policy
+### 4.4 人工模式：agent credential 与 policy
 
 流程：
 
@@ -103,7 +121,7 @@
 
 覆盖图：WF-04、WF-08。
 
-### 4.4 token issue、grant 与 revoke
+### 4.5 token issue、grant 与 revoke
 
 流程：
 
@@ -116,7 +134,7 @@
 
 覆盖图：WF-05、WF-06、WF-08。
 
-### 4.5 审计追踪
+### 4.6 审计追踪
 
 流程：
 
@@ -133,7 +151,7 @@
 |---|---|---|
 | 未配置 GitHub App | WF-02、WF-03 | 引导创建/添加 app |
 | 未授权 | WF-02、WF-03 | 明确需要显式 device flow |
-| 无 agent credential | WF-04 | 引导创建第一个 credential |
+| 无 agent credential | WF-04、WF-09 | 人工模式引导创建；审批模式优先生成授权码 |
 | 无审计记录 | WF-06 | 正常空状态 |
 | 加载/pending | WF-08 和各页面说明 | refresh、token、revoke、audit 查询都防重复操作 |
 | GitHub 网络不可达 | WF-08 | code + message + retry |
@@ -142,14 +160,16 @@
 | policy denied | WF-04、WF-08 | 不包含秘密，指出 repo/profile 拒绝 |
 | secret store unavailable | WF-02、WF-07、WF-08 | 显示恢复路径，不显示秘密 |
 | Host/Origin rejected | WF-08 | localhost 安全错误页 |
-| 高风险操作确认 | WF-04、WF-05、WF-08 | revoke/disable/high-risk permission/reauth |
+| 高风险操作确认 | WF-04、WF-05、WF-08、WF-09、WF-11 | revoke/disable/high-risk permission/reauth/高风险申请批准 |
 
 ## 6. 低保真阶段待确认问题
 
-1. Token Issues 与 Grants 是否接受合并为一个导航项中的上下双列表，还是拆成两个导航项？
-2. Dashboard 是否应以“需要用户行动”为第一优先级，而不是以 token/agent 数量统计为第一优先级？
-3. 高风险权限启用是否只二次确认，还是要求输入仓库名/类型化确认短语？
-4. Audit 详情是否使用右侧 drawer，而不是独立详情页？
+1. 授权码默认一次性还是允许在短窗口内重复使用？当前建议：一次性，泄露/失败则撤销并重新生成。
+2. 部分批准的粒度：按仓库、按 permission profile、按单个权限项，还是三者都支持？当前建议：先按仓库 + profile，高风险权限单独确认。
+3. discovery public node 是否仅限 `127.0.0.1`？当前建议：是；public 只是无需凭证可读协议元数据，不是公网公开。
+4. agent 自报的 project/name/version 是否需要额外本地 attestation 或只作为未验证声明显示？当前建议：先明确标为未验证声明。
+5. Token Issues 与 Grants 是否接受合并为高级模式中的一个页面，还是拆成两个导航项？
+6. 高风险权限启用是否只二次确认，还是要求输入仓库名/类型化确认短语？
 
 这些问题只影响信息架构和交互细节，不影响后端 Phase 1 POC 并行推进。
 
@@ -157,7 +177,7 @@
 
 高保真阶段必须保持或明确变更：
 
-- 左侧导航信息架构。
+- 审批模式作为默认 agent 接入路径；人工模式仅高级保留。
 - Dashboard 的“需要用户行动”优先级。
 - write-only secret 输入与不显示完整秘密约束。
 - reauth 显式确认。

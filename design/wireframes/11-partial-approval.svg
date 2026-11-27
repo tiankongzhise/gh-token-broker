@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="820" viewBox="0 0 1280 820">
+<rect width="100%" height="100%" fill="#f4f4f4"/>
+<rect x="0" y="0" width="210" height="820" rx="0" fill="#e8e8e8" stroke="#555" stroke-width="2"/>
+<text x="24" y="42" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="20" font-weight="700" fill="#222" text-anchor="start">GH Token Broker</text>
+<text x="24" y="68" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" fill="#555" text-anchor="start">localhost WebUI</text>
+<rect x="14" y="88" width="182" height="38" rx="4" fill="#e8e8e8" stroke="#aaa" stroke-width="1"/>
+<text x="30" y="112" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#222" text-anchor="start">Dashboard</text>
+<rect x="14" y="140" width="182" height="38" rx="4" fill="#d4d4d4" stroke="#777" stroke-width="1"/>
+<text x="30" y="164" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="15" font-weight="700" fill="#222" text-anchor="start">Approvals</text>
+<rect x="14" y="192" width="182" height="38" rx="4" fill="#e8e8e8" stroke="#aaa" stroke-width="1"/>
+<text x="30" y="216" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#222" text-anchor="start">GitHub Apps</text>
+<rect x="14" y="244" width="182" height="38" rx="4" fill="#e8e8e8" stroke="#aaa" stroke-width="1"/>
+<text x="30" y="268" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#222" text-anchor="start">Audit</text>
+<rect x="14" y="296" width="182" height="38" rx="4" fill="#e8e8e8" stroke="#aaa" stroke-width="1"/>
+<text x="30" y="320" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#222" text-anchor="start">Settings</text>
+<rect x="14" y="348" width="182" height="38" rx="4" fill="#e8e8e8" stroke="#aaa" stroke-width="1"/>
+<text x="30" y="372" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#222" text-anchor="start">Advanced: Agents</text>
+<rect x="14" y="400" width="182" height="38" rx="4" fill="#e8e8e8" stroke="#aaa" stroke-width="1"/>
+<text x="30" y="424" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#222" text-anchor="start">Advanced: Tokens</text>
+<rect x="14" y="704" width="182" height="88" rx="4" fill="#f7f7f7" stroke="#777" stroke-width="1"/>
+<text x="28" y="730" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="13" font-weight="700" fill="#222" text-anchor="start">本地状态</text>
+<text x="28" y="754" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" fill="#222" text-anchor="start">broker: running</text>
+<text x="28" y="776" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" fill="#222" text-anchor="start">127.0.0.1 only</text>
+<rect x="210" y="0" width="1070" height="72" rx="0" fill="#eeeeee" stroke="#555" stroke-width="2"/>
+<text x="238" y="44" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="24" font-weight="700" fill="#222" text-anchor="start">Partial Approval — 部分批准示例</text>
+<text x="1228" y="42" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" fill="#555" text-anchor="end">用户本地会话</text>
+<rect x="240" y="108" width="440" height="570" rx="4" fill="#ffffff" stroke="#555" stroke-width="2"/>
+<text x="256" y="136" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#222" text-anchor="start">agent 原始申请</text>
+<text x="256" y="164" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">project: repo-maintainer</text>
+<text x="256" y="186" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">repositories:</text>
+<text x="256" y="208" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">· owner/repo-a — pr-write — reason: create fix PR</text>
+<text x="256" y="230" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">· owner/repo-b — read-only — reason: inspect issues</text>
+<text x="256" y="252" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">· owner/repo-c — admin — reason: manage settings</text>
+<text x="256" y="274" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">min_ttl: 2h</text>
+<text x="256" y="296" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">agent 声明用途文本（不可作为安全证明）</text>
+<rect x="710" y="108" width="500" height="570" rx="4" fill="#ffffff" stroke="#555" stroke-width="2"/>
+<text x="726" y="136" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#222" text-anchor="start">用户可调整的批准结果</text>
+<text x="726" y="164" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">[x] owner/repo-a · pr-write · 批准</text>
+<text x="726" y="186" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">[x] owner/repo-b · read-only · 批准</text>
+<text x="726" y="208" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">[ ] owner/repo-c · admin · 拒绝</text>
+<text x="726" y="230" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start"></text>
+<text x="726" y="252" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">可选降权：pr-write → read-only</text>
+<text x="726" y="274" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">可选缩短：min_ttl 2h → 30m</text>
+<text x="726" y="296" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">高风险项默认不勾选，需单独确认</text>
+<text x="726" y="318" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start"></text>
+<text x="726" y="340" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">最终确认：显示批准/拒绝差异</text>
+<text x="726" y="362" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">结果写 audit；agent 收到机器可读结果</text>
+<line x1="680" y1="390" x2="710" y2="390" stroke="#555" stroke-width="2"/>
+<text x="684" y="378" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="24" font-weight="700" fill="#222" text-anchor="start">→</text>
+</svg>

@@ -17,11 +17,12 @@ FONT = "Microsoft YaHei, Segoe UI, Arial, sans-serif"
 
 NAV = [
     ("dashboard", "Dashboard"),
+    ("approvals", "Approvals"),
     ("apps", "GitHub Apps"),
-    ("agents", "Agents"),
-    ("tokens", "Token / Grants"),
     ("audit", "Audit"),
     ("settings", "Settings"),
+    ("agents", "Advanced: Agents"),
+    ("tokens", "Advanced: Tokens"),
 ]
 
 
@@ -103,44 +104,44 @@ def page_frame(name: str, title: str, active: str):
 
 def generate_overview():
     c = Canvas()
-    c.text(40, 52, "WebUI 低保真页面与核心流程总览", size=28, weight="700")
-    c.text(40, 82, "评审重点：页面是否完整、流程是否闭环、状态是否覆盖；不评审颜色/字体/最终视觉。", size=15, fill="#555")
+    c.text(40, 52, "审批优先的 WebUI 低保真流程总览", size=28, weight="700")
+    c.text(40, 82, "用户新方向：少配置；agent 主动读取协议并提交权限申请，用户只生成授权码并审批。原人工模式保留为高级模式。", size=15, fill="#555")
 
     steps = [
-        ("1. 首次配置", ["GitHub Apps 空状态", "添加 client id", "write-only secret"]),
-        ("2. 显式授权", ["device flow", "用户浏览器确认", "pending / success / error"]),
-        ("3. 日常监控", ["Dashboard", "refresh 状态", "reauth warning"]),
-        ("4. agent 策略", ["Agents", "credential", "repo/profile policy"]),
-        ("5. 发放与撤销", ["Token Issues", "Grants", "revoke confirm"]),
-        ("6. 审计追踪", ["Audit filters", "correlation id", "脱敏详情"]),
+        ("1. 生成授权码", ["用户在 Broker 登录", "生成一次性/短寿命 code", "把 code 交给 agent"]),
+        ("2. agent 发现协议", ["读取 localhost public node", "well-known/discovery", "了解申请格式和能力"]),
+        ("3. agent 提交申请", ["项目/仓库/权限 profile", "min_ttl / 用途说明", "authorization code 认证"]),
+        ("4. 用户审批", ["全部批准", "部分批准/降权", "拒绝并写原因"]),
+        ("5. Broker 生效", ["创建/更新 agent policy", "发放 credential/grant", "后续按 approval  mint token"]),
+        ("6. 审计与撤销", ["approval inbox", "agent/token inventory", "revoke + audit"]),
     ]
     x = 40
     for idx, (title, lines) in enumerate(steps):
-        box(c, x, 130, 180, 150, title, lines)
+        box(c, x, 125, 180, 165, title, lines)
         if idx < len(steps) - 1:
             c.line(x + 180, 205, x + 205, 205)
             c.text(x + 183, 194, "→", size=24, weight="700")
         x += 205
 
-    box(c, 40, 330, 560, 260, "页面结构", [
-        "左侧导航固定：Dashboard / GitHub Apps / Agents / Token / Audit / Settings",
-        "每个列表页都包含：空状态、加载状态、错误状态、危险操作确认",
-        "Dashboard 聚合授权健康、refresh、reauth、最近失败和安全提示",
-        "详情优先使用右侧 drawer，避免页面跳转丢失上下文",
+    box(c, 40, 330, 560, 260, "审批模式（默认）", [
+        "用户不需要手工编写 repo pattern/profile 组合",
+        "agent 根据项目上下文主动声明需要的 GitHub 权限",
+        "用户在 Approval Inbox 中看清申请内容后全部/部分批准",
+        "批准后自动生成 agent credential、policy 和后续 grant/token 边界",
+        "授权码一次性/短寿命；审批前不等于已获得 GitHub 访问能力",
     ])
-    box(c, 640, 330, 560, 260, "安全约束贯穿", [
-        "任何页面不回显完整 token / refresh token / client secret / master key",
-        "秘密输入使用 write-only 字段，保存后只显示 fingerprint / last-eight",
-        "revoke、disable、reauth、raw token 兼容模式都属于高风险或显式确认操作",
-        "WebUI 仅 loopback；Host/Origin 失败时显示专用错误页",
+    box(c, 640, 330, 560, 260, "人工模式（高级保留）", [
+        "保留原 GitHub Apps / Agents / Token / Grants / Settings 管理能力",
+        "用于手工修正策略、rotate/disable credential、处理异常和高级排障",
+        "不作为普通用户接入 agent 的默认路径",
+        "高风险操作仍需二次确认；秘密永不完整回显",
     ])
-    box(c, 40, 630, 1160, 120, "待用户确认的低保真范围问题", [
-        "Token Issues 与 Grants 是否接受合并为一个顶部分页/双列表页面，还是拆成两个导航项？",
-        "Dashboard 是否以“授权健康 + 需要用户行动”为第一优先级，而不是 token 数量统计？",
-        "高风险权限确认是否需要输入仓库名或勾选明确后果？",
+    box(c, 40, 630, 1160, 120, "待用户确认的审批模式问题", [
+        "授权码默认一次性还是允许在短窗口内重复使用？建议：一次性，失败可重新生成。",
+        "部分批准的粒度：按仓库、按 permission profile、按权限项，还是三者都支持？建议先按仓库 + profile。",
+        "agent discovery public node 是否仅限 127.0.0.1？建议：是；这里的 public 指无需凭证可读协议元数据，不是公网公开。",
     ], dash=True)
     c.save("00-overview-flow.svg")
-
 
 def generate_dashboard():
     c = page_frame("dashboard", "Dashboard — 授权健康与需要行动", "dashboard")
@@ -367,6 +368,93 @@ def generate_states():
     c.save("08-states-errors.svg")
 
 
+def generate_approval_inbox():
+    c = page_frame("approvals", "Approvals — agent 权限申请审批", "approvals")
+    label(c, 240, 96, "审批模式 · 默认", fill="#dddddd", width=150)
+    box(c, 240, 136, 300, 250, "生成 agent 授权码", [
+        "按钮：生成授权码",
+        "展示：一次性 code + 过期时间",
+        "code 只显示一次；可 revoke/regenerate",
+        "可选备注：给哪个 agent/项目使用",
+        "边界：code 泄露可重新撤销；审批前无 GitHub 权限",
+    ])
+    box(c, 560, 136, 650, 250, "待审批申请列表", [
+        "table: agent/project · repo · requested profile · min_ttl · reason · expires",
+        "status: pending / partially approved / approved / rejected / expired",
+        "empty: 当前没有待审批申请",
+        "点击行 → 右侧审批详情",
+    ])
+
+    box(c, 240, 416, 570, 310, "申请详情", [
+        "agent 自称：name/version/project path（需显示为未验证声明）",
+        "请求范围：host / owner / repo / permission profile / min_ttl",
+        "用途说明：例如 read issues、create PR、push branch",
+        "风险提示：profile 是否包含 write/high-risk permission",
+        "broker 校验结果：repo 存在性、App installation coverage、policy冲突",
+    ])
+    box(c, 840, 416, 370, 310, "审批操作", [
+        "Approve all：接受全部申请",
+        "Partial approve：取消部分仓库/降低 profile/缩短 min_ttl",
+        "Reject：填写可选原因并通知 agent",
+        "确认页显示最终生效差异，不显示完整 credential",
+        "所有结果写 audit；pending 防重复点击",
+    ])
+    c.save("09-approval-inbox.svg")
+
+
+def generate_agent_code_flow():
+    c = Canvas()
+    c.text(40, 52, "Agent 授权码与协议发现流程", size=28, weight="700")
+    c.text(40, 82, "这是 agent-facing 流程，不是复杂人工配置页。public node 指无需凭证可读的 localhost 协议元数据，不是公网服务。", size=15, fill="#555")
+    lanes=[("用户 / Owner",40),("Agent",460),("GH Token Broker",880)]
+    for title,x in lanes:
+        c.rect(x,120,360,620,fill="#f8f8f8",stroke="#555",sw=2,rx=4)
+        c.text(x+180,150,title,size=18,weight="700",anchor="middle")
+    def step(x,y,w,text):
+        c.rect(x,y,w,58,fill="#ffffff",stroke="#777",sw=1,rx=4)
+        c.text_block(x+12,y+22,text,size=13,line_height=18)
+    step(60,190,320,["1. 登录本地 Broker","生成一次性授权码"])
+    step(480,220,320,["2. 用户把授权码交给 agent","例如粘贴到 agent 配置/命令"])
+    step(480,310,320,["3. 读取 discovery","GET /.well-known/gh-token-broker"])
+    step(900,310,280,["返回公开协议元数据","api version/endpoints/capabilities"])
+    step(480,410,320,["4. 用授权码提交申请","项目、仓库、profile、min_ttl、原因"])
+    step(900,430,280,["校验授权码","创建 pending approval"])
+    step(60,520,320,["5. 用户审批","全部 / 部分 / 拒绝"])
+    step(900,590,280,["批准后生效","创建 credential/policy/grant 边界"])
+    step(480,650,320,["6. agent 后续按协议请求 token","不再要求用户手工配置 policy"])
+    for x1,y1,x2,y2 in [(380,220,480,240),(640,280,640,310),(800,340,900,340),(800,440,900,460),(900,610,380,550),(900,650,800,680)]:
+        c.line(x1,y1,x2,y2)
+    c.save("10-agent-code-flow.svg")
+
+
+def generate_partial_approval():
+    c = page_frame("approvals", "Partial Approval — 部分批准示例", "approvals")
+    box(c, 240, 108, 440, 570, "agent 原始申请", [
+        "project: repo-maintainer",
+        "repositories:",
+        "· owner/repo-a — pr-write — reason: create fix PR",
+        "· owner/repo-b — read-only — reason: inspect issues",
+        "· owner/repo-c — admin — reason: manage settings",
+        "min_ttl: 2h",
+        "agent 声明用途文本（不可作为安全证明）",
+    ])
+    box(c, 710, 108, 500, 570, "用户可调整的批准结果", [
+        "[x] owner/repo-a · pr-write · 批准",
+        "[x] owner/repo-b · read-only · 批准",
+        "[ ] owner/repo-c · admin · 拒绝",
+        "",
+        "可选降权：pr-write → read-only",
+        "可选缩短：min_ttl 2h → 30m",
+        "高风险项默认不勾选，需单独确认",
+        "",
+        "最终确认：显示批准/拒绝差异",
+        "结果写 audit；agent 收到机器可读结果",
+    ])
+    c.line(680,390,710,390)
+    c.text(684,378,"→",size=24,weight="700")
+    c.save("11-partial-approval.svg")
+
+
 def generate_index():
     pages = [
         ("00-overview-flow.svg", "页面与核心流程总览"),
@@ -378,6 +466,9 @@ def generate_index():
         ("06-audit.svg", "Audit"),
         ("07-settings-security.svg", "Settings / Security"),
         ("08-states-errors.svg", "状态与错误集合"),
+        ("09-approval-inbox.svg", "Approvals：agent 权限申请审批"),
+        ("10-agent-code-flow.svg", "Agent 授权码与协议发现流程"),
+        ("11-partial-approval.svg", "Partial Approval：部分批准示例"),
     ]
     cards = []
     for href, title in pages:
@@ -431,6 +522,9 @@ def main():
     generate_audit()
     generate_settings()
     generate_states()
+    generate_approval_inbox()
+    generate_agent_code_flow()
+    generate_partial_approval()
     generate_index()
     print(f"generated wireframes in {OUT}")
 

@@ -25,7 +25,7 @@ main{padding:16px 24px}.layout{display:grid;grid-template-columns:190px minmax(5
 </nav>
 <main>
 <section id="uiMode">
-<div class="note"><b>使用方法：</b>左侧选择页面。灰色图是原低保真；蓝色编号是可点击讲解点。右侧“本页全部位置说明”按区域解释：这里配置/展示什么、作用、设计理由、边界差异。编号位置只是审核辅助，不代表最终视觉坐标。</div>
+<div class="note"><b>使用方法：</b>左侧选择页面。灰色图是原低保真；蓝色编号是可点击讲解点。右侧“本页全部位置说明”按区域解释：这里配置/展示什么、作用、设计理由、边界差异。编号位置只是审核辅助，不代表最终视觉坐标。<br><b>方向更新：</b>审批模式（WF-09 至 WF-11）是用户提出的默认接入路径；原 Agents/Token/Grants 页面应理解为高级人工模式。</div>
 <div class="layout" style="margin-top:14px">
 <div class="pages" id="pageButtons"></div>
 <div class="stagecard"><div class="stage" id="stage"><img id="wireImg" alt="wireframe"></div><p class="small muted">如果编号与图形有轻微偏移，以右侧文字说明为准；低保真只确认信息架构，不确认像素。</p></div>
@@ -133,6 +133,22 @@ const pages=[
 {x:36,y:57,t:"Secret store error",what:"secret_store_unavailable、恢复建议、不显示 key/material。",why:"密钥材料不可用是本地安全故障，需要明确恢复路径。",edge:"不能降级为明文存储来‘提高可用性’。"},
 {x:57,y:57,t:"Host/Origin rejected",what:"localhost 安全错误页，说明如何正确访问。",why:"防 DNS rebinding 和跨站请求进入本地管理面。",edge:"这不是用户配置错误页；后端仍必须拒绝请求。"},
 {x:78,y:57,t:"High-risk confirm",what:"危险操作标题、后果说明、确认/取消和 pending。",why:"revoke/disable/high-risk permission/reauth 都可能造成实际破坏。",edge:"确认后失败要显示失败；不能仅因为用户确认就假装操作成功。"}],edges:["这些状态是验收标准的一部分；后续高保真不得把它们删掉。","错误响应必须包含 code + message + correlation id，且不包含秘密。"]}
+,
+{file:"09-approval-inbox.svg",name:"Approvals",title:"Approvals：审批模式默认页",purpose:"这是用户提出的新默认方向：用户不再手工配置大量 repo/profile，而是生成授权码并审批 agent 主动提交的申请。",items:[
+{x:30,y:22,t:"生成授权码",what:"用户登录本地 Broker 后生成一次性/短寿命 code，并把 code 交给 agent。",why:"code 只用于让 agent 提交申请和建立后续身份，不等于已经批准 GitHub 权限。",edge:"code 泄露可 revoke；过期或已使用后应重新生成。"},
+{x:55,y:22,t:"待审批申请",what:"列表显示 agent/project、repo、requested profile、min_ttl、reason、expires。",why:"用户只需要看申请是否有必要，而不需要自己从零写 policy。",edge:"agent 自报信息不是安全证明，页面必须标为未验证声明。"},
+{x:38,y:58,t:"申请详情",what:"展示 host/owner/repo/profile/min_ttl、用途说明、风险提示和 broker 校验结果。",why:"审批的关键是让用户理解‘批准后会允许什么’。",edge:"repo 不存在、App 未覆盖、权限冲突或高风险项都应阻止默认批准。"},
+{x:78,y:58,t:"审批操作",what:"Approve all、Partial approve、Reject。",why:"全部批准适合简单可信场景；部分批准让用户无需手工重建整个策略。",edge:"pending 防重复点击；所有结果写 audit。"}],edges:["这一页是审批模式的中心，应该比原 Agents 手工策略页更靠前、更简单。","批准后如何生成 credential/policy/grant 仍需要后端契约细化。"]},
+{file:"10-agent-code-flow.svg",name:"授权码流程",title:"Agent 授权码与协议发现流程",purpose:"解释 agent 如何自己读取公开协议节点并发起申请，为什么这能减少用户配置。",items:[
+{x:18,y:28,t:"用户生成 code",what:"用户只需登录 Broker、生成授权码、交给 agent。",why:"把复杂配置转移为 agent 的机器可读申请，用户只做审批。",edge:"授权码必须短寿命/一次性，否则泄露后的窗口变大。"},
+{x:47,y:39,t:"agent discovery",what:"agent 读取 localhost `/.well-known/gh-token-broker` 一类 discovery endpoint。",why:"协议公开让不同 agent 可以自行对接，不需要用户复制复杂 API 文档。",edge:"public 指无需凭证可读协议元数据，不是公网公开；仍应仅限 loopback。"},
+{x:47,y:54,t:"提交权限申请",what:"agent 用授权码认证后提交项目、仓库、profile、min_ttl、原因。",why:"agent 最了解自己项目需要什么权限，比用户手工猜测更准确。",edge:"agent 可以夸大需求，所以用户审批和 broker 校验仍是安全边界。"},
+{x:80,y:72,t:"批准后生效",what:"broker 创建或更新 credential/policy/grant 边界，agent 后续按协议请求 token。",why:"批准结果机器可读，避免用户手工复制复杂配置。",edge:"批准前 agent 没有 GitHub 访问能力；被拒绝也只能得到机器可读拒绝结果。"}],edges:["这是一张跨角色流程图，不是普通 WebUI 页面。","协议发现与授权码认证是后续后端契约的核心。"]},
+{file:"11-partial-approval.svg",name:"部分批准",title:"Partial Approval：部分批准示例",purpose:"把‘全部或部分批准’变成具体界面：用户可以按仓库/权限拒绝或降权，而不是只能全选或全拒。",items:[
+{x:31,y:25,t:"原始申请",what:"agent 申请多个仓库和不同 profile，例如 repo-a pr-write、repo-b read-only、repo-c admin。",why:"真实 agent 常常一次申请多个范围；逐项展示才能让用户判断。",edge:"agent 的用途说明只是声明，不能证明它不会滥用。"},
+{x:70,y:25,t:"勾选批准范围",what:"用户勾选 repo-a/repo-b，取消 repo-c admin。",why:"部分批准让用户保留必要功能，同时去掉高风险或无关范围。",edge:"高风险项应默认不勾选，即使用户选择批准也要单独确认。"},
+{x:70,y:49,t:"降权和缩短 TTL",what:"可以把 pr-write 降为 read-only，或把 min_ttl 从 2h 缩到 30m。",why:"这比纯手工编辑 policy 简单，同时仍能收紧风险。",edge:"过度缩短 min_ttl 可能导致 agent 操作频繁失败，需要平衡。"},
+{x:70,y:70,t:"最终差异确认",what:"确认页列出批准、拒绝、降权后的最终结果并写 audit。",why:"用户需要知道点击确认后到底生效了什么。",edge:"如果后端应用失败，不能只显示成功；必须显示失败和可重试状态。"}],edges:["部分批准粒度是本次低保真最需要确认的交互问题之一。","建议第一版按仓库 + permission profile，而不是开放几十个 GitHub 原子权限。"]}
 ];
 const scenarios=[
 {id:"normal",name:"正常的一天",title:"正常的一天：为什么不用反复授权",boundary:"父 token 还有效、refresh token 还有效、GitHub 网络正常。",steps:["你在 WebUI 显式完成 device flow。GitHub 返回父 token 和 refresh token；页面只显示成功状态，不显示 token。","broker 把父 token 放内存，把 refresh token 加密后写入 SQLite。master key 只存在 Windows Credential Manager。","agent 之后需要访问 GitHub 时，broker 使用内存里的父 token 或后续 child token 机制；你不需要再次打开浏览器授权。","接受的含义：你相信这条链可以作为后续 agent 访问控制的地基。拒绝的含义：后续不能假设这种自动续期能力存在。"]},
