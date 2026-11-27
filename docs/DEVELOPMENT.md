@@ -16,7 +16,7 @@
 - 适合 Windows 本地分发。
 - 方便将传输层与核心 token/policy 逻辑解耦。
 
-尚未初始化 Go module，因此目前没有 `go.mod`、Go 版本锁定或真实构建命令。
+后端 Phase 1 POC 已在 `feat/backend-core` worktree 初始化 Go module；在合并进 `main` 前，相关命令应在后端 worktree 执行。`go.mod` 当前要求 Go 1.26+，本轮开发环境实际使用 Go 1.27.1 windows/amd64。
 
 ### 2.2 存储
 
@@ -36,7 +36,7 @@ WebUI 是管理面，技术栈待低保真/高保真阶段确认。当前不预�
 
 - Windows 10/11
 - Git for Windows
-- Go stable toolchain（实现启动时确定并锁定版本）
+- Go stable toolchain；Phase 1 POC 的 `go.mod` 要求 Go 1.26+，本轮使用 Go 1.27.1 验证
 - Python 3.x（用于当前仓库的 secret scan 脚本）
 - PowerShell 5.1+ 或 PowerShell 7+
 - GitHub App 测试实例与测试仓库
@@ -48,25 +48,34 @@ WebUI 是管理面，技术栈待低保真/高保真阶段确认。当前不预�
 计划目录结构：
 
 ```text
-cmd/                    # 未来：二进制入口
-internal/               # 未来：核心逻辑，不导出为公共 API
-  broker/
-  github/
-  policy/
-  storage/
-  secretstore/
-  audit/
-  grant/
-  mcp/
-  web/
+cmd/                    # 二进制入口；Phase 1 目前只有 gh-token-broker POC 命令
+internal/               # 核心逻辑，不导出为公共 API
+  config/               # 配置加载与校验
+  githubapp/            # GitHub OAuth/device flow client
+  platform/winmutex/    # Windows named mutex
+  secretstore/          # secret store 抽象
+  storage/sqlite/       # 加密 SQLite secret/account persistence
+  tokenchain/           # device flow 完成、refresh chain、parent token cache
+  broker/               # 未来：核心 broker facade
+  policy/               # 未来：repo/profile policy
+  audit/                # 未来：审计
+  grant/                # 未来：grant lifecycle
+  mcp/                  # 未来：MCP transport/tools
+  web/                  # 未来：WebUI backend
 docs/                   # 产品、架构、开发、测试文档
 scripts/                # 仓库维护脚本
 testdata/               # 未来：不包含真实秘密的测试数据
-design/                 # 未来：低保真/高保真设计产物
+design/                 # 低保真/高保真设计产物
 prototype/              # 未来：可运行示意 Demo
 ```
 
-当前只有 `docs/`、`scripts/` 和根文档。
+`cmd/` 与 `internal/` 当前只存在于后端 POC 分支 `feat/backend-core`；`design/wireframes/` 当前只存在于 WebUI 低保真分支 `feat/webui-wireframes`。合并前不要在主 worktree 假定这些文件可用。
+
+### 4.1 CI/CD 与生成物归属
+
+- CI/CD 门禁、workflow 引入时机、发布和供应链边界不在本文写死，统一见 [CI_CD](CI_CD.md)。
+- `.gitignore` 修改时机和审查原则不在本文写死，统一见 [GITIGNORE_POLICY](GITIGNORE_POLICY.md)；实际规则以根 `.gitignore` 为准。
+- 引入新工具链、编译产物、测试报告、runtime cache 或日志目录时，必须在同一任务中检查是否需要更新根 `.gitignore`。
 
 ## 5. 秘密与配置约束
 
@@ -189,7 +198,7 @@ python scripts/check_secrets.py
 
 ## 7. 代码约定
 
-当前没有既有代码。新项目初始约定如下，后续以实际配置为准：
+Phase 1 POC 已建立初始 Go 代码；约定如下，后续以实际配置为准：
 
 ### Go
 
@@ -229,8 +238,10 @@ python scripts/check_secrets.py
 | 用途 | 命令 | 状态 |
 |---|---|---|
 | 秘密扫描 | `python scripts/check_secrets.py` | 已配置，需每次 push 前运行 |
-| Go 格式化 | 未定 | 未配置；实现启动后补充 |
-| Go lint/test/build | 未定 | 未配置；实现启动后补充 |
+| Go 格式化 | 后端 worktree：`gofmt -w cmd internal`；检查时 `gofmt -l cmd internal` 应无输出 | 已在 Phase 1 POC 使用 |
+| Go 单元测试 | 后端 worktree：`go test -count=1 -timeout=90s ./...` | 已在 Phase 1 POC 使用 |
+| Go vet/build | 后端 worktree：`go vet ./... && go build ./...` | 已在 Phase 1 POC 使用 |
+| Go race spot check | 后端 worktree：`CGO_ENABLED=1 go test -race -count=1 -timeout=90s ./internal/tokenchain ./internal/platform/winmutex` | 局部验证命令；尚未成为完整 CI 门禁 |
 | MCP 测试 | 未定 | 未配置 |
 | WebUI 测试 | 未定 | 未配置 |
 
