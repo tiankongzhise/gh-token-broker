@@ -239,6 +239,7 @@ Phase 1 POC 已建立初始 Go 代码；约定如下，后续以实际配置为�
 | 用途 | 命令 | 状态 |
 |---|---|---|
 | 秘密扫描 | `python scripts/check_secrets.py` | 已配置，需每次 push 前运行 |
+| 文档权威检查 | `python scripts/check_doc_authority.py` | 已配置，防止登记过的状态漂移/缺失权威链接 |
 | Go 格式化 | 后端 worktree：`gofmt -w cmd internal`；检查时 `gofmt -l cmd internal` 应无输出 | 已在 Phase 1 POC 使用 |
 | Go 单元测试 | 后端 worktree：`go test -count=1 -timeout=90s ./...` | 已在 Phase 1 POC 使用 |
 | Go vet/build | 后端 worktree：`go vet ./... && go build ./...` | 已在 Phase 1 POC 使用 |

@@ -190,7 +190,7 @@
 1. `docs/CI_CD.md` 记录 CI/CD 原则、分层门禁、引入时机、发布/供应链边界和当前配置事实。
 2. `docs/GITIGNORE_POLICY.md` 记录 `.gitignore` 修改时机、规则分类和审查清单；根 `.gitignore` 是实际执行文件。
 3. `AGENTS.md` 只保留原则与文档地图入口，不复制具体 workflow 命令、平台细节或 ignore 规则。
-4. 当前没有配置 CI workflow，也没有批准 CD/自动发布；不得把 policy 文档当作 CI 已存在或已通过。
+4. 截至 D-0008 创建时尚未配置 CI workflow，也没有批准 CD/自动发布；首个 CI 后续由 D-0009 实施。不得把 policy 文档当作 CI 已通过或完整供应链门禁。
 5. 引入新工具链、编译产物、测试报告、runtime cache 或日志目录时，必须在同一任务中检查并更新根 `.gitignore`。
 
 
@@ -208,3 +208,19 @@
 3. 首个 CI 只覆盖仓库卫生、Markdown 链接、secret scan、wireframe XML/ignore hygiene，以及存在 `go.mod` 时的 Go 检查。
 4. 这不批准 CD、自动发布、签名、SBOM、依赖扫描或完整供应链门禁。
 5. 同步 feature 分支时优先使用普通 merge，避免改写历史和 force-push。
+
+
+## D-0010 文档事实单一权威来源机制
+
+- 日期：2026-11-27
+- 状态：`approved`
+- 批准证据：2026-11-27 用户指出 WIREFRAMES draft 状态与低保真批准不一致，要求审计同类问题，并明确提出“某个事项在哪里登记，应该只有一个权威文档记录和更改，其他文档只是引用”，同时允许提出更好方案。
+- 决策：采用单一权威来源机制；`docs/INFORMATION_AUTHORITY.md` 记录治理原则，`docs/authority-registry.json` 作为机器可读登记表，`scripts/check_doc_authority.py` 作为 CI/本地检查。
+
+### 边界
+
+1. 决策和批准证据只登记在 DECISIONS；当前状态、审核门和验证快照只登记在 PROJECT_STATUS。
+2. artifact 文档不独立维护审批状态，只链接权威记录。
+3. policy、执行配置和运行结果分别登记，禁止混写。
+4. checker 只能防止已登记的 stale/缺失引用问题，不能替代语义审查；发现新类型漂移时必须补登记规则。
+5. 本决策批准治理原则和首版 enforcement 机制，不表示 registry 覆盖已经完整。

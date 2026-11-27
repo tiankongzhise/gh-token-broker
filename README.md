@@ -90,13 +90,14 @@ GitHub API / Git over HTTPS
 - [威胁模型](docs/THREAT_MODEL.md)
 - [决策记录](docs/DECISIONS.md)
 - [文档审计](docs/DOCUMENTATION_AUDIT.md)
+- [信息权威来源](docs/INFORMATION_AUTHORITY.md)
 - [安全政策](SECURITY.md)
 - [Git 治理](docs/GIT_GOVERNANCE.md)
 - [项目操作规则](AGENTS.md)
 
 ## 当前实现状态
 
-当前仓库只有产品、架构、开发、测试、安全和项目治理文档，以及基础的 push 前机密信息检查脚本。尚无 daemon、MCP server、WebUI 或 credential helper 实现。
+`main` 当前包含产品、架构、开发、测试、安全、项目治理文档、CI 和仓库检查脚本；尚无合并进 `main` 的 daemon、MCP server、WebUI 或 credential helper 实现。后端 Phase 1 POC 与 WebUI 低保真产物仍在各自 feature 分支，未合并到 `main`。
 
 ## License
 
