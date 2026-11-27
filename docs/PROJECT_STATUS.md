@@ -54,6 +54,16 @@
 
 规则：同一时刻只处理一个 integration；main CI 通过后再同步另一个分支。权威原则见 [BRANCHING](BRANCHING.md)。
 
+## 3.2 当前暂停点（2026-11-27）
+
+用户要求“下班了先暂停任务，记录进度，回家再继续”。当前工作暂停在 PR #14 `chore/main-pr-gate`：
+
+1. PR #14 已包含三组已推送提交：open-main-PR gate/freshness、push 前身份确认异常触发修正、推送守卫机器可读约定对齐。`3ae497c` 的 PR CI 已成功。
+2. 本轮新增需求是缩小审核面：只保护 `AGENTS.md` 既有约束不被模糊授权静默 mutation；不建立泛化 control-plane 人工审核机制。
+3. 当前已保存 `scripts/check_agents_mutation.py` 草案，但尚未接入 CI，尚未写 D-0021/规则文档，尚未完成验证。
+4. 恢复时下一步：补 AGENTS mutation 行为规则、D-0021、CI 接入、authority registry/CI_CD/DOCUMENTATION_AUDIT/PROJECT_STATUS 更新，验证后推送并让 PR #14 CI 重新通过。
+5. 在 PR #14 合并前，不得继续 feature 新实现；这是 open-main-PR gate 要强制执行的场景本身。
+
 ## 4. 未决事项
 
 按优先级排序：
