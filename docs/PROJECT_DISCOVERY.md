@@ -12,7 +12,7 @@
 | 主要语言方向 | Go（建议，尚未开始实现） |
 | 持久化方向 | SQLite 元数据/审计；加密 SQLite secret payload + Windows Credential Manager 保存 master key（D-0002 已批准） |
 | 部署形态 | 本地单用户，不公网暴露 |
-| 许可证 | LGPL 2.1（用户已指定；当前按 `LGPL-2.1-only` 记录） |
+| 许可证 | `LGPL-2.1-only`（用户已确认） |
 | 实现状态 | 见 [PROJECT_STATUS](PROJECT_STATUS.md) |
 
 ## 2. 用户明确目标
@@ -261,13 +261,12 @@ python scripts/check_secrets.py
 
 ## 8. 未决事项
 
-1. LGPL 2.1 的精确 SPDX 语义：`LGPL-2.1-only` 还是 `LGPL-2.1-or-later`。
-2. scoped token 父子失效语义在目标 GitHub App 上的实测结果。
-3. SQLite 驱动与 schema migration 方案。
-4. WebUI 技术栈与页面范围。
-5. 是否支持 GitHub Enterprise host 的优先级。
-6. raw token 兼容模式是否默认存在，还是仅编译/配置为高级模式。
-7. 是否需要 operation-only MCP 作为第一交付通道。
+1. scoped token 父子失效语义在目标 GitHub App 上的实测结果。
+2. SQLite 驱动与 schema migration 方案。
+3. WebUI 技术栈与页面范围。
+4. 是否支持 GitHub Enterprise host 的优先级。
+5. raw token 兼容模式是否默认存在，还是仅编译/配置为高级模式。
+6. 是否需要 operation-only MCP 作为第一交付通道。
 
 ## 9. 置信度摘要
 

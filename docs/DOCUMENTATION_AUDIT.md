@@ -21,7 +21,7 @@
 
 | ID | 问题 | 证据/影响 | 状态 |
 |---|---|---|---|
-| DOC-001 | 许可证未确定且没有许可证文本 | README 原声明“许可证尚未确定”；仓库无 LICENSE | **已关闭**：用户指定 LGPL 2.1，新增 `LICENSE`，README 和 D-0001 已更新；only/or-later 精确语义仍待确认 |
+| DOC-001 | 许可证未确定且没有许可证文本 | README 原声明“许可证尚未确定”；仓库无 LICENSE | **已关闭**：用户确认 `LGPL-2.1-only`，新增 `LICENSE`，README 和 D-0001 已更新 |
 | DOC-002 | `AGENTS.md` 同时包含长期规则、当前阶段、批准、角色状态、验证状态等可变内容 | 可变状态容易过期，agent 不知道更新哪里 | **已关闭**：AGENTS 改为框架约束 + 文档地图；可变状态迁入 `docs/PROJECT_STATUS.md` |
 | DOC-003 | 缺少决策日志/ADR 入口 | license、secret store、并行 worktree 等选择无统一状态 | **已关闭**：新增 `docs/DECISIONS.md` |
 | DOC-004 | secret store 表述不一致/矛盾 | 用户初始目标是加密 SQLite；发现文档曾倾向直接 Credential Manager；测试计划已包含加密测试 | **已关闭**：用户已批准 D-0002，MVP 采用加密 SQLite + WCM master key |

@@ -12,15 +12,16 @@
 | 批准状态 | **有限授权，不是完整产品基线批准** | 授权并行推进 A 低保真和后端核心；不视为高保真、Demo、完整后端、raw token 策略或 WebUI 技术栈批准 |
 | 后端核心解释 | 已确认采用保守解释：按 [DEVELOPMENT](DEVELOPMENT.md) Phase 1 的核心 token chain POC 边界执行 | 2026-11-27 用户确认“采取保守解释”；不自动包含 MCP、WebUI、scoped token、多 agent policy |
 | 产品实现状态 | 尚未开始；当前主 worktree 正在进行文档治理/结构修正 | 本文件创建时无产品代码 |
-| 许可证 | LGPL 2.1 已由用户指定；仓库按 `LGPL-2.1-only` 记录 | 用户原话为“本项目使用 LGPL 2.1 许可”；only/or-later 精确语义仍需确认，见 [DECISIONS](DECISIONS.md#d-0001-license-lgpl-21) |
+| 许可证 | **已确认**：`LGPL-2.1-only` | 2026-11-27 用户明确选择；见 [DECISIONS](DECISIONS.md#d-0001-license-lgpl-21) |
 | secret store MVP | **已批准**：加密 SQLite + Windows Credential Manager 保存 master key | 2026-11-27 用户批准 D-0002；见 [DECISIONS](DECISIONS.md#d-0002-secret-store-mvp) |
-| 当前审核门 | 两项并行工作可执行；许可证精确语义待选择 | secret store 与后端 POC 保守范围已确认；文档治理基线已提交到本地 main |
+| 当前审核门 | 两项并行工作可执行；下一人工门为各自阶段产物审查 | 许可证、secret store 与后端 POC 保守范围均已确认；文档治理基线已提交到本地 main |
 
 ## 2. 批准与授权记录
 
 | 日期 | 用户授权/决定 | 适用范围 | 不构成对什么事项的批准 |
 |---|---|---|---|
-| 2026-11-27 | “本项目使用 LGPL 2.1 许可” | 许可证族与版本 2.1 | 不自动明确 `only` vs `or-later` |
+| 2026-11-27 | “本项目使用 LGPL 2.1 许可” | 许可证族与版本 2.1 | 当时尚未明确 `only` vs `or-later` |
+| 2026-11-27 | 明确选择 `LGPL-2.1-only` | 许可证精确 SPDX 语义 | 不表示未来自动接受 or-later |
 | 2026-11-27 | 开两个 worktree：一个前端低保真确认，一个后端核心 | 并行工作组织方式 | 不批准完整后端、MCP、WebUI 实现、scoped token 或 raw token 策略 |
 | 2026-11-27 | 批准 D-0002 secret store MVP | 加密 SQLite + master key in Windows Credential Manager | 不批准跳过 AEAD/key rotation/恢复设计要求 |
 | 2026-11-27 | “采取保守解释” | 后端核心按 Phase 1 core token chain POC | 不扩展到 MCP、WebUI、scoped token、多 agent policy |
@@ -42,13 +43,12 @@
 
 按优先级排序：
 
-1. **LGPL 精确 SPDX**：`LGPL-2.1-only` 还是 `LGPL-2.1-or-later`。
-2. scoped token 父/子失效语义在目标 GitHub App 上的实测结果。
-3. WebUI 技术栈与页面范围。
-4. raw token 兼容模式是否默认存在，还是仅编译/配置为高级模式。
-5. GitHub Enterprise host 支持优先级。
-6. operation-only MCP 是否作为第一交付通道。
-7. SQLite 驱动与 schema migration 方案。
+1. scoped token 父/子失效语义在目标 GitHub App 上的实测结果。
+2. WebUI 技术栈与页面范围。
+3. raw token 兼容模式是否默认存在，还是仅编译/配置为高级模式。
+4. GitHub Enterprise host 支持优先级。
+5. operation-only MCP 是否作为第一交付通道。
+6. SQLite 驱动与 schema migration 方案。
 
 ## 5. 当前验证状态
 
@@ -76,5 +76,6 @@
 |---|---|---|
 | 2026-11-27 | 初始化项目文档和 secret scan baseline | commit `c55ea97` |
 | 2026-11-27 | 用户指定 LGPL 2.1、要求并行 worktree、要求审计文档并重构 AGENTS 为文档地图 | 本轮文档治理变更 |
-| 2026-11-27 | 用户批准 D-0002、确认后端核心保守解释为 Phase 1，并允许创建本地 commit | 并行执行边界已确认；许可证 only/or-later 仍待选择 |
+| 2026-11-27 | 用户批准 D-0002、确认后端核心保守解释为 Phase 1，并允许创建本地 commit | 并行执行边界已确认 |
 | 2026-11-27 | 文档治理基线提交到本地 main `be69311`；两个 worktree 已 fast-forward | 尚未 push |
+| 2026-11-27 | 用户确认许可证为 `LGPL-2.1-only` | 精确许可证语义已关闭 |
