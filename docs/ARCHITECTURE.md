@@ -191,6 +191,25 @@ profiles:
 6. rate limit 是否通过。
 7. min_ttl 是否可满足。
 
+### 3.5A Agent Enrollment / Approval Service
+
+默认 agent 接入采用审批模式，而不是要求用户手工编写完整 policy。
+
+核心概念：
+
+- **agent authorization code**：用户生成的一次性或短寿命高熵授权码，只允许 agent 提交接入/权限申请或完成绑定；不直接代表 GitHub 权限。
+- **discovery public node**：localhost-only、无需凭证可读的协议元数据 endpoint，公开 API version、申请 schema、支持的 profile、能力标记和错误码。这里 public 指协议元数据公开，不是公网公开。
+- **permission application**：agent 用授权码提交的机器可读申请，包含自报身份/项目上下文、host、owner/repo、profile、min_ttl、reason。
+- **approval decision**：用户全部批准、部分批准/降权或拒绝。批准后系统创建或更新 agent credential、policy 和后续 grant/token 边界。
+
+安全约束：
+
+- agent 自报 project/name/version/reason 是未验证声明，不是安全事实。
+- 授权码明文只应在生成时显示一次；服务端只保存 hash/派生值。
+- 授权码过期、已使用或被撤销后不得再提交申请。
+- 批准、部分批准、降权和拒绝都必须写审计。
+- 高风险权限默认不批准或需要单独确认。
+
 ### 3.6 Grant Service
 
 grant 用于解耦“授权决策”和“实际秘密交付”。
@@ -317,6 +336,32 @@ SQLite 存非秘密或加密后的结构化数据。初版建议表：
 - created_at / updated_at
 - disabled_at
 
+#### `agent_authorization_codes`
+
+- id
+- code_hash
+- label nullable
+- expires_at
+- max_uses
+- use_count
+- created_at
+- revoked_at
+- last_used_at
+
+#### `permission_applications`
+
+- id
+- code_id
+- agent_claimed_name/project metadata
+- host/owner/repo/profile request_json
+- min_ttl_seconds
+- reason
+- status pending/approved/partially_approved/rejected/expired
+- created_at
+- decided_at
+- decision_json
+- decision_reason
+
 #### `agent_policies`
 
 - id
@@ -401,7 +446,21 @@ User explicitly starts auth
 - reauth 必须由用户显式确认。
 - device code/user code 不能视为长期秘密，但也应避免日志持久化。
 
-### 4.2 agent 申请访问
+### 4.2 agent 接入、申请与审批（默认审批模式）
+
+```text
+user -> WebUI create agent authorization code
+user -> agent: provide authorization code out-of-band
+agent -> broker discovery public node: read protocol metadata
+agent -> broker submit permission application(code, project, repos, profiles, minTTL, reason)
+broker -> validate code expiry/use/revocation and request shape
+broker -> create pending approval; no GitHub access granted yet
+user -> Approval Inbox: approve all / partial approve / reject
+broker -> atomically create or update agent credential + policy
+broker -> write audit and return machine-readable decision
+```
+
+后续已批准 agent 请求访问：
 
 ```text
 agent -> MCP authorize(repo, operation/profile, minTTL)
@@ -414,6 +473,8 @@ agent -> MCP authorize(repo, operation/profile, minTTL)
   -> grant service creates short-lived grant
   -> MCP returns grant id and non-secret metadata
 ```
+
+人工模式仍可直接编辑 agent credential/policy，但仅作为高级管理路径。
 
 不返回内容：
 
@@ -531,6 +592,9 @@ HTTP 安全要求：
 
 - `github_auth_status`
 - `github_list_allowed_access`
+- `github_get_discovery_document`（或通过 localhost well-known HTTP endpoint，不一定是 MCP tool）
+- `github_submit_permission_application`
+- `github_get_application_decision`
 - `github_request_access_grant`
 - `github_revoke_grant`
 - `github_revoke_token_issue`
@@ -546,9 +610,10 @@ HTTP 安全要求：
 
 ### 6.1 页面初稿
 
-- Dashboard：授权状态、refresh 状态、最近失败、reauth 提醒。
+- Dashboard：授权状态、refresh 状态、pending approvals、最近失败、reauth 提醒。
+- Approvals：生成 agent 授权码、审批 permission application、全部/部分批准或拒绝。
 - GitHub Apps：app/account/installation 状态。
-- Agents：agent credential、策略、启用/禁用。
+- Agents：agent credential、策略、启用/禁用（高级人工模式）。
 - Token Issues：发放、到期、revoke 状态。
 - Grants：active/redeemed/expired。
 - Audit：事件查询和详情。

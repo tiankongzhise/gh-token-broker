@@ -8,13 +8,13 @@
 
 | 字段 | 当前值 | 证据/备注 |
 |---|---|---|
-| 当前阶段 | WebUI 低保真产物与后端 Phase 1 core token chain POC 已产出，均停在各自人工审查门 | 2026-11-27 用户授权并行推进；本阶段产物不代表完整产品基线批准 |
-| 批准状态 | **有限授权，不是完整产品基线批准** | 授权并行推进 A 低保真和后端核心；不视为高保真、Demo、完整后端、raw token 策略或 WebUI 技术栈批准 |
+| 当前阶段 | WebUI 低保真已按用户反馈改为审批优先方向并等待复审；后端 Phase 1 core token chain POC 已通过审查 | 2026-11-27 用户授权并行推进；本阶段产物不代表完整产品基线批准 |
+| 批准状态 | **有限授权，不是完整产品基线批准** | 后端 token chain 已接受为 Phase 2 技术地基；审批模式方向已确认；仍不视为高保真、Demo、完整后端、raw token 策略或 WebUI 技术栈批准 |
 | 后端核心解释 | 已确认采用保守解释：按 [DEVELOPMENT](DEVELOPMENT.md) Phase 1 的核心 token chain POC 边界执行 | 2026-11-27 用户确认“采取保守解释”；不自动包含 MCP、WebUI、scoped token、多 agent policy |
-| 产品实现状态 | 后端 Phase 1 POC 已在后端 worktree 提交；WebUI 低保真与审核讲解 Demo 已在 WebUI worktree 提交 | 后端 `feat/backend-core` commit `9c1ba2a`；WebUI `feat/webui-wireframes` commits `d1f8157`、`e0266c1`；均未 push、未合并 |
+| 产品实现状态 | 后端 Phase 1 POC 已在后端 worktree 提交；WebUI 低保真与审核讲解 Demo 已在 WebUI worktree 提交 | 后端 `feat/backend-core` commit `9c1ba2a`；WebUI `feat/webui-wireframes` commits `d1f8157`、`e0266c1`、`4fe1a13`；均未 push、未合并 |
 | 许可证 | **已确认**：`LGPL-2.1-only` | 2026-11-27 用户明确选择；见 [DECISIONS](DECISIONS.md#d-0001-license-lgpl-21) |
 | secret store MVP | **已批准**：加密 SQLite + Windows Credential Manager 保存 master key | 2026-11-27 用户批准 D-0002；见 [DECISIONS](DECISIONS.md#d-0002-secret-store-mvp) |
-| 当前审核门 | **A 低保真人工审查门 + 后端 Phase 1 POC 人工审查门** | 低保真需用户确认页面/流程/状态；POC 需用户确认是否接受为后续 Phase 2 技术基础；不得自行进入高保真、Demo 或 Phase 2 |
+| 当前审核门 | **审批优先低保真复审门** | 后端 POC 已通过但仍未启动 Phase 2；审批模式 wireframes 需用户复审；不得自行进入高保真、Demo 或 Phase 2 |
 
 ## 2. 批准与授权记录
 
@@ -26,6 +26,8 @@
 | 2026-11-27 | 批准 D-0002 secret store MVP | 加密 SQLite + master key in Windows Credential Manager | 不批准跳过 AEAD/key rotation/恢复设计要求 |
 | 2026-11-27 | “采取保守解释” | 后端核心按 Phase 1 core token chain POC | 不扩展到 MCP、WebUI、scoped token、多 agent policy |
 | 2026-11-27 | 允许 commit | 授权创建本地 git commit | 不授权 push、强推、改写历史或添加 AI 署名 |
+| 2026-11-27 | 审批模式方向 | 默认 UX：用户生成授权码，agent discovery 并提交权限申请，用户全部/部分审批；人工模式高级保留 | 不批准具体前端技术栈、高保真、discovery API 最终实现契约 |
+| 2026-11-27 | “后端通过，token chain 当作 Phase 2 的技术地基” | 接受 Phase 1 token chain 核心语义作为 Phase 2 地基 | 不表示 Phase 2 已启动，不批准所有实现细节或真实 GitHub 语义 |
 
 没有任何记录表明以下内容已批准：完整 PRD/架构基线、WebUI 技术栈、高保真设计、Demo、raw token 兼容模式、GitHub Enterprise 优先级、完整发布流程。
 
@@ -44,11 +46,13 @@
 按优先级排序：
 
 1. scoped token 父/子失效语义在目标 GitHub App 上的实测结果。
-2. WebUI 技术栈与页面范围。
-3. raw token 兼容模式是否默认存在，还是仅编译/配置为高级模式。
-4. GitHub Enterprise host 支持优先级。
-5. operation-only MCP 是否作为第一交付通道。
-6. SQLite schema migration 方案；Phase 1 POC 已选用 `modernc.org/sqlite` 作为纯 Go 驱动，但该选型尚未被批准为长期架构决策。
+2. 审批模式低保真细节：授权码 TTL/一次性语义、部分批准粒度、高风险项确认方式、agent 自报信息展示。
+3. discovery public node 与 permission application 的最终 API/schema 契约。
+4. WebUI 技术栈。
+5. raw token 兼容模式是否默认存在，还是仅编译/配置为高级模式。
+6. GitHub Enterprise host 支持优先级。
+7. operation-only MCP 是否作为第一交付通道。
+8. SQLite schema migration 方案；Phase 1 POC 已选用 `modernc.org/sqlite` 作为纯 Go 驱动，但该选型尚未被批准为长期架构决策。
 
 ## 5. 当前验证状态
 
@@ -59,7 +63,7 @@
 | Go 单元测试 | 后端 worktree：`go test -count=1 -timeout=90s ./...` | 已在 `feat/backend-core` 验证 | 2026-11-27 通过，全部为 mock/test key，无真实 GitHub 调用 |
 | Go vet/build | 后端 worktree：`go vet ./... && go build ./...` | 已在 `feat/backend-core` 验证 | 2026-11-27 通过 |
 | Go race spot check | 后端 worktree：`CGO_ENABLED=1 go test -race -count=1 -timeout=90s ./internal/tokenchain ./internal/platform/winmutex` | 已做局部验证，不是完整 CI 门禁 | 2026-11-27 通过 |
-| Wireframe artifact 检查 | WebUI worktree：生成脚本运行、9 个 SVG XML parse、walkthrough 静态/JS 语法/简化 DOM runtime smoke、本地 HTTP 访问 | 已验证 | 2026-11-27 通过 |
+| Wireframe artifact 检查 | WebUI worktree：生成脚本运行、12 个 SVG XML parse、walkthrough JS syntax、本地 HTTP 访问 | 已验证 | 2026-11-27 审批模式更新后通过 |
 | 启动/真实 GitHub 冒烟 | 未运行 | 需要真实 GitHub App 与用户授权，不能在审查前虚构 | 未运行 |
 
 ## 6. 角色与委派状态
@@ -85,3 +89,6 @@
 | 2026-11-27 | WebUI worktree 提交低保真 wireframes 与 `docs/WIREFRAMES.md` | `feat/webui-wireframes` commit `d1f8157`；待用户审查 |
 | 2026-11-27 | 后端 worktree 提交 Phase 1 core token chain POC | `feat/backend-core` commit `9c1ba2a`；测试/build/vet/secret scan 通过；待用户审查 |
 | 2026-11-27 | WebUI worktree 增加低保真/后端 POC 审核讲解 Demo | `feat/webui-wireframes` commit `e0266c1`；用于辅助当前审核，不代表进入高保真或 Demo 阶段 |
+| 2026-11-27 | 用户指出原前端过于繁琐，确认审批模式方向 | D-0004 approved；人工模式高级保留 |
+| 2026-11-27 | 用户接受后端 POC 为 Phase 2 技术地基 | D-0005 approved；Phase 2 未启动 |
+| 2026-11-27 | WebUI worktree 增加审批优先低保真 | `feat/webui-wireframes` commit `4fe1a13`；待用户复审 |

@@ -75,3 +75,60 @@
 - `feat/backend-core` 负责后端核心 POC。
 - 两边不得互相修改对方负责的产物；共享规则/状态变更在主 worktree 或明确的文档治理分支处理。
 - 并行授权不等于完整产品基线批准；后端 POC 范围仍以 PROJECT_STATUS 为准。
+
+## D-0004 默认 agent 接入 UX：审批模式优先，人工模式高级保留
+
+- 日期：2026-11-27
+- 状态：`approved`
+- 批准证据：用户明确说明原低保真“前端太过繁琐……需要我设置的东西过多”，并提出希望：登录 GH Token Broker 后生成授权码，把授权码交给 agent；agent 读取公开节点了解协议，用授权码提交项目所需 GitHub 权限申请；用户只审批，并可全部或部分批准。用户同时说明原低保真“可以保留做人工模式”，但更希望有“审批模式”。
+- 决策：**agent 接入的默认 UX 采用 agent-initiated approval mode；原手工配置 agent credential/repo/profile 的界面保留为高级人工模式，不作为默认路径。**
+
+### 核心含义
+
+- 用户默认只需要：
+  1. 登录本地 GH Token Broker。
+  2. 生成一次性或短寿命 agent 授权码。
+  3. 把授权码交给 agent。
+  4. 在 Approval Inbox 审批 agent 提交的权限申请，可全部批准、部分批准/降权或拒绝。
+- agent 需要能够读取 broker 的 localhost discovery public node，了解协议版本、endpoint、支持的 profile 和申请格式。这里 “public” 指无需凭证可读的协议元数据，不是公网公开。
+- 授权码只代表“允许提交申请/建立接入请求”，不代表已经获得 GitHub 访问能力。
+- 批准后系统才创建或更新 agent credential、policy、grant/token 边界。
+- 手工 Agents/Token/Grants 管理能力仍保留，用于高级修正、排障、rotate/disable/revoke。
+
+### 理由
+
+- 项目面向 agent 使用；agent 最了解自己的项目上下文和所需权限，比用户手工猜测 repo pattern/profile 更准确。
+- 用户主要职责应是风险判断和审批，而不是理解并维护复杂策略语法。
+- 部分批准能在“全拒绝”和“全批准”之间提供实际可用的最小权限路径。
+
+### 后果与待细化边界
+
+- 低保真必须增加审批模式页面/流程；原 wireframes 不应删除，而应重新标注为高级人工模式。
+- 后端契约需要增加 discovery document、authorization code bootstrap、permission application、approval result 等概念。
+- 授权码建议一次性、短寿命、可撤销；具体 TTL 和是否允许重复使用仍需实现前确认。
+- 部分批准粒度建议第一版按仓库 + permission profile；是否细化到单个 GitHub permission 仍待确认。
+- agent 自报 project/name/version/reason 不能作为安全证明，UI 必须标为未验证声明。
+- 该决策不批准具体前端技术栈，也不代表高保真或 Demo 阶段已经开始。
+
+## D-0005 Phase 1 backend token chain POC 作为 Phase 2 技术地基
+
+- 日期：2026-11-27
+- 状态：`approved`
+- 批准证据：2026-11-27 用户明确回复“后端通过，token chain 当作 Phase 2 的技术地基”。
+- 决策：接受 `feat/backend-core` 中 Phase 1 core token chain POC 的核心语义作为 Phase 2 技术地基。
+
+### 接受的语义范围
+
+- device flow 显式授权。
+- refresh token 加密存 SQLite，master key 存 Windows Credential Manager。
+- refresh token 轮换与状态/过期时间同事务持久化。
+- refresh 互斥，避免同一账户并发刷新导致链损坏。
+- parent token 仅内存缓存，不明文落盘。
+- 普通 token 请求不得自动启动 device flow；refresh 失效进入显式 reauth。
+
+### 不构成批准的内容
+
+- 不表示 Phase 2 已经开始；进入 Phase 2 仍需用户明确任务指示。
+- 不表示 `modernc.org/sqlite`、当前 schema、CLI 命令表面或所有实现细节成为永久架构决策。
+- 不批准 MCP、WebUI、scoped token、多 agent policy、raw token 兼容模式。
+- 不替代真实 GitHub App device-flow/refresh 冒烟验证。
