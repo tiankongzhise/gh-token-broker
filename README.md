@@ -95,6 +95,7 @@ GitHub API / Git over HTTPS
 - [安全政策](SECURITY.md)
 - [Git 治理](docs/GIT_GOVERNANCE.md)
 - [分支与文件 Ownership](docs/BRANCHING.md)
+- [提交信息规范](docs/COMMIT_MESSAGES.md)
 - [项目操作规则](AGENTS.md)
 
 ## 当前实现状态

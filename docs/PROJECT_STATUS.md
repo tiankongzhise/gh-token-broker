@@ -32,7 +32,7 @@
 | 2026-11-27 | 用户修正降权语义并确认“低保真确认” | 第一版允许按仓库批准/拒绝并降权 permission profile；低保真信息架构与审批交互方向通过 | 不批准最终视觉、前端技术栈、后端 API schema 或自动开始高保真 |
 | 2026-11-27 | 用户要求 merged branches 及时清理，并选择只删除短分支 | 已合并 chore/fix 分支清理；feature 分支暂存但失去 active 写入权 | 不授权删除仍有未合并工作的分支或改写历史 |
 | 2026-11-27 | 用户选择推荐版本管理方案 | SemVer + VERSION + vX.Y.Z tag + CI consistency check + Go ldflags 注入 | 不批准自动 release/CD、签名、SBOM 或 artifact 上传 |
-| 2026-11-27 | 用户要求治理基线同步后开始高保真和后端阶段2 | 启动 B 高保真与 backend Phase 2 safe delivery | 不批准 Demo、正式 WebUI 技术栈、MCP、scoped token 完整实现或 raw token 兼容模式 |
+| 2026-11-27 | 用户要求治理基线同步后开始高保真和后端阶段2 | 启动 B 高保真与 backend Phase 2 safe delivery | 不批准 Demo、正式 WebUI 技术栈、MCP、完整 policy engine 或 raw token 兼容模式 |
 
 没有任何记录表明以下内容已批准：完整 PRD/架构基线、WebUI 技术栈、高保真设计、Demo、raw token 兼容模式、GitHub Enterprise 优先级、完整发布流程。
 
@@ -42,7 +42,7 @@
 |---|---|---|---|---|
 | 主文档/治理 | `E:\github\gh-token-broker` | `main` | 根文档、`docs/`、`scripts/check_secrets.py`、`.gitignore`、许可证与本阶段用户明确要求的文档治理 | 不开始产品实现；首个 CI workflow 已配置 |
 | WebUI 高保真 | `E:\github\gh-token-broker-webui` | planned: `feat/webui-high-fidelity` | `design/high-fidelity/`、`docs/DESIGN_SPEC.md` | 不定正式前端技术栈、不进入 Demo、不改后端核心文件 |
-| 后端 Phase 2 | `E:\github\gh-token-broker-backend` | planned: `feat/backend-safe-delivery` | `cmd/`、`internal/`、`go.mod`、`go.sum`、`config.example.yaml`；范围为 exec wrapper、credential helper、min_ttl、基础审计与 Windows 验证 | 不做 MCP/WebUI/scoped token 完整实现；不返回 raw token 给模型上下文 |
+| 后端 Phase 2 | `E:\github\gh-token-broker-backend` | planned: `feat/backend-safe-delivery` | `cmd/`、`internal/`、`go.mod`、`go.sum`、`config.example.yaml`；范围按 CR-0001 为 scoped/grant 基础、exec wrapper、credential helper、min_ttl、基础审计与 Windows 验证 | 不做 MCP/WebUI/scoped token 完整实现；不返回 raw token 给模型上下文 |
 
 注意：`feat/webui-wireframes` 与 `feat/backend-core` 已按用户选择暂存，但在 ownership registry 中为 `integrated`，不再拥有写入权。后续高保真与 Phase 2 使用新 active 分支；实时状态以 `git worktree list` 和 `docs/branch-ownership.json` 为准。
 
@@ -58,7 +58,7 @@
 
 按优先级排序：
 
-1. scoped token 父/子失效语义在目标 GitHub App 上的实测结果。
+1. scoped token 父/子失效语义在目标 GitHub App 上的实测结果；CR-0001 已允许提前实现基础能力，但真实语义仍需冒烟矩阵。
 2. 高保真阶段开始前需确认：高风险项确认强度、审批模式 Dashboard 精简程度、人工模式页面合并/拆分。
 3. discovery public node 与 permission application 的最终 API/schema 契约。
 4. WebUI 技术栈。
@@ -76,7 +76,8 @@
 | 秘密扫描 | 仓库根：`python scripts/check_secrets.py` | 已配置；每次 push 前必须运行 | 2026-11-27 后端提交前通过；WebUI 提交前通过 |
 | 文档权威检查 | 仓库根：`python scripts/check_doc_authority.py` | 已配置，已接入 CI workflow | 2026-11-27 本地通过；PR #3 分支 CI 与 merge 后 main CI 通过 |
 | 分支 ownership 检查 | 仓库根：`python scripts/check_branch_ownership.py` | 已配置，已接入 CI workflow | 2026-11-27 本地通过；PR #7 修复后 main CI 通过；PR #9/#10 integration CI 通过 |
-| 版本格式检查 | 仓库根：`python scripts/check_version.py` | 本轮新增并接入 CI workflow；tag 上下文校验 tag 与 VERSION 一致 | 2026-11-27 本地通过 |
+| 版本格式检查 | 仓库根：`python scripts/check_version.py` | 已接入 CI workflow；tag 上下文校验 tag 与 VERSION 一致 | 2026-11-27 本地通过 |
+| commit message 检查 | 仓库根：`python scripts/check_commit_messages.py` | 本轮新增并接入 CI workflow；GitHub merge commit 豁免 | 2026-11-27 本地通过 |
 | CI workflow | `.github/workflows/ci.yml` 已配置；GitHub Actions job/context 为 `ci` | PR #1 分支 CI 与 merge 后 main CI 已通过；backend 首次同步 CI 暴露 Windows CRLF/gofmt 问题，本轮用 `.gitattributes` 修复 | 已真实运行 |
 | main 分支保护 | GitHub branch protection | 已配置：要求 PR、要求 `ci` 且 strict、enforce admins、禁止 force push/deletion | 2026-11-27 API 验证 |
 | Go 格式检查 | 后端 worktree：`gofmt -l cmd internal`（应无输出） | 已在 `feat/backend-core` 验证 | 2026-11-27 通过 |
@@ -124,3 +125,5 @@
 | 2026-11-27 | WebUI integration 完成 | PR #9 已合并；main CI 通过；低保真成果成为共同 main 基线，但不启动高保真 |
 | 2026-11-27 | backend integration 完成 | PR #10 已合并；main CI 通过；Phase 1 POC 成为共同 main 基线，但不启动 Phase 2 |
 | 2026-11-27 | 用户要求 merged branch cleanup、指出版本管理缺失，并授权之后开始高保真与后端 Phase 2 | 已删除已合并 chore/fix 短分支；feature 分支按用户选择暂存但转为 integrated；D-0014/D-0015/D-0016 记录 |
+| 2026-11-27 | 用户选择提前 scoped/grant 基础 | CR-0001/D-0017 approved；Phase 2 先实现 scoped token 与最小 grant 基础，exec/helper 不得使用 parent token |
+| 2026-11-27 | 用户要求后续 commit 使用中文并补充约束 | D-0018 approved；新增 COMMIT_MESSAGES 与结构性 checker，历史 commit 不回溯改写 |
