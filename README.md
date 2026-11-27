@@ -93,11 +93,12 @@ GitHub API / Git over HTTPS
 - [信息权威来源](docs/INFORMATION_AUTHORITY.md)
 - [安全政策](SECURITY.md)
 - [Git 治理](docs/GIT_GOVERNANCE.md)
+- [分支与文件 Ownership](docs/BRANCHING.md)
 - [项目操作规则](AGENTS.md)
 
 ## 当前实现状态
 
-`main` 当前包含产品、架构、开发、测试、安全、项目治理文档、CI 和仓库检查脚本；尚无合并进 `main` 的 daemon、MCP server、WebUI 或 credential helper 实现。后端 Phase 1 POC 与 WebUI 低保真产物仍在各自 feature 分支，未合并到 `main`。
+`main` 当前包含产品、架构、开发、测试、安全、项目治理文档、CI、仓库检查脚本、已批准的低保真 wireframes，以及 Phase 1 core token chain POC。尚无完整 daemon、MCP server、WebUI 或 credential helper 实现；POC 只是已接受的 Phase 2 技术地基，不代表 Phase 2 已启动。
 
 ## License
 

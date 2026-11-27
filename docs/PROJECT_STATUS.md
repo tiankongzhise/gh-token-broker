@@ -11,7 +11,7 @@
 | 当前阶段 | WebUI 审批优先低保真已获用户确认；后端 Phase 1 core token chain POC 已通过审查；下一阶段入口为 B 高保真，但尚未开始 | 2026-11-27 用户修正降权语义并确认“低保真确认”；高保真未获开始指令 |
 | 批准状态 | **有限授权，不是完整产品基线批准** | 后端 token chain 已接受为 Phase 2 技术地基；审批优先低保真已确认；仍不视为高保真、Demo、完整后端、raw token 策略或 WebUI 技术栈批准 |
 | 后端核心解释 | 已确认采用保守解释：按 [DEVELOPMENT](DEVELOPMENT.md) Phase 1 的核心 token chain POC 边界执行 | 2026-11-27 用户确认“采取保守解释”；不自动包含 MCP、WebUI、scoped token、多 agent policy |
-| 产品实现状态 | 后端 Phase 1 POC 已在后端 worktree 提交；WebUI 低保真与审核讲解 Demo 已在 WebUI worktree 提交 | 后端 `feat/backend-core` commit `9c1ba2a`；WebUI `feat/webui-wireframes` commits 已包含低保真、讲解 Demo、审批模式与降权语义修正；均未 push、未合并 |
+| 产品实现状态 | 已批准低保真 wireframes 与 Phase 1 core token chain POC 均已集成进 `main` | WebUI integration PR #9 已合并且 main CI 通过；backend integration PR #10 已合并且 main CI 通过；仍无完整 daemon、MCP server、WebUI 或 credential helper 实现 |
 | 许可证 | **已确认**：`LGPL-2.1-only` | 2026-11-27 用户明确选择；见 [DECISIONS](DECISIONS.md#d-0001-license-lgpl-21) |
 | secret store MVP | **已批准**：加密 SQLite + Windows Credential Manager 保存 master key | 2026-11-27 用户批准 D-0002；见 [DECISIONS](DECISIONS.md#d-0002-secret-store-mvp) |
 | 当前审核门 | **低保真已通过；高保真开始前的显式工作指令门** | 后端 POC 已通过但仍未启动 Phase 2；低保真确认不等于高保真/Demo/Phase 2 开始指令 |
@@ -41,14 +41,14 @@
 | WebUI 低保真 | `E:\github\gh-token-broker-webui` | `feat/webui-wireframes` | `design/wireframes/`、`docs/WIREFRAMES.md` 及低保真所需文档索引 | 不定最终视觉、不实现后端、不改后端核心文件 |
 | 后端核心 | `E:\github\gh-token-broker-backend` | `feat/backend-core` | 按 Phase 1：Go module、配置、secret store 抽象/实现、device flow、refresh chain、mock GitHub 单元测试 | 不做 MCP/WebUI/scoped token/多 agent policy；不返回 raw token 给模型上下文 |
 
-注意：两个工作流 worktree 创建时基于 `main` 的 commit `c55ea97`；2026-11-27 文档治理基线提交后，两个分支曾 fast-forward 到同一文档基线。当前两个分支已分别携带本阶段产物 commit：WebUI `d1f8157`、后端 `9c1ba2a`，均未合并回 main。后续实时分支状态以 `git worktree list` 为准。
+注意：两个工作流 worktree 创建时基于 `main` 的 commit `c55ea97`；2026-11-27 文档治理基线提交后，两个分支曾 fast-forward 到同一文档基线。WebUI 与 backend 的已验收产物现已分别通过 PR #9/#10 集成回 `main`；后续实时分支状态以 `git worktree list` 为准。
 
 ## 3.1 当前 integration queue
 
 | 顺序 | 分支 | 集成内容 | 当前状态 |
 |---|---|---|---|
-| 1 | `feat/webui-wireframes` | 已批准低保真 wireframes 与讲解 artifact | 待集成；不表示高保真开始 |
-| 2 | `feat/backend-core` | 已接受为 Phase 2 技术地基的 core token chain POC | 待集成；不表示 Phase 2 开始 |
+| 1 | `feat/webui-wireframes` | 已批准低保真 wireframes 与讲解 artifact | **已集成**：PR #9 已合并，main CI 通过；不表示高保真开始 |
+| 2 | `feat/backend-core` | 已接受为 Phase 2 技术地基的 core token chain POC | **已集成**：PR #10 已合并，main CI 通过；不表示 Phase 2 开始 |
 
 规则：同一时刻只处理一个 integration；main CI 通过后再同步另一个分支。权威原则见 [BRANCHING](BRANCHING.md)。
 
@@ -72,13 +72,14 @@
 |---|---|---|---|
 | 秘密扫描 | 仓库根：`python scripts/check_secrets.py` | 已配置；每次 push 前必须运行 | 2026-11-27 后端提交前通过；WebUI 提交前通过 |
 | 文档权威检查 | 仓库根：`python scripts/check_doc_authority.py` | 已配置，已接入 CI workflow | 2026-11-27 本地通过；PR #3 分支 CI 与 merge 后 main CI 通过 |
+| 分支 ownership 检查 | 仓库根：`python scripts/check_branch_ownership.py` | 已配置，已接入 CI workflow | 2026-11-27 本地通过；PR #7 修复后 main CI 通过；PR #9/#10 integration CI 通过 |
 | CI workflow | `.github/workflows/ci.yml` 已配置；GitHub Actions job/context 为 `ci` | PR #1 分支 CI 与 merge 后 main CI 已通过；backend 首次同步 CI 暴露 Windows CRLF/gofmt 问题，本轮用 `.gitattributes` 修复 | 已真实运行 |
 | main 分支保护 | GitHub branch protection | 已配置：要求 PR、要求 `ci` 且 strict、enforce admins、禁止 force push/deletion | 2026-11-27 API 验证 |
 | Go 格式检查 | 后端 worktree：`gofmt -l cmd internal`（应无输出） | 已在 `feat/backend-core` 验证 | 2026-11-27 通过 |
-| Go 单元测试 | 后端 worktree：`go test -count=1 -timeout=90s ./...` | 已在 `feat/backend-core` 验证 | 2026-11-27 通过，全部为 mock/test key，无真实 GitHub 调用 |
+| Go 单元测试 | 仓库根：`go test -count=1 -timeout=90s ./...` | 已在 integration 前后的 `feat/backend-core` 与 main CI 验证 | 2026-11-27 通过，全部为 mock/test key，无真实 GitHub 调用 |
 | Go vet/build | 后端 worktree：`go vet ./... && go build ./...` | 已在 `feat/backend-core` 验证 | 2026-11-27 通过 |
 | Go race spot check | 后端 worktree：`CGO_ENABLED=1 go test -race -count=1 -timeout=90s ./internal/tokenchain ./internal/platform/winmutex` | 已做局部验证，不是完整 CI 门禁 | 2026-11-27 通过 |
-| Wireframe artifact 检查 | WebUI worktree：生成脚本运行、12 个 SVG XML parse、模式分离检查、walkthrough JS syntax、本地 HTTP 访问 | 已验证 | 2026-11-27 模式分离与仓库级审批更新后通过 |
+| Wireframe artifact 检查 | WebUI worktree/main artifact：生成脚本运行、12 个 SVG XML parse、模式分离检查、walkthrough JS syntax、本地 HTTP 访问 | 已验证并随 PR #9 集成 | 2026-11-27 模式分离与仓库级审批更新后通过 |
 | 启动/真实 GitHub 冒烟 | 未运行 | 需要真实 GitHub App 与用户授权，不能在审查前虚构 | 未运行 |
 
 ## 6. 角色与委派状态
@@ -116,3 +117,5 @@
 | 2026-11-27 | 用户允许 GitHub PR merge commit 自动作者身份 | D-0011 approved；仅限 GitHub merge commit，本地普通提交身份不变 |
 | 2026-11-27 | 用户批准 CI 触发策略去重 | D-0012 approved；push CI 保留 main 与 feat/**，chore/fix 短分支依靠 PR CI |
 | 2026-11-27 | 用户批准两个已验收 feature 分支均集成，并选择实用严格 ownership 模式 | D-0013 approved；建立 integration queue 与 branch ownership registry |
+| 2026-11-27 | WebUI integration 完成 | PR #9 已合并；main CI 通过；低保真成果成为共同 main 基线，但不启动高保真 |
+| 2026-11-27 | backend integration 完成 | PR #10 已合并；main CI 通过；Phase 1 POC 成为共同 main 基线，但不启动 Phase 2 |
