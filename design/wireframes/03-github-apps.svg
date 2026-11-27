@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="820" viewBox="0 0 1280 820">
+<rect width="100%" height="100%" fill="#f4f4f4"/>
+<rect x="0" y="0" width="210" height="820" rx="0" fill="#e8e8e8" stroke="#555" stroke-width="2"/>
+<text x="24" y="42" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="20" font-weight="700" fill="#222" text-anchor="start">GH Token Broker</text>
+<text x="24" y="68" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" fill="#555" text-anchor="start">localhost WebUI</text>
+<rect x="14" y="88" width="182" height="38" rx="4" fill="#e8e8e8" stroke="#aaa" stroke-width="1"/>
+<text x="30" y="112" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#222" text-anchor="start">Dashboard</text>
+<rect x="14" y="140" width="182" height="38" rx="4" fill="#d4d4d4" stroke="#777" stroke-width="1"/>
+<text x="30" y="164" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="15" font-weight="700" fill="#222" text-anchor="start">GitHub Apps</text>
+<rect x="14" y="192" width="182" height="38" rx="4" fill="#e8e8e8" stroke="#aaa" stroke-width="1"/>
+<text x="30" y="216" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#222" text-anchor="start">Agents</text>
+<rect x="14" y="244" width="182" height="38" rx="4" fill="#e8e8e8" stroke="#aaa" stroke-width="1"/>
+<text x="30" y="268" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#222" text-anchor="start">Token / Grants</text>
+<rect x="14" y="296" width="182" height="38" rx="4" fill="#e8e8e8" stroke="#aaa" stroke-width="1"/>
+<text x="30" y="320" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#222" text-anchor="start">Audit</text>
+<rect x="14" y="348" width="182" height="38" rx="4" fill="#e8e8e8" stroke="#aaa" stroke-width="1"/>
+<text x="30" y="372" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#222" text-anchor="start">Settings</text>
+<rect x="14" y="704" width="182" height="88" rx="4" fill="#f7f7f7" stroke="#777" stroke-width="1"/>
+<text x="28" y="730" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="13" font-weight="700" fill="#222" text-anchor="start">本地状态</text>
+<text x="28" y="754" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" fill="#222" text-anchor="start">broker: running</text>
+<text x="28" y="776" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" fill="#222" text-anchor="start">127.0.0.1 only</text>
+<rect x="210" y="0" width="1070" height="72" rx="0" fill="#eeeeee" stroke="#555" stroke-width="2"/>
+<text x="238" y="44" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="24" font-weight="700" fill="#222" text-anchor="start">GitHub Apps — 授权与安装范围</text>
+<text x="1228" y="42" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" fill="#555" text-anchor="end">用户本地会话</text>
+<rect x="240" y="104" width="690" height="250" rx="4" fill="#ffffff" stroke="#555" stroke-width="2"/>
+<text x="256" y="132" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#222" text-anchor="start">App / Account 列表</text>
+<text x="256" y="160" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">table columns: name · host · user · auth status · parent expiry · refresh expiry</text>
+<text x="256" y="182" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">row actions: view / reauth / refresh now / mark untrusted</text>
+<text x="256" y="204" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">status badges: valid / refreshing / reauth_required / revoked / unknown_error</text>
+<text x="256" y="226" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">empty: 尚未配置 GitHub App → 进入 onboarding</text>
+<rect x="950" y="104" width="260" height="250" rx="4" fill="#ffffff" stroke="#555" stroke-width="2"/>
+<text x="966" y="132" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#222" text-anchor="start">添加 App</text>
+<text x="966" y="160" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">name / host / client id</text>
+<text x="966" y="182" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">client secret write-only</text>
+<text x="966" y="204" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">保存后只显示 fingerprint</text>
+<rect x="240" y="382" width="590" height="310" rx="4" fill="#ffffff" stroke="#555" stroke-width="2"/>
+<text x="256" y="410" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#222" text-anchor="start">详情 drawer（右侧或下方）</text>
+<text x="256" y="438" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">GitHub App metadata：client id、host、installations</text>
+<text x="256" y="460" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">授权状态机：valid → refreshing → valid / reauth_required</text>
+<text x="256" y="482" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">最近错误：machine code + human message + correlation id</text>
+<text x="256" y="504" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start"> Installation/repository coverage 警告</text>
+<rect x="860" y="382" width="350" height="310" rx="4" fill="#ffffff" stroke="#555" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="876" y="410" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#222" text-anchor="start">显式 reauth 确认</text>
+<text x="876" y="438" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">说明为何需要重新授权</text>
+<text x="876" y="460" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">确认按钮：开始 device flow</text>
+<text x="876" y="482" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">取消：保持 reauth_required</text>
+<text x="876" y="504" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">高风险提示：旧 token 可能失效</text>
+</svg>

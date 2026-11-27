@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="820" viewBox="0 0 1280 820">
+<rect width="100%" height="100%" fill="#f4f4f4"/>
+<rect x="0" y="0" width="210" height="820" rx="0" fill="#e8e8e8" stroke="#555" stroke-width="2"/>
+<text x="24" y="42" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="20" font-weight="700" fill="#222" text-anchor="start">GH Token Broker</text>
+<text x="24" y="68" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" fill="#555" text-anchor="start">localhost WebUI</text>
+<rect x="14" y="88" width="182" height="38" rx="4" fill="#e8e8e8" stroke="#aaa" stroke-width="1"/>
+<text x="30" y="112" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#222" text-anchor="start">Dashboard</text>
+<rect x="14" y="140" width="182" height="38" rx="4" fill="#e8e8e8" stroke="#aaa" stroke-width="1"/>
+<text x="30" y="164" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#222" text-anchor="start">GitHub Apps</text>
+<rect x="14" y="192" width="182" height="38" rx="4" fill="#e8e8e8" stroke="#aaa" stroke-width="1"/>
+<text x="30" y="216" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#222" text-anchor="start">Agents</text>
+<rect x="14" y="244" width="182" height="38" rx="4" fill="#e8e8e8" stroke="#aaa" stroke-width="1"/>
+<text x="30" y="268" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#222" text-anchor="start">Token / Grants</text>
+<rect x="14" y="296" width="182" height="38" rx="4" fill="#e8e8e8" stroke="#aaa" stroke-width="1"/>
+<text x="30" y="320" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#222" text-anchor="start">Audit</text>
+<rect x="14" y="348" width="182" height="38" rx="4" fill="#d4d4d4" stroke="#777" stroke-width="1"/>
+<text x="30" y="372" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="15" font-weight="700" fill="#222" text-anchor="start">Settings</text>
+<rect x="14" y="704" width="182" height="88" rx="4" fill="#f7f7f7" stroke="#777" stroke-width="1"/>
+<text x="28" y="730" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="13" font-weight="700" fill="#222" text-anchor="start">本地状态</text>
+<text x="28" y="754" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" fill="#222" text-anchor="start">broker: running</text>
+<text x="28" y="776" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" fill="#222" text-anchor="start">127.0.0.1 only</text>
+<rect x="210" y="0" width="1070" height="72" rx="0" fill="#eeeeee" stroke="#555" stroke-width="2"/>
+<text x="238" y="44" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="24" font-weight="700" fill="#222" text-anchor="start">Settings — 安全与本地运行</text>
+<text x="1228" y="42" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="13" font-weight="400" fill="#555" text-anchor="end">用户本地会话</text>
+<rect x="240" y="104" width="450" height="285" rx="4" fill="#ffffff" stroke="#555" stroke-width="2"/>
+<text x="256" y="132" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#222" text-anchor="start">本地服务</text>
+<text x="256" y="160" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">bind: 127.0.0.1</text>
+<text x="256" y="182" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">port / startup mode</text>
+<text x="256" y="204" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">single instance status</text>
+<text x="256" y="226" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">SQLite path（非秘密）</text>
+<rect x="720" y="104" width="490" height="285" rx="4" fill="#ffffff" stroke="#555" stroke-width="2"/>
+<text x="736" y="132" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#222" text-anchor="start">Secret store</text>
+<text x="736" y="160" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">backend: encrypted SQLite + WCM master key</text>
+<text x="736" y="182" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">status: available / unavailable / key version</text>
+<text x="736" y="204" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">操作：test access / rotate master key（未来）</text>
+<text x="736" y="226" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">不显示 master key 或任何秘密</text>
+<rect x="240" y="420" width="450" height="275" rx="4" fill="#ffffff" stroke="#555" stroke-width="2"/>
+<text x="256" y="448" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#222" text-anchor="start">Token 策略默认值</text>
+<text x="256" y="476" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">default min_ttl: 2h</text>
+<text x="256" y="498" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">safety margin</text>
+<text x="256" y="520" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">raw token output: disabled</text>
+<text x="256" y="542" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">若启用 raw token：高级模式 + 明显警告 + 审计</text>
+<rect x="720" y="420" width="490" height="275" rx="4" fill="#ffffff" stroke="#555" stroke-width="2"/>
+<text x="736" y="448" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#222" text-anchor="start">备份与恢复</text>
+<text x="736" y="476" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">备份说明：SQLite 密文/元数据可以备份；master key 不随备份</text>
+<text x="736" y="498" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">恢复状态预览：missing key → reauth_required</text>
+<text x="736" y="520" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">日志级别 / 日志脱敏状态</text>
+</svg>

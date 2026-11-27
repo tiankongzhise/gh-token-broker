@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="820" viewBox="0 0 1280 820">
+<rect width="100%" height="100%" fill="#f4f4f4"/>
+<text x="40" y="52" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="28" font-weight="700" fill="#222" text-anchor="start">WebUI 低保真页面与核心流程总览</text>
+<text x="40" y="82" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" fill="#555" text-anchor="start">评审重点：页面是否完整、流程是否闭环、状态是否覆盖；不评审颜色/字体/最终视觉。</text>
+<rect x="40" y="130" width="180" height="150" rx="4" fill="#ffffff" stroke="#555" stroke-width="2"/>
+<text x="56" y="158" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#222" text-anchor="start">1. 首次配置</text>
+<text x="56" y="186" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">GitHub Apps 空状态</text>
+<text x="56" y="208" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">添加 client id</text>
+<text x="56" y="230" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">write-only secret</text>
+<line x1="220" y1="205" x2="245" y2="205" stroke="#555" stroke-width="2"/>
+<text x="223" y="194" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="24" font-weight="700" fill="#222" text-anchor="start">→</text>
+<rect x="245" y="130" width="180" height="150" rx="4" fill="#ffffff" stroke="#555" stroke-width="2"/>
+<text x="261" y="158" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#222" text-anchor="start">2. 显式授权</text>
+<text x="261" y="186" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">device flow</text>
+<text x="261" y="208" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">用户浏览器确认</text>
+<text x="261" y="230" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">pending / success / error</text>
+<line x1="425" y1="205" x2="450" y2="205" stroke="#555" stroke-width="2"/>
+<text x="428" y="194" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="24" font-weight="700" fill="#222" text-anchor="start">→</text>
+<rect x="450" y="130" width="180" height="150" rx="4" fill="#ffffff" stroke="#555" stroke-width="2"/>
+<text x="466" y="158" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#222" text-anchor="start">3. 日常监控</text>
+<text x="466" y="186" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">Dashboard</text>
+<text x="466" y="208" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">refresh 状态</text>
+<text x="466" y="230" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">reauth warning</text>
+<line x1="630" y1="205" x2="655" y2="205" stroke="#555" stroke-width="2"/>
+<text x="633" y="194" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="24" font-weight="700" fill="#222" text-anchor="start">→</text>
+<rect x="655" y="130" width="180" height="150" rx="4" fill="#ffffff" stroke="#555" stroke-width="2"/>
+<text x="671" y="158" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#222" text-anchor="start">4. agent 策略</text>
+<text x="671" y="186" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">Agents</text>
+<text x="671" y="208" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">credential</text>
+<text x="671" y="230" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">repo/profile policy</text>
+<line x1="835" y1="205" x2="860" y2="205" stroke="#555" stroke-width="2"/>
+<text x="838" y="194" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="24" font-weight="700" fill="#222" text-anchor="start">→</text>
+<rect x="860" y="130" width="180" height="150" rx="4" fill="#ffffff" stroke="#555" stroke-width="2"/>
+<text x="876" y="158" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#222" text-anchor="start">5. 发放与撤销</text>
+<text x="876" y="186" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">Token Issues</text>
+<text x="876" y="208" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">Grants</text>
+<text x="876" y="230" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">revoke confirm</text>
+<line x1="1040" y1="205" x2="1065" y2="205" stroke="#555" stroke-width="2"/>
+<text x="1043" y="194" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="24" font-weight="700" fill="#222" text-anchor="start">→</text>
+<rect x="1065" y="130" width="180" height="150" rx="4" fill="#ffffff" stroke="#555" stroke-width="2"/>
+<text x="1081" y="158" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#222" text-anchor="start">6. 审计追踪</text>
+<text x="1081" y="186" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">Audit filters</text>
+<text x="1081" y="208" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">correlation id</text>
+<text x="1081" y="230" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">脱敏详情</text>
+<rect x="40" y="330" width="560" height="260" rx="4" fill="#ffffff" stroke="#555" stroke-width="2"/>
+<text x="56" y="358" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#222" text-anchor="start">页面结构</text>
+<text x="56" y="386" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">左侧导航固定：Dashboard / GitHub Apps / Agents / Token / Audit / Settings</text>
+<text x="56" y="408" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">每个列表页都包含：空状态、加载状态、错误状态、危险操作确认</text>
+<text x="56" y="430" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">Dashboard 聚合授权健康、refresh、reauth、最近失败和安全提示</text>
+<text x="56" y="452" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">详情优先使用右侧 drawer，避免页面跳转丢失上下文</text>
+<rect x="640" y="330" width="560" height="260" rx="4" fill="#ffffff" stroke="#555" stroke-width="2"/>
+<text x="656" y="358" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#222" text-anchor="start">安全约束贯穿</text>
+<text x="656" y="386" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">任何页面不回显完整 token / refresh token / client secret / master key</text>
+<text x="656" y="408" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">秘密输入使用 write-only 字段，保存后只显示 fingerprint / last-eight</text>
+<text x="656" y="430" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">revoke、disable、reauth、raw token 兼容模式都属于高风险或显式确认操作</text>
+<text x="656" y="452" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">WebUI 仅 loopback；Host/Origin 失败时显示专用错误页</text>
+<rect x="40" y="630" width="1160" height="120" rx="4" fill="#ffffff" stroke="#555" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="56" y="658" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#222" text-anchor="start">待用户确认的低保真范围问题</text>
+<text x="56" y="686" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">Token Issues 与 Grants 是否接受合并为一个顶部分页/双列表页面，还是拆成两个导航项？</text>
+<text x="56" y="708" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">Dashboard 是否以“授权健康 + 需要用户行动”为第一优先级，而不是 token 数量统计？</text>
+<text x="56" y="730" font-family="Microsoft YaHei, Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" fill="#333" text-anchor="start">高风险权限确认是否需要输入仓库名或勾选明确后果？</text>
+</svg>
