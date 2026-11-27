@@ -192,3 +192,19 @@
 3. `AGENTS.md` 只保留原则与文档地图入口，不复制具体 workflow 命令、平台细节或 ignore 规则。
 4. 当前没有配置 CI workflow，也没有批准 CD/自动发布；不得把 policy 文档当作 CI 已存在或已通过。
 5. 引入新工具链、编译产物、测试报告、runtime cache 或日志目录时，必须在同一任务中检查并更新根 `.gitignore`。
+
+
+## D-0009 main 分支保护与首个 CI 实施
+
+- 日期：2026-11-27
+- 状态：`approved`
+- 批准证据：2026-11-27 用户明确要求“main禁止直接push，任何对main的修改应该通过分支然后pr合并”，授权操作 GitHub 添加保护，并要求“添加ci，并push真实测试，分支ci通过后，合并到main，main ci通过后，为分支同步最新的main变化”。
+- 决策：main 采用分支保护 + PR 合并流程；首个 CI 使用 GitHub Actions 实现仓库卫生检查和条件化 Go 检查。
+
+### 边界
+
+1. 禁止直接向远端 `main` push；所有 main 修改必须通过分支和 PR。
+2. CI job/context 为 `ci`；分支保护和 CI 的实际远端状态以 PROJECT_STATUS 记录为准。
+3. 首个 CI 只覆盖仓库卫生、Markdown 链接、secret scan、wireframe XML/ignore hygiene，以及存在 `go.mod` 时的 Go 检查。
+4. 这不批准 CD、自动发布、签名、SBOM、依赖扫描或完整供应链门禁。
+5. 同步 feature 分支时优先使用普通 merge，避免改写历史和 force-push。

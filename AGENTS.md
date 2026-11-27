@@ -66,6 +66,7 @@
 ## 5. Git 与并行工作约束
 
 - 默认分支：`main`；协作流程为 GitHub Flow；短期分支使用 `feat/<short-kebab>`、`fix/<short-kebab>`、`chore/<short-kebab>`。
+- 禁止直接向远端 `main` push；所有对 `main` 的修改必须通过分支和 Pull Request 合并。确需变更保护规则时必须另行获得用户明确授权。
 - 提交格式：Conventional Commits 1.0.0，默认英文。
 - 先检查工作区，保留用户和其他代理已有改动；不擅自清理、强推、改写历史或执行其他不可逆操作。
 - 提交仅含本任务文件；提交前检查 diff 和 staged diff。

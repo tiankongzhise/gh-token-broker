@@ -2,7 +2,7 @@
 
 最近更新：2026-11-27
 
-本文定义 CI/CD 的目标、分层门禁、引入时机和供应链边界。**当前没有配置任何 CI workflow，也没有已批准的 CD/发布自动化。** 不得把本文当作“CI 已存在”或“CI 已通过”的证据。
+本文定义 CI/CD 的目标、分层门禁、引入时机和供应链边界。仓库已配置首个 CI workflow，但**没有已批准的 CD/发布自动化**。不得把 CI 配置当作“所有发布/供应链门禁已完成”的证据。
 
 ## 1. 原则
 
@@ -18,9 +18,9 @@
 
 | 项 | 当前状态 |
 |---|---|
-| CI workflow | **未配置**；仓库没有 `.github/workflows/` 产品流水线 |
+| CI workflow | **已配置首个 workflow**：`.github/workflows/ci.yml`，job/context 为 `ci` |
 | CD/发布自动化 | **未配置、未批准** |
-| secret scan | 本地脚本 `python scripts/check_secrets.py` 已配置，push 前必须运行 |
+| secret scan | 本地脚本和 CI 均运行 `python scripts/check_secrets.py` |
 | Go POC 检查 | 后端 worktree 已手动运行 `gofmt`、`go test`、`go vet`、`go build` 和局部 race spot check |
 | Windows 手动冒烟 | 未运行真实 GitHub/device flow/Credential Manager 端到端冒烟 |
 | 依赖扫描/SBOM/签名/校验和 | 未配置 |
@@ -85,7 +85,7 @@
 ## 4. 引入时机
 
 1. **纯文档阶段**：可以先不配置完整 CI，但必须保留 secret scan。
-2. **首次准备 push 到远端/开放协作前**：至少评估 L0；是否配置 workflow 需要用户批准。
+2. **首次准备 push 到远端/开放协作前**：至少配置 L0。首个 L0/L1 workflow 已由用户授权添加。
 3. **Go 代码准备合并到 main 前**：必须设计并尽量配置 L1；不能长期依赖人工记忆运行测试。
 4. **可运行 daemon/helper/WebUI 出现前**：补 L2。
 5. **首次发布前**：必须补 L3，并明确 L4 是否存在及其边界。

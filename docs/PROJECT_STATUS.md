@@ -55,14 +55,14 @@
 6. GitHub Enterprise host 支持优先级。
 7. operation-only MCP 是否作为第一交付通道。
 8. SQLite schema migration 方案；Phase 1 POC 已选用 `modernc.org/sqlite` 作为纯 Go 驱动，但该选型尚未被批准为长期架构决策。
-9. CI workflow 平台、依赖扫描、构建复现、SBOM/签名/校验和与发布自动化仍未配置；原则见 [CI_CD](CI_CD.md)。
+9. 依赖扫描、构建复现、SBOM/签名/校验和与发布自动化仍未配置；首个 GitHub Actions CI 已按用户授权添加，远端结果待验证；原则见 [CI_CD](CI_CD.md)。
 
 ## 5. 当前验证状态
 
 | 用途 | 工作目录与命令 | 状态 | 最近结果 |
 |---|---|---|---|
 | 秘密扫描 | 仓库根：`python scripts/check_secrets.py` | 已配置；每次 push 前必须运行 | 2026-11-27 后端提交前通过；WebUI 提交前通过 |
-| CI workflow | 未配置 | 仅有 `docs/CI_CD.md` policy；不代表流水线存在或通过 | 未运行 |
+| CI workflow | `.github/workflows/ci.yml` 已在本轮分支中添加；GitHub Actions job/context 为 `ci` | 待首次远端运行；不得提前声明通过 | 未运行 |
 | Go 格式检查 | 后端 worktree：`gofmt -l cmd internal`（应无输出） | 已在 `feat/backend-core` 验证 | 2026-11-27 通过 |
 | Go 单元测试 | 后端 worktree：`go test -count=1 -timeout=90s ./...` | 已在 `feat/backend-core` 验证 | 2026-11-27 通过，全部为 mock/test key，无真实 GitHub 调用 |
 | Go vet/build | 后端 worktree：`go vet ./... && go build ./...` | 已在 `feat/backend-core` 验证 | 2026-11-27 通过 |
@@ -99,3 +99,4 @@
 | 2026-11-27 | 用户确认审批模式细化并要求两套 UI 分离 | D-0006 approved；授权码一次性/短寿命、仓库级审批、严格 loopback、顶部模式切换 |
 | 2026-11-27 | 用户修正降权语义并确认低保真 | D-0007 approved；第一版允许 profile 降权但不开放原子权限编辑；低保真阶段通过 |
 | 2026-11-27 | 用户指出 CI/CD 与 `.gitignore` 治理缺口 | D-0008 approved；新增 CI/CD 与 gitignore 专门规范并接入文档地图；实际 CI 未配置 |
+| 2026-11-27 | 用户要求 main 分支保护、添加 CI 并真实 push 验证 | D-0009 approved；禁止直接 push main，main 修改走分支 + PR；执行结果待远端验证后更新 |
