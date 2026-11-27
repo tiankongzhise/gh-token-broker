@@ -62,6 +62,12 @@
       "required": true
     },
     {
+      "id": "git.high-friction-policy-evidence",
+      "fact": "high-friction recurring confirmation policies require explicit approved decision evidence",
+      "authority": "scripts/check_policy_evidence.py",
+      "required": true
+    },
+    {
       "id": "git.commit-message-policy",
       "fact": "commit message language, structure, information-density requirements and validation boundaries",
       "authority": "docs/COMMIT_MESSAGES.md",

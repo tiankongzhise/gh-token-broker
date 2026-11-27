@@ -364,3 +364,19 @@
 3. base 不是 `main` 的 PR 不触发门禁，允许子代理或协作者向 feature 分支提交局部实现 PR。
 4. CI 中无法查询 GitHub open PR 状态时 fail closed；本地网络不可用时只警告，最终以 CI 为准。
 5. 该门禁不替代 integration queue、branch ownership、secret scan 或 main branch protection；它只解决 main 尚未前进但已存在悬空 main PR 的同步空窗。
+
+
+## D-0020 push 前身份与署名政策改为异常触发
+
+- 日期：2026-11-27
+- 状态：`approved`
+- 批准证据：2026-11-27 用户追问“每次单独询问”的来源和意义，并明确指出该策略与技能规范设计目标存在张力；随后用户明确要求“修正”，并要求沉淀解决方案和防复发机制。
+- 决策：AI 署名和贡献者身份检查改为异常触发型政策。扫描无 AI 署名且作者均属于允许身份时，可按当前任务授权执行 push/PR/merge，不再仅因该政策重复询问；命中 AI 署名或名单外作者时必须暂停询问。高摩擦 recurring confirmation policy 不得由 agent 作为长期默认值自行建立，必须有明确用户批准和 decision 记录。
+
+### 边界
+
+1. 该政策不授权 direct push main、force push、改写历史、跳过 secret scan 或绕过 branch protection。
+2. 禁止 AI 署名仍是项目默认；命中署名不得静默剥离，必须暂停并由用户决定保留、剥离或取消。
+3. `notebook <tiankongzhise@163.com>` 是本地普通提交身份；GitHub noreply 身份仅允许用于 GitHub 自动 PR merge commit。
+4. “每次单独询问”等高摩擦政策未来如确需恢复，必须在对应政策行或决策记录中引用明确 `D-xxxx` 证据。
+5. `check_policy_evidence.py` 是结构 tripwire，只能防止无证据的高摩擦措辞重新出现，不能证明政策选择本身合理。

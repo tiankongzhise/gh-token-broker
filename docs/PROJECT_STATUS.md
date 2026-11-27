@@ -77,6 +77,7 @@
 | 文档权威检查 | 仓库根：`python scripts/check_doc_authority.py` | 已配置，已接入 CI workflow | 2026-11-27 本地通过；PR #3 分支 CI 与 merge 后 main CI 通过 |
 | 分支 ownership 检查 | 仓库根：`python scripts/check_branch_ownership.py` | 已配置，已接入 CI workflow；本轮新增 feature freshness 规则 | 2026-11-27 本地通过；PR #7 修复后 main CI 通过；PR #9/#10 integration CI 通过 |
 | open main PR 门禁 | 仓库根：`python scripts/check_main_pr_gate.py` | 本轮新增并接入 CI workflow；只对 `feat/**` 生效 | 2026-11-27 本地已实现；远端 CI 尚无结果 |
+| 高摩擦政策证据检查 | 仓库根：`python scripts/check_policy_evidence.py` | 本轮新增并接入 CI workflow | 2026-11-27 本地已实现；远端 CI 尚无结果 |
 | 版本格式检查 | 仓库根：`python scripts/check_version.py` | 已接入 CI workflow；tag 上下文校验 tag 与 VERSION 一致 | 2026-11-27 本地通过 |
 | commit message 检查 | 仓库根：`python scripts/check_commit_messages.py` | 本轮新增并接入 CI workflow；GitHub merge commit 豁免 | 2026-11-27 本地通过 |
 | CI workflow | `.github/workflows/ci.yml` 已配置；GitHub Actions job/context 为 `ci` | PR #1 分支 CI 与 merge 后 main CI 已通过；backend 首次同步 CI 暴露 Windows CRLF/gofmt 问题，本轮用 `.gitattributes` 修复 | 已真实运行 |
@@ -129,3 +130,4 @@
 | 2026-11-27 | 用户选择提前 scoped/grant 基础 | CR-0001/D-0017 approved；Phase 2 先实现 scoped token 与最小 grant 基础，exec/helper 不得使用 parent token |
 | 2026-11-27 | 用户要求后续 commit 使用中文并补充约束 | D-0018 approved；新增 COMMIT_MESSAGES 与结构性 checker，历史 commit 不回溯改写 |
 | 2026-11-27 | 用户指出悬空 main PR 会击穿仅靠 Git 历史的同步机制 | D-0019 approved；采用通用 open-main-PR gate 与 feature freshness；feature 工作必须先处理/同步 main PR |
+| 2026-11-27 | 用户要求修正 push 前每次确认政策并沉淀防复发机制 | D-0020 approved；改为异常触发型署名/身份政策，新增高摩擦政策证据检查 |
