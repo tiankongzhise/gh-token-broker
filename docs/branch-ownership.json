@@ -19,12 +19,5 @@
       ]
     }
   },
-  "exceptions": [
-    {
-      "branch": "feat/backend-core",
-      "path": ".gitignore",
-      "reason": "Backend POC introduced Go build artifact ignores before ownership enforcement existed.",
-      "removeWhen": "initial backend integration is merged into main"
-    }
-  ]
+  "exceptions": []
 }
