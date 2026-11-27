@@ -2,7 +2,7 @@
 
 最近审计：2026-11-27
 
-范围：README、AGENTS、LICENSE、SECURITY、VERSION、docs/PRD、ARCHITECTURE、DEVELOPMENT、TEST_PLAN、PROJECT_DISCOVERY、CI_CD、VERSIONING、BRANCHING、GITIGNORE_POLICY、INFORMATION_AUTHORITY、authority-registry.json、branch-ownership.json、scripts/check_secrets.py。
+范围：README、AGENTS、LICENSE、SECURITY、VERSION、docs/PRD、ARCHITECTURE、DEVELOPMENT、TEST_PLAN、PROJECT_DISCOVERY、CI_CD、VERSIONING、BRANCHING、COMMIT_MESSAGES、GITIGNORE_POLICY、INFORMATION_AUTHORITY、authority-registry.json、branch-ownership.json、scripts/check_secrets.py。
 
 目的：确认文档是否覆盖项目治理、需求、架构、安全、开发、测试和交付要求，并识别缺失或不一致。
 
@@ -51,6 +51,7 @@
 | DOC-112 | 低 | 漏洞报告渠道未配置 | 首次发布前更新 SECURITY.md；不要虚构联系渠道 |
 | DOC-113 | 中 | 版本控制基础已建立，但 release notes/changelog、artifact packaging、签名/SBOM 与自动发布流程仍未设计或批准 | 首次 release preparation 前补专门流程；不得把 VERSION/tag checker 当作发布自动化 |
 | DOC-114 | 低 | merged branch cleanup 已写入 BRANCHING，但 GitHub auto-delete merged branches 尚未配置 | 后续可由用户明确授权启用仓库级 auto-delete；当前按人工确认后的及时删除执行 |
+| DOC-115 | 中 | commit message 曾只有英文短句和表层 Conventional Commits 格式，缺少原因/边界/验证信息 | **本轮关闭**：新增 COMMIT_MESSAGES 与结构性 checker；语义质量仍需 review，不能由脚本完全证明 |
 
 ## 4. 文档一致性维护规则
 

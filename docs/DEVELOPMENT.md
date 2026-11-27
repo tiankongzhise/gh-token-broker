@@ -84,6 +84,12 @@ prototype/              # 未来：可运行示意 Demo
 - 当前开发目标版本只记录根 `VERSION`；普通 feature/fix/chore PR 不随意修改它。
 - 版本格式和 tag consistency 检查命令：`python scripts/check_version.py`。
 
+### 4.3 commit message 检查入口
+
+- commit message 规范和示例统一见 [COMMIT_MESSAGES](COMMIT_MESSAGES.md)。
+- 提交前检查：`python scripts/check_commit_messages.py`。
+- type 前缀保持英文机器可读，摘要和正文使用中文；正文必须包含原因/边界和 `验证：` 记录。
+
 ## 5. 秘密与配置约束
 
 ### 5.1 绝不提交的内容

@@ -332,3 +332,19 @@
 2. client secret 的存储必须沿用已批准加密 SQLite + WCM master key 方向。
 3. scoped token 不可用时 exec/helper 必须失败关闭，不得回退 parent token。
 4. 真实 GitHub scoped token 父/子失效语义仍未实测，不得提前宣称验证完成。
+
+
+## D-0018 commit message 中文规范与结构检查
+
+- 日期：2026-11-27
+- 状态：`approved`
+- 批准证据：2026-11-27 用户指出当前 commit 描述信息过少、对后续回看帮助不足，并明确要求“后续的commit提交使用中文，添加约束”。
+- 决策：新增 `docs/COMMIT_MESSAGES.md` 作为 commit message 权威规范；Conventional Commits type 前缀保持英文机器可读，摘要和正文必须使用中文；新增结构性 checker 并接入 CI。
+
+### 边界
+
+1. 非 merge commit 必须有正文，正文至少说明原因/变更/边界并包含 `验证：` 记录。
+2. checker 只能验证结构，不能证明正文语义真实或充分。
+3. GitHub 自动 merge commit 豁免格式检查。
+4. 该规范不改变 AI 署名每次单独询问和贡献者身份政策。
+5. 历史 commit 不回溯改写；规范适用于后续新 commit。
