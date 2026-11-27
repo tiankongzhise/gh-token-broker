@@ -62,7 +62,7 @@
 | 用途 | 工作目录与命令 | 状态 | 最近结果 |
 |---|---|---|---|
 | 秘密扫描 | 仓库根：`python scripts/check_secrets.py` | 已配置；每次 push 前必须运行 | 2026-11-27 后端提交前通过；WebUI 提交前通过 |
-| 文档权威检查 | 仓库根：`python scripts/check_doc_authority.py` | 本轮新增，已接入 CI workflow | 2026-11-27 本地通过；远端待本轮 PR 验证 |
+| 文档权威检查 | 仓库根：`python scripts/check_doc_authority.py` | 已配置，已接入 CI workflow | 2026-11-27 本地通过；PR #3 分支 CI 与 merge 后 main CI 通过 |
 | CI workflow | `.github/workflows/ci.yml` 已配置；GitHub Actions job/context 为 `ci` | PR #1 分支 CI 与 merge 后 main CI 已通过；backend 首次同步 CI 暴露 Windows CRLF/gofmt 问题，本轮用 `.gitattributes` 修复 | 已真实运行 |
 | main 分支保护 | GitHub branch protection | 已配置：要求 PR、要求 `ci` 且 strict、enforce admins、禁止 force push/deletion | 2026-11-27 API 验证 |
 | Go 格式检查 | 后端 worktree：`gofmt -l cmd internal`（应无输出） | 已在 `feat/backend-core` 验证 | 2026-11-27 通过 |

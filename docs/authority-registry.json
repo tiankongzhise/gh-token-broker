@@ -91,6 +91,7 @@
         "实际 workflow、依赖扫描、签名/发布校验尚未配置",
         "CI policy 可记录但实际 workflow 未配置",
         "远端结果待验证",
+        "待本轮 PR 验证",
         "当前没有配置 CI workflow"
       ],
       "requiredAny": [],
