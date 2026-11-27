@@ -2,7 +2,7 @@
 
 最近审计：2026-11-27
 
-范围：README、AGENTS、LICENSE、SECURITY、VERSION、docs/PRD、ARCHITECTURE、DEVELOPMENT、TEST_PLAN、PROJECT_DISCOVERY、CI_CD、VERSIONING、BRANCHING、COMMIT_MESSAGES、GITIGNORE_POLICY、INFORMATION_AUTHORITY、authority-registry.json、branch-ownership.json、scripts/check_secrets.py。
+范围：README、AGENTS、LICENSE、SECURITY、VERSION、docs/PRD、ARCHITECTURE、DEVELOPMENT、TEST_PLAN、PROJECT_DISCOVERY、CI_CD、VERSIONING、BRANCHING、COMMIT_MESSAGES、GITIGNORE_POLICY、INFORMATION_AUTHORITY、AGENT_RULES、authority-registry.json、branch-ownership.json、docs/agent-rules/、scripts/check_secrets.py、scripts/check_main_pr_gate.py、scripts/check_policy_evidence.py、scripts/check_agent_rules.py、scripts/check_agents_mutation.py。
 
 目的：确认文档是否覆盖项目治理、需求、架构、安全、开发、测试和交付要求，并识别缺失或不一致。
 
@@ -52,6 +52,10 @@
 | DOC-113 | 中 | 版本控制基础已建立，但 release notes/changelog、artifact packaging、签名/SBOM 与自动发布流程仍未设计或批准 | 首次 release preparation 前补专门流程；不得把 VERSION/tag checker 当作发布自动化 |
 | DOC-114 | 低 | merged branch cleanup 已写入 BRANCHING，但 GitHub auto-delete merged branches 尚未配置 | 后续可由用户明确授权启用仓库级 auto-delete；当前按人工确认后的及时删除执行 |
 | DOC-115 | 中 | commit message 曾只有英文短句和表层 Conventional Commits 格式，缺少原因/边界/验证信息 | **本轮关闭**：新增 COMMIT_MESSAGES 与结构性 checker；语义质量仍需 review，不能由脚本完全证明 |
+| DOC-116 | 高 | 只靠 Git 历史/main freshness 无法发现“base 为 main 的悬空 open PR”，feature 分支可能在规则 PR 未合并时继续开发 | **本轮关闭**：新增通用 open-main-PR gate；不按内容穷举 PR 类型，任何其他 open main PR 都阻塞 feature 新工作 |
+| DOC-117 | 中 | push 前“每次单独询问”由初始保守默认固化为长期政策，缺少明确用户权衡并造成确认疲劳 | **本轮关闭**：改为异常触发型署名/身份政策；新增高摩擦政策 evidence tripwire，防止无证据恢复同类默认 |
+| DOC-118 | 中 | `AGENTS.md` 既有约束可能在模糊授权下被静默改写，而泛化 control-plane 审核又会把过多审计成本转嫁给用户 | **本轮关闭**：仅对根 `AGENTS.md` 既有约束 mutation 要求明确批准和 D 证据；局部问题沉淀到领域层 |
+| DOC-119 | 中 | 根 `AGENTS.md` 复制阶段/审核门框架，可能与 PROJECT_STATUS 中的可变状态漂移 | **本轮关闭**：阶段审核门统一由 PROJECT_STATUS/DECISIONS/CR 记录，根 `AGENTS.md` 只保留读取入口 |
 
 ## 4. 文档一致性维护规则
 

@@ -12,6 +12,7 @@ on:
 
 permissions:
   contents: read
+  pull-requests: read
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
@@ -41,12 +42,18 @@ jobs:
 
       - name: Repository hygiene
         shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           python scripts/check_secrets.py
           python scripts/check_markdown_links.py
           python scripts/check_repo_hygiene.py
           python scripts/check_doc_authority.py
           python scripts/check_branch_ownership.py
+          python scripts/check_main_pr_gate.py
+          python scripts/check_policy_evidence.py
+          python scripts/check_agent_rules.py
+          python scripts/check_agents_mutation.py
           python scripts/check_version.py
           python scripts/check_commit_messages.py
 

@@ -8,7 +8,7 @@
 
 | 字段 | 当前值 | 证据/备注 |
 |---|---|---|
-| 当前阶段 | WebUI B 高保真与后端 Phase 2 已获开始授权；正在先同步 merged-branch cleanup 与版本管理治理基线 | 2026-11-27 用户明确要求完成分支处理后开始高保真和后端阶段2；见 D-0016 |
+| 当前阶段 | WebUI B 高保真与后端 Phase 2 已获开始授权；正在补齐 open-main-PR 与 feature freshness 门禁基线 | 2026-11-27 用户明确要求完成分支处理后开始高保真和后端阶段2；见 D-0016；悬空 main PR 暴露后用户批准 D-0019 |
 | 批准状态 | **有限授权，不是完整产品基线批准** | 后端 token chain 已接受为 Phase 2 技术地基；审批优先低保真已确认；仍不视为高保真、Demo、完整后端、raw token 策略或 WebUI 技术栈批准 |
 | 后端核心解释 | 已确认采用保守解释：按 [DEVELOPMENT](DEVELOPMENT.md) Phase 1 的核心 token chain POC 边界执行 | 2026-11-27 用户确认“采取保守解释”；不自动包含 MCP、WebUI、scoped token、多 agent policy |
 | 产品实现状态 | 已批准低保真 wireframes 与 Phase 1 core token chain POC 均已集成进 `main` | WebUI integration PR #9 已合并且 main CI 通过；backend integration PR #10 已合并且 main CI 通过；仍无完整 daemon、MCP server、WebUI 或 credential helper 实现 |
@@ -41,8 +41,8 @@
 | 工作流 | 路径 | 分支 | 允许修改/目标 | 禁止事项 |
 |---|---|---|---|---|
 | 主文档/治理 | `E:\github\gh-token-broker` | `main` | 根文档、`docs/`、`scripts/check_secrets.py`、`.gitignore`、许可证与本阶段用户明确要求的文档治理 | 不开始产品实现；首个 CI workflow 已配置 |
-| WebUI 高保真 | `E:\github\gh-token-broker-webui` | planned: `feat/webui-high-fidelity` | `design/high-fidelity/`、`docs/DESIGN_SPEC.md` | 不定正式前端技术栈、不进入 Demo、不改后端核心文件 |
-| 后端 Phase 2 | `E:\github\gh-token-broker-backend` | planned: `feat/backend-safe-delivery` | `cmd/`、`internal/`、`go.mod`、`go.sum`、`config.example.yaml`；范围按 CR-0001 为 scoped/grant 基础、exec wrapper、credential helper、min_ttl、基础审计与 Windows 验证 | 不做 MCP/WebUI/scoped token 完整实现；不返回 raw token 给模型上下文 |
+| WebUI 高保真 | `E:\github\gh-token-broker-webui` | `feat/webui-high-fidelity` | `design/high-fidelity/`、`docs/DESIGN_SPEC.md` | 不定正式前端技术栈、不进入 Demo、不改后端核心文件 |
+| 后端 Phase 2 | `E:\github\gh-token-broker-backend` | `feat/backend-safe-delivery` | `cmd/`、`internal/`、`go.mod`、`go.sum`、`config.example.yaml`；范围按 CR-0001 为 scoped/grant 基础、exec wrapper、credential helper、min_ttl、基础审计与 Windows 验证 | 不做 MCP/WebUI/scoped token 完整实现；不返回 raw token 给模型上下文 |
 
 注意：`feat/webui-wireframes` 与 `feat/backend-core` 已按用户选择暂存，但在 ownership registry 中为 `integrated`，不再拥有写入权。后续高保真与 Phase 2 使用新 active 分支；实时状态以 `git worktree list` 和 `docs/branch-ownership.json` 为准。
 
@@ -53,6 +53,15 @@
 | — | 当前无进行中 integration | merged-branch/versioning 治理基线合并后，再按 queue 处理高保真/Phase 2 成果 | 等待新 feature 分支产生可集成成果 |
 
 规则：同一时刻只处理一个 integration；main CI 通过后再同步另一个分支。权威原则见 [BRANCHING](BRANCHING.md)。
+
+## 3.2 当前治理收敛点（2026-11-27）
+
+用户已从暂停状态恢复，并要求把人工审核集中到根 `AGENTS.md` 的公共约束。当前工作仍在 PR #14 `chore/main-pr-gate`：
+
+1. PR #14 已包含 open-main-PR gate/freshness、push 前身份确认异常触发修正、推送守卫机器可读约定对齐；`3ae497c` 的 PR CI 已成功。
+2. 本轮新增范围是窄范围 `AGENTS.md` mutation guard，以及根/领域 agent 规则分层与经验晋升机制；不建立泛化 control-plane 人工审核机制。
+3. `scripts/check_agents_mutation.py` 已保存，正在补 CI 接入、D-0021/D-0022 和领域规则 registry。
+4. 在 PR #14 合并前，不得继续 feature 新实现；这是 open-main-PR gate 要强制执行的场景本身。
 
 ## 4. 未决事项
 
@@ -75,7 +84,11 @@
 |---|---|---|---|
 | 秘密扫描 | 仓库根：`python scripts/check_secrets.py` | 已配置；每次 push 前必须运行 | 2026-11-27 后端提交前通过；WebUI 提交前通过 |
 | 文档权威检查 | 仓库根：`python scripts/check_doc_authority.py` | 已配置，已接入 CI workflow | 2026-11-27 本地通过；PR #3 分支 CI 与 merge 后 main CI 通过 |
-| 分支 ownership 检查 | 仓库根：`python scripts/check_branch_ownership.py` | 已配置，已接入 CI workflow | 2026-11-27 本地通过；PR #7 修复后 main CI 通过；PR #9/#10 integration CI 通过 |
+| 分支 ownership 检查 | 仓库根：`python scripts/check_branch_ownership.py` | 已配置，已接入 CI workflow；本轮新增 feature freshness 规则 | 2026-11-27 本地通过；PR #7 修复后 main CI 通过；PR #9/#10 integration CI 通过 |
+| open main PR 门禁 | 仓库根：`python scripts/check_main_pr_gate.py` | 本轮新增并接入 CI workflow；只对 `feat/**` 生效 | 2026-11-27 本地已实现；远端 CI 尚无结果 |
+| 高摩擦政策证据检查 | 仓库根：`python scripts/check_policy_evidence.py` | 本轮新增并接入 CI workflow | 2026-11-27 本地已实现；远端 CI 尚无结果 |
+| agent rules registry 检查 | 仓库根：`python scripts/check_agent_rules.py` | 本轮新增并接入 CI workflow | 2026-11-27 本地已实现；远端 CI 尚无结果 |
+| AGENTS mutation 检查 | 仓库根：`python scripts/check_agents_mutation.py` | 本轮新增并接入 CI workflow；只在既有 `AGENTS.md` 行被删除/改写时要求 D 证据 | 2026-11-27 本地已实现；远端 CI 尚无结果 |
 | 版本格式检查 | 仓库根：`python scripts/check_version.py` | 已接入 CI workflow；tag 上下文校验 tag 与 VERSION 一致 | 2026-11-27 本地通过 |
 | commit message 检查 | 仓库根：`python scripts/check_commit_messages.py` | 本轮新增并接入 CI workflow；GitHub merge commit 豁免 | 2026-11-27 本地通过 |
 | CI workflow | `.github/workflows/ci.yml` 已配置；GitHub Actions job/context 为 `ci` | PR #1 分支 CI 与 merge 后 main CI 已通过；backend 首次同步 CI 暴露 Windows CRLF/gofmt 问题，本轮用 `.gitattributes` 修复 | 已真实运行 |
@@ -127,3 +140,6 @@
 | 2026-11-27 | 用户要求 merged branch cleanup、指出版本管理缺失，并授权之后开始高保真与后端 Phase 2 | 已删除已合并 chore/fix 短分支；feature 分支按用户选择暂存但转为 integrated；D-0014/D-0015/D-0016 记录 |
 | 2026-11-27 | 用户选择提前 scoped/grant 基础 | CR-0001/D-0017 approved；Phase 2 先实现 scoped token 与最小 grant 基础，exec/helper 不得使用 parent token |
 | 2026-11-27 | 用户要求后续 commit 使用中文并补充约束 | D-0018 approved；新增 COMMIT_MESSAGES 与结构性 checker，历史 commit 不回溯改写 |
+| 2026-11-27 | 用户指出悬空 main PR 会击穿仅靠 Git 历史的同步机制 | D-0019 approved；采用通用 open-main-PR gate 与 feature freshness；feature 工作必须先处理/同步 main PR |
+| 2026-11-27 | 用户要求修正 push 前每次确认政策并沉淀防复发机制 | D-0020 approved；改为异常触发型署名/身份政策，新增高摩擦政策证据检查 |
+| 2026-11-27 | 用户要求审核集中于 AGENTS 公共约束，并批准规则分层修正方案 | D-0021/D-0022 approved；只保护根 AGENTS 既有约束 mutation，局部经验沉淀到领域规则；阶段审核门统一由 PROJECT_STATUS 记录 |

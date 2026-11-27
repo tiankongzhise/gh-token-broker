@@ -69,6 +69,12 @@ def main() -> int:
         print(f"branch ownership check failed: cannot inspect base diff: {exc}")
         return 1
 
+    if branch.startswith("feat/"):
+        try:
+            run("merge-base", "--is-ancestor", base_ref, "HEAD")
+        except subprocess.CalledProcessError:
+            failures.append(f"{branch}: {base_ref} is not an ancestor of HEAD; sync latest main before continuing feature work")
+
     own_patterns = active.get(branch, {}).get("write", [])
     exceptions = {
         item.get("path")

@@ -348,3 +348,67 @@
 3. GitHub 自动 merge commit 豁免格式检查。
 4. 该规范不改变 AI 署名每次单独询问和贡献者身份政策。
 5. 历史 commit 不回溯改写；规范适用于后续新 commit。
+
+
+## D-0019 open main PR 阻塞门禁与 feature freshness
+
+- 日期：2026-11-27
+- 状态：`approved`
+- 批准证据：2026-11-27 用户指出，仅按内容穷举治理 PR 无法保证不遗漏，并提出更通用的规则：“如果存在 pr 到 main 分支的未合并 pr，应该先处理这个 pr，然后再同步到特性分支，再继续”；用户同时明确 base 不是 main 的 feature 子 PR 不需要阻塞。
+- 决策：采用通用 open-main-PR gate。任何 `feat/**` 分支在存在其他 base 为 `main` 的 open PR 时不得继续新增 feature 工作；必须先处理该 PR，合并或关闭后同步最新 main 再继续。`origin/main` 必须是活跃 feature 分支 HEAD 的 ancestor。
+
+### 边界
+
+1. 不按 PR 内容、标题或路径判断重要性；任何 open main PR 默认阻塞 feature 新工作，避免治理分类遗漏。
+2. 当前 feature 分支自己的 main integration PR 不阻塞自己，因为更新该分支、修复 CI 和响应 review 都属于处理该 integration；它会阻塞其他 feature 分支。
+3. base 不是 `main` 的 PR 不触发门禁，允许子代理或协作者向 feature 分支提交局部实现 PR。
+4. CI 中无法查询 GitHub open PR 状态时 fail closed；本地网络不可用时只警告，最终以 CI 为准。
+5. 该门禁不替代 integration queue、branch ownership、secret scan 或 main branch protection；它只解决 main 尚未前进但已存在悬空 main PR 的同步空窗。
+
+
+## D-0020 push 前身份与署名政策改为异常触发
+
+- 日期：2026-11-27
+- 状态：`approved`
+- 批准证据：2026-11-27 用户追问“每次单独询问”的来源和意义，并明确指出该策略与技能规范设计目标存在张力；随后用户明确要求“修正”，并要求沉淀解决方案和防复发机制。
+- 决策：AI 署名和贡献者身份检查改为异常触发型政策。扫描无 AI 署名且作者均属于允许身份时，可按当前任务授权执行 push/PR/merge，不再仅因该政策重复询问；命中 AI 署名或名单外作者时必须暂停询问。为保持技能/hook 可解析性，机器可读约定分别使用 `push 前必须剥离署名` 与 `push 前必须统一作者`，并在 GIT_GOVERNANCE 中明确执行解释。高摩擦 recurring confirmation policy 不得由 agent 作为长期默认值自行建立，必须有明确用户批准和 decision 记录。
+
+### 边界
+
+1. 该政策不授权 direct push main、force push、改写历史、跳过 secret scan 或绕过 branch protection。
+2. 禁止 AI 署名仍是项目默认；命中署名不得静默剥离，必须暂停并由用户决定保留、剥离或取消。
+3. `notebook <tiankongzhise@163.com>` 是本地普通提交身份；GitHub noreply 身份仅允许用于 GitHub 自动 PR merge commit。
+4. “每次单独询问”等高摩擦政策未来如确需恢复，必须在对应政策行或决策记录中引用明确 `D-xxxx` 证据。
+5. `check_policy_evidence.py` 是结构 tripwire，只能防止无证据的高摩擦措辞重新出现，不能证明政策选择本身合理。
+
+
+## D-0021 AGENTS.md 既有约束 mutation 保护
+
+- 日期：2026-11-27
+- 状态：`approved`
+- 批准证据：2026-11-27 用户指出不应该扩大人工审计面，真正需要保护的是“`AGENTS.md` 原有内容被因模糊授权而修改”；随后用户明确说“按这个来实现，人应该只做最核心的审核”。
+- 决策：建立窄范围 `AGENTS.md` mutation guard。纯机械修正和不改变语义的整理可由 agent 按当前任务授权处理；修改、删除、弱化或因重排改变既有 `AGENTS.md` 约束含义时，必须有明确用户批准，并记录对应 D-xxxx 决策证据。
+
+### 边界
+
+1. 不建立泛化的 control-plane 人工审核机制；其他文档的日常问题修复可由 agent 按现有 ownership/CI 流程处理。
+2. “修正”“按规范处理”“继续”等模糊指令不能直接视为 `AGENTS.md` 既有约束 mutation 授权。
+3. 授权模糊时必须先展示“原约束 → 拟改约束”的最小差异并等待确认。
+4. `check_agents_mutation.py` 检测实质删除/改写行并要求决策证据；它是 tripwire，不能证明用户授权语义本身。
+5. 该规则只保护根 `AGENTS.md` 既有约束，不要求用户审计所有局部经验沉淀。
+
+
+## D-0022 根/领域 agent 规则分层与经验晋升机制
+
+- 日期：2026-11-27
+- 状态：`approved`
+- 批准证据：2026-11-27 用户提出“人的精力有限”，只需审核上升到 `AGENTS.md` 的公共约束；其他有沉淀价值的问题可由 agent 写入对应领域文档。用户同时提出 `AGENTS.md` 需要分层，并批准“根 AGENTS + docs/agent-rules/ 逻辑领域规则 + 必要且自包含目录才用嵌套 AGENTS.md”的修正版方案。用户随后纠正：阶段审核门属于可变状态，不应写入根 `AGENTS.md`，必须由专门状态文件统一记录。
+- 决策：采用三层规则模型：根 `AGENTS.md` 只保存全局硬约束和规则地图；逻辑领域规则放入 `docs/agent-rules/`；真正自包含目录才可使用嵌套 `AGENTS.md`。局部经验优先沉淀到最近的有效文档，只有跨领域或全局高风险事项才可提议提升到根 `AGENTS.md`，且提升必须经用户批准。
+
+### 边界
+
+1. 当前阶段、审核门和批准证据是可变状态，只由 `docs/PROJECT_STATUS.md`、DECISIONS 和已批准 CR 记录；不得在根 `AGENTS.md` 或领域规则中复制阶段门。
+2. 领域规则只能更严格或更具体，不得弱化根 `AGENTS.md`。
+3. 领域规则按 `docs/agent-rules/registry.json` 登记，并与 `docs/branch-ownership.json` 的 active branch ownership 保持一致。
+4. 一次性 bug 修复不强制写文档；有复用价值的领域经验先写入领域层，不直接写入根文件。
+5. 当前登记 `webui` 与 `backend` 两个 active domain；新增/停用领域规则必须同步 registry。
