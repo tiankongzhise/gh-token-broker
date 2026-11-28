@@ -77,6 +77,7 @@ feature 新实现可在各自 ownership 与 domain rules 内继续；任何新�
 3. WebUI 高保真整体审核通过后，用语义契约清单比较前端最终形态和 contract branch；如有差异先修 contract branch。
 4. 用户确认冻结后才开 PR 进 `main`；main CI 通过后再同步 feature 分支。
 5. backend Phase 2 在冻结前暂停。
+6. 2026-11-28 用户进一步修正契约方向：Agent 审批模式必须呈现统一授权心智，只让用户决定 agent 能做什么；GitHub 原生权限、broker 代执行、内部 operation id 和模板细节属于高级/内部层，不应进入审批主流程。
 
 
 ## 4. 未决事项

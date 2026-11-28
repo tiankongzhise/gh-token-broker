@@ -509,9 +509,10 @@ MVP 采用已批准的 D-0002 方案：秘密材料字段级加密后存 SQLite�
 
 ## 附录：授权粒度与 operation capability 契约草案（CR-0002）
 
-2026-11-28 高保真审核发现，授权模型需要从“仓库 + profile 降权”升级为两层契约：
+2026-11-28 高保真审核发现，授权模型需要从“仓库 + profile 降权”升级为统一用户授权心智加内部两层实现契约：
 
 1. **per-repository permission matrix**：同一 application 内每个仓库独立决定；每个仓库可在申请 profile 上限内对 GitHub 原子权限选择 `write/read/none`；`none` 在 scoped token 请求中应表现为省略 permission key。
-2. **broker operation capability layer**：创建仓库、设置 approved branch protection template 等 GitHub 原生权限无法安全细分的高风险操作，不通过向 agent 交付 `administration:write` token 实现，而通过 broker 代执行的受控 operation capability 实现。
+2. **统一用户授权心智**：Agent 审批模式只呈现“agent 能做什么”；用户不需要区分能力由 GitHub token permission、broker 代执行或未来其他安全机制实现。
+3. **broker operation capability layer（内部实现）**：创建仓库、设置 approved branch protection template 等 GitHub 原生权限无法安全细分的高风险操作，不通过向 agent 交付 `administration:write` token 实现，而通过 broker 代执行的受控 operation capability 实现；该实现细节不属于审批模式主界面。
 
 该附录是 CR-0002 契约草案索引，不是冻结需求；冻结以前端高保真审核和后续批准为准。

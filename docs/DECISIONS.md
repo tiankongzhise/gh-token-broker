@@ -417,15 +417,16 @@
 
 - 日期：2026-11-28
 - 状态：`proposed`
-- 证据：用户在高保真审核中明确要求每个申请中的每个仓库都能独立设置授权粒度，并指出需要在申请权限组内做细粒度调整；随后询问“允许创建仓库/设置 main 保护但禁止删除”是否可实现，并批准采用推荐的 contract workspace 机制执行。
+- 证据：用户在高保真审核中明确要求每个申请中的每个仓库都能独立设置授权粒度，并指出需要在申请权限组内做细粒度调整；随后询问“允许创建仓库/设置 main 保护但禁止删除”是否可实现，批准采用推荐的 contract workspace 机制执行；随后进一步明确用户授权心智必须统一，不应在 Agent 审批模式暴露 GitHub 原生权限与 broker 代执行的实现差异。
 - 决策草案：建立 `chore/contract-operation-capabilities` 作为契约草案工作区，先 commit 不 PR/merge；待 WebUI 高保真整体审核通过后，用语义契约清单比较并修正，再进入 main。
 
 ### 草案含义
 
-1. token permission layer 与 broker operation capability layer 分离。
-2. 每个仓库独立 permission matrix；申请 profile 是上限；`write/read/none` 在上限内调整。
-3. `none` 在 scoped token 请求中通过省略 permission key 表达。
-4. 默认不得向 agent 交付 `administration:write` token；创建仓库和 branch protection 等高风险操作应由 broker-side operation executor 代执行。
-5. 该条目在冻结前不是后端恢复实现授权，也不替代 CR-0002 的正式批准。
+1. 用户授权心智统一为“agent 能做什么”；实现机制对 Agent 审批模式隐藏。
+2. 内部实现仍需区分 token permission layer 与 broker operation capability layer。
+3. 每个仓库独立 permission matrix；申请 profile 是上限；`write/read/none` 在上限内调整。
+4. `none` 在 scoped token 请求中通过省略 permission key 表达。
+5. 默认不得向 agent 交付 `administration:write` token；创建仓库和 branch protection 等高风险操作应由 broker-side operation executor 代执行，但该实现细节只在高级/内部层可见。
+6. 该条目在冻结前不是后端恢复实现授权，也不替代 CR-0002 的正式批准。
 
 后果：backend Phase 2 在契约冻结前暂停；WebUI 高保真继续作为待审核设计 artifact。

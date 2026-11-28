@@ -327,6 +327,7 @@
 - 同一 application 内不同仓库拥有不同最终 permission matrix。
 - 超过申请 profile 上限的权限被拒绝。
 - UI/API 中 `none` 转换为 scoped token 请求中的 omission，而不是字符串 `none`。
+- Agent 审批模式不出现内部 operation id、`Broker operation capability`、executor 或模板实现术语；这些只允许出现在人工/高级模式或机器审计详情。
 - agent 无法通过 helper/exec/MCP tool result 获得带 `administration:write` 的 token。
 - broker operation capability 只允许注册 operation id；未知 operation fail closed。
 - secure branch protection 模板禁止弱化 enforce admins、force push、deletion 和 required checks。
