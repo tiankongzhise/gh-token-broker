@@ -516,3 +516,15 @@ MVP 采用已批准的 D-0002 方案：秘密材料字段级加密后存 SQLite�
 3. **broker operation capability layer（内部实现）**：创建仓库、设置 approved branch protection template 等 GitHub 原生权限无法安全细分的高风险操作，不通过向 agent 交付 `administration:write` token 实现，而通过 broker 代执行的受控 operation capability 实现；该实现细节不属于审批模式主界面。
 
 该附录是 CR-0002 契约草案索引，不是冻结需求；冻结以前端高保真审核和后续批准为准。
+
+
+## 附录：Capability-based authorization broker 契约草案（CR-0003）
+
+2026-11-28 用户进一步指出，项目不应被 GitHub 原生权限模型限制。授权需求应升级为用户层 capability-based authorization：
+
+1. 用户决定“哪个 agent 对哪些资源在什么约束下能做什么”，而不是选择 GitHub permission 或理解底层实现方式。
+2. 仓库管理能力必须按 agent 单独配置，并取代粗粒度 `Administration` 授权项。
+3. scoped token、GitHub ruleset/protection、broker-side executor 和未来 proxy 都只是内部 enforcement substrate。
+4. 核心安全不变量是 no-bypass：若授予受限 capability，agent 不得同时持有能绕过该限制的 token、credential 或操作入口。
+
+该附录是 CR-0003 契约草案索引，不是冻结需求；冻结以用户明确批准为准。CR-0002 暂时保留为中间上下文，CR-0003 定稿后必须归档或标记 superseded。

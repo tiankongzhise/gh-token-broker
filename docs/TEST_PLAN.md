@@ -333,3 +333,16 @@
 - secure branch protection 模板禁止弱化 enforce admins、force push、deletion 和 required checks。
 - create repository/protection 成功、失败、部分失败与审计一致性。
 - 使用私有仓库矩阵验证 `contents`/`administration`、用户权限、App 权限、scoped token 权限的交集；公开仓库不能作为权限拒绝证据。
+
+
+## 附录：capability authorization 测试草案（CR-0003）
+
+后续测试必须覆盖：
+
+- 每个 agent 有独立策略上限；公共仓库管理配置不能隐式放大某个 agent。
+- application approval 只能缩小 agent 策略上限，不能扩大。
+- Agent 审批模式只出现用户层能力语义，不出现内部 operation id、executor 或 enforcement 实现术语。
+- no-bypass：授予受限 branch deletion capability 时，agent 不得同时持有可删除任意普通分支的 token/credential。
+- unknown capability、unknown resource selector、不可验证 constraint、不可验证 ruleset/protection 状态均 fail closed。
+- enforcement substrate 选择错误、部分失败和补偿路径写入审计，且用户层 intent 能与内部 enforcement detail 关联。
+- 使用私有仓库矩阵验证 token/ruleset/broker operation 的实际效果，公开仓库不能作为权限拒绝证据。

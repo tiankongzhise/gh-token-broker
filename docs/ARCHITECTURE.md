@@ -788,3 +788,23 @@ agent -> broker operation capability request
 默认不得向 agent/helper/MCP tool result 交付带 `administration:write` 的 token。branch protection 初版应使用批准模板，不向 agent 开放任意弱化参数。
 
 该附录是 CR-0002 契约草案索引，不是最终 API/schema。
+
+
+## 附录：capability-based authorization 架构草案（CR-0003）
+
+授权架构草案应从“repo/profile → token permission”升级为“capability intent → enforcement plan”：
+
+```text
+agent policy / application decision
+  -> user-level capability intent（resource + action + constraints）
+  -> policy evaluation
+  -> enforcement planner
+       ├── scoped token（仅当权限粒度足够且无 bypass）
+       ├── GitHub ruleset/protection（仅当状态可验证）
+       ├── broker-executed operation（高权限操作不离开 broker）
+       ├── broker-mediated transport/proxy（后续复杂能力，未批准）
+       └── unavailable / fail closed
+  -> audit（用户层 intent 与内部 enforcement detail 分层记录）
+```
+
+架构 invariant：不得向 agent 交付能绕过已批准 capability 限制的 token、credential 或操作入口。该附录是 CR-0003 草案，不是最终模块/API 设计。

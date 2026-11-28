@@ -1,6 +1,6 @@
 # DOCUMENTATION_AUDIT — GH Token Broker
 
-最近审计：2026-11-27
+最近审计：2026-11-28
 
 范围：README、AGENTS、LICENSE、SECURITY、VERSION、docs/PRD、ARCHITECTURE、DEVELOPMENT、TEST_PLAN、PROJECT_DISCOVERY、CI_CD、VERSIONING、BRANCHING、COMMIT_MESSAGES、GITIGNORE_POLICY、INFORMATION_AUTHORITY、AGENT_RULES、authority-registry.json、branch-ownership.json、docs/agent-rules/、scripts/check_secrets.py、scripts/check_main_pr_gate.py、scripts/check_policy_evidence.py、scripts/check_agent_rules.py、scripts/check_agents_mutation.py。
 
@@ -56,6 +56,7 @@
 | DOC-117 | 中 | push 前“每次单独询问”由初始保守默认固化为长期政策，缺少明确用户权衡并造成确认疲劳 | **本轮关闭**：改为异常触发型署名/身份政策；新增高摩擦政策 evidence tripwire，防止无证据恢复同类默认 |
 | DOC-118 | 中 | `AGENTS.md` 既有约束可能在模糊授权下被静默改写，而泛化 control-plane 审核又会把过多审计成本转嫁给用户 | **本轮关闭**：仅对根 `AGENTS.md` 既有约束 mutation 要求明确批准和 D 证据；局部问题沉淀到领域层 |
 | DOC-119 | 中 | 根 `AGENTS.md` 复制阶段/审核门框架，可能与 PROJECT_STATUS 中的可变状态漂移 | **本轮关闭**：阶段审核门统一由 PROJECT_STATUS/DECISIONS/CR 记录，根 `AGENTS.md` 只保留读取入口 |
+| DOC-120 | 高 | 授权契约正在从 GitHub permission-centric 过渡到 capability-based authorization；CR-0002 与 CR-0003 暂时并存，存在过期契约长期残留风险 | **本轮打开/跟踪中**：CR-0003 定稿前保留 CR-0002 作为上下文；CR-0003 冻结后必须归档或标记 supersede CR-0002 |
 
 ## 4. 文档一致性维护规则
 

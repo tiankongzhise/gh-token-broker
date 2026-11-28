@@ -14,7 +14,7 @@
 | 产品实现状态 | 已批准低保真 wireframes 与 Phase 1 core token chain POC 均已集成进 `main` | WebUI integration PR #9 已合并且 main CI 通过；backend integration PR #10 已合并且 main CI 通过；仍无完整 daemon、MCP server、WebUI 或 credential helper 实现 |
 | 许可证 | **已确认**：`LGPL-2.1-only` | 2026-11-27 用户明确选择；见 [DECISIONS](DECISIONS.md#d-0001-license-lgpl-21) |
 | secret store MVP | **已批准**：加密 SQLite + Windows Credential Manager 保存 master key | 2026-11-27 用户批准 D-0002；见 [DECISIONS](DECISIONS.md#d-0002-secret-store-mvp) |
-| 当前审核门 | **B 高保真人工审核中；backend Phase 2 暂停等待 CR-0002 授权契约冻结** | 高保真细粒度授权与 operation capability 会影响后端契约；契约冻结前不得恢复 backend 实现 |
+| 当前审核门 | **B 高保真人工审核中；backend Phase 2 暂停等待 CR-0002 授权契约冻结** | capability-based authorization 契约会影响后端架构；CR-0003 冻结前不得恢复 backend 实现 |
 
 ## 2. 批准与授权记录
 
@@ -40,7 +40,7 @@
 
 | 工作流 | 路径 | 分支 | 允许修改/目标 | 禁止事项 |
 |---|---|---|---|---|
-| 授权契约同步 | `E:\github\gh-token-broker` | `chore/contract-operation-capabilities` | `docs/changes/CR-0002.md`、PRD/ARCHITECTURE/THREAT_MODEL/TEST_PLAN/DEVELOPMENT/DECISIONS/PROJECT_STATUS 的契约草案 | 不打开 PR、不合并、不视为冻结契约、不恢复 backend 实现 |
+| 授权契约同步 | `E:\github\gh-token-broker` | `chore/contract-operation-capabilities` | `docs/changes/CR-0002.md`、`docs/changes/CR-0003.md`、PRD/ARCHITECTURE/THREAT_MODEL/TEST_PLAN/DEVELOPMENT/DECISIONS/PROJECT_STATUS 的契约草案 | 不打开 PR、不合并、不视为冻结契约、不恢复 backend 实现 |
 | 主文档/治理 | `E:\github\gh-token-broker` | `main` | 根文档、`docs/`、`scripts/check_secrets.py`、`.gitignore`、许可证与本阶段用户明确要求的文档治理 | 不开始产品实现；首个 CI workflow 已配置 |
 | WebUI 高保真 | `E:\github\gh-token-broker-webui` | `feat/webui-high-fidelity` | `design/high-fidelity/`、`docs/DESIGN_SPEC.md` | 不定正式前端技术栈、不进入 Demo、不改后端核心文件 |
 | 后端 Phase 2 | `E:\github\gh-token-broker-backend` | `feat/backend-safe-delivery` | `cmd/`、`internal/`、`go.mod`、`go.sum`、`config.example.yaml`；范围按 CR-0001 为 scoped/grant 基础、exec wrapper、credential helper、min_ttl、基础审计与 Windows 验证 | 不做 MCP/WebUI/scoped token 完整实现；不返回 raw token 给模型上下文 |
@@ -70,7 +70,7 @@ feature 新实现可在各自 ownership 与 domain rules 内继续；任何新�
 
 ## 3.3 Contract workspace：授权粒度与 operation capability（2026-11-28）
 
-用户批准采用推荐的 contract workspace 机制：`chore/contract-operation-capabilities` 已从 `main` 创建，用于整理 CR-0002 授权粒度与 broker operation capability 契约。当前规则：
+用户批准采用推荐的 contract workspace 机制：`chore/contract-operation-capabilities` 已从 `main` 创建，最初用于整理 CR-0002，当前已扩展为整理 CR-0003 capability-based authorization broker 契约。当前规则：
 
 1. 可以 commit 契约草案；不打开 PR、不合并进 `main`。
 2. 该分支在冻结前不是权威规范；权威仍是 `main` 上已批准文档。
@@ -78,6 +78,7 @@ feature 新实现可在各自 ownership 与 domain rules 内继续；任何新�
 4. 用户确认冻结后才开 PR 进 `main`；main CI 通过后再同步 feature 分支。
 5. backend Phase 2 在冻结前暂停。
 6. 2026-11-28 用户进一步修正契约方向：Agent 审批模式必须呈现统一授权心智，只让用户决定 agent 能做什么；GitHub 原生权限、broker 代执行、内部 operation id 和模板细节属于高级/内部层，不应进入审批主流程。
+7. 2026-11-28 用户批准新建 CR-0003，并明确 CR-0003 仍可能调整；CR-0002 暂时保留，但 CR-0003 定稿后必须归档或标记 superseded，不能长期保留过期并行规范。
 
 
 ## 4. 未决事项

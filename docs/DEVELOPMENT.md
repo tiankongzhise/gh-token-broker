@@ -280,3 +280,10 @@ CR 中写明原因、原/新行为、影响、迁移回滚、需要重审的门�
 ## 附录：实现顺序草案（CR-0002）
 
 后端 Phase 2 当前因授权契约未冻结而暂停。恢复前必须先确认 CR-0002：per-repository permission matrix、`none` omission、token permission layer 与 broker operation capability layer 分离、administration token 不交付、secure branch protection template 和审计字段。不得先按粗粒度 profile 或共享矩阵实现 policy/API，避免返工。
+
+
+## 附录：实现顺序草案（CR-0003）
+
+backend Phase 2 当前因授权契约未冻结而暂停。恢复前必须先确认 CR-0003：capability vocabulary、resource selector、per-agent policy ceiling、enforcement planner、no-bypass invariant、Administration replacement、audit shape 和阶段边界。不得继续按粗粒度 GitHub permission matrix 或公共仓库管理配置实现 policy/API，避免返工。
+
+已实现的 scoped/grant 基础可保留为 token-enforceable capabilities 的底层交付机制，但不得在没有 enforcement plan 的情况下扩展 exec/helper。

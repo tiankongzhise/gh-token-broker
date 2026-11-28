@@ -430,3 +430,22 @@
 6. 该条目在冻结前不是后端恢复实现授权，也不替代 CR-0002 的正式批准。
 
 后果：backend Phase 2 在契约冻结前暂停；WebUI 高保真继续作为待审核设计 artifact。
+
+
+## D-0024 capability-based authorization broker 方向
+
+- 日期：2026-11-28
+- 状态：`proposed`
+- 证据：用户指出仓库管理操作不应是公共配置，而应按 agent 单独配置；它应取代粗粒度 `Administration` 权限申请。用户进一步指出，既然项目已经引入 broker，就不应被 GitHub 原生权限模型限制，例如“只允许删除某些短期分支”应能通过中转封装实现。用户批准新建 CR-0003，同时明确 CR-0003 仍可能调整，CR-0002 可暂时保留但定稿后必须归档。
+- 决策草案：将项目授权方向从 GitHub permission-centric token broker 升级为 capability-based authorization broker。用户层统一表达“哪个 agent 对哪些资源在什么约束下能做什么”；scoped token、GitHub ruleset/protection、broker-side executor 和未来 proxy 都只是内部 enforcement substrate。
+
+### 草案含义
+
+1. 核心安全不变量是 no-bypass：如果授予受限 capability，agent 不得同时持有能绕过该限制的 token、credential 或操作入口。
+2. `Administration` 不应作为 Agent 审批模式中的原始授权项；用户看到的是具体管理能力和约束。
+3. 每个 agent 必须有独立策略上限；application approval 只能缩小，不得扩大。
+4. 内部需要 enforcement planner 判断 capability 是否能由 scoped token、GitHub ruleset/protection、broker-executed operation、broker-mediated transport/proxy 安全实现；无法实现时 fail closed。
+5. CR-0002 暂时保留为中间草案；CR-0003 定稿并获批准后必须归档或标记 supersede CR-0002，不得长期保留过期并行规范。
+6. 该条目在冻结前不是后端恢复实现授权，也不批准最终 capability vocabulary、API/schema、policy DSL 或 broker-mediated git proxy。
+
+后果：backend Phase 2 继续暂停；WebUI 高保真需要按 capability-based authorization 方向重新设计后再进入冻结比较。

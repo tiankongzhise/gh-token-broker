@@ -82,3 +82,10 @@ v1 不承诺防御同 Windows 用户上下文下完全恶意且具备任意代�
 新增威胁：`administration:write` token 一旦交付给 agent，即使用户只想允许创建仓库或设置 branch protection，也可能被用于删除仓库、修改仓库设置、管理团队/协作者或删除/弱化 branch protection。GitHub 原生权限目前不能把该操作集合拆到足够细。
 
 计划缓解：高风险管理操作不通过 token 交付，而通过 broker operation capability layer 代执行；agent 只获得受控 operation id 和参数模板，不接触 administration-capable token。残余风险包括 broker 自身 confused deputy、模板参数绕过、operation 审计不足和 GitHub 权限语义变化；这些必须进入后续测试矩阵。
+
+
+## 附录：capability bypass 威胁草案（CR-0003）
+
+新增核心威胁：broker 表面只暴露细粒度 capability，但 agent 已持有的 GitHub token 或 credential 能直接执行更宽操作，导致 capability 约束被绕过。例如只授权删除 `agent/*` 短期分支，却同时交付通用 `contents:write` token，agent 可能删除其他普通分支。
+
+计划缓解：建立 no-bypass invariant；每类 capability 必须由 enforcement planner 判断 token/ruleset/broker/proxy 是否真正满足限制，无法满足时 fail closed。残余风险包括 enforcement substrate 状态漂移、ruleset 被管理员修改、broker confused deputy、proxy 绕过、审计关联不足和 GitHub 权限语义变化。
