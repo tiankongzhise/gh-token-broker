@@ -33,8 +33,8 @@
 | Dashboard | [dashboard.html](../design/high-fidelity/dashboard.html) | 待审批、reauth、快速操作、最近事件均可点击 |
 | 生成授权码 | [authorization-code.html](../design/high-fidelity/authorization-code.html) | 一次性/短寿命/用途限制/撤销状态 |
 | Approvals | [approval-inbox.html](../design/high-fidelity/approval-inbox.html) | 申请列表、风险详情、全部/部分/拒绝入口 |
-| 部分批准与细粒度授权 | [partial-approval.html](../design/high-fidelity/partial-approval.html) | 每仓库独立权限矩阵、operation capability 独立审批、最终差异 |
-| Audit | [audit-agent.html](../design/high-fidelity/audit-agent.html) | 审批视角审计、operation capability 事件、重新授权入口、denied/token 元数据详情 |
+| 部分批准与细粒度授权 | [partial-approval.html](../design/high-fidelity/partial-approval.html) | 每仓库独立权限矩阵、受限仓库管理操作、最终差异 |
+| Audit | [audit-agent.html](../design/high-fidelity/audit-agent.html) | 审批视角审计、管理操作请求、重新授权入口、denied/token 元数据详情 |
 | 重新授权 | [reauth.html](../design/high-fidelity/reauth.html) | 显式启动 device flow，不自动续期 |
 | Settings | [settings-agent.html](../design/high-fidelity/settings-agent.html) | 低风险审批偏好与只读安全边界 |
 
@@ -95,26 +95,26 @@
 
 参考：GitHub Docs — Create a scoped access token（`POST /applications/{client_id}/token/scoped`）与 Permissions required for GitHub Apps。
 
-### 4.2 Broker operation capability 设计
+### 4.2 统一授权心智与高风险管理操作
 
-GitHub 原生权限不能把 `administration:write` 拆成“允许创建仓库/设置 main 保护，但禁止删除仓库或删除/弱化 protection”。因此本设计把高风险管理操作从 token permission matrix 中分离出来，作为独立的 broker operation capability：
+用户明确指出：审批模式的心智负担不能暴露实现机制。用户只需要理解“我授权 agent 能做什么”；至于某项能力底层由 GitHub 原生 token permission 实现、由 broker 代执行，或由未来其他安全执行器实现，都不应该成为 Agent 审批模式的主界面概念。
 
-- operation capability 不是 GitHub token 权限；批准它不代表 agent 获得 `administration:write` token。
-- operation capability 区块必须位于仓库细粒度矩阵之前，并在页首提供显式跳转；它是与仓库 token 授权同级的一等审批对象，不能埋在页面底部。
-- agent 只能请求 broker 执行明确列出的 operation id，例如 `create_repository_with_secure_baseline` 或 `configure_main_branch_protection`。
-- 每个 operation capability 必须独立审批，不能与仓库 permission matrix 共用决定。
-- capability 必须带约束模板，例如 `secure-repo-v1` 和 `secure-main-v1`；agent 不能传任意 branch protection 参数来弱化保护。
-- `configure_main_branch_protection` 示例中目标范围被限制为“只能作用于上一 create operation 创建的仓库”，避免 capability 被用于任意既有仓库。
-- UI 必须明确列出不允许的操作：`delete_repository`、`delete_branch_protection`、`update_repository_settings`、`manage_collaborators`、任意 administration token 交付。
-- operation 的批准、拒绝、执行成功/失败必须与仓库授权分开审计。
+因此 Agent 审批模式必须遵守：
 
-这层设计会影响后端 policy/schema/API、audit、threat model 和未来 MCP/operation executor；当前全局契约草案记录在 CR-0002，最终形态仍以高保真审核和契约冻结为准。
+- 不出现 `Broker operation capability`、内部 operation id、executor、模板实现机制等实现术语。
+- 用户看到的是统一授权项，例如“创建仓库（受限）”“为新仓库保护 main（受限）”。
+- 每个授权项仍然独立决定；仓库内容权限按仓库矩阵审批，仓库管理操作按能力项审批。
+- 用户可见约束必须使用人类语言，例如“最多 1 个私有仓库”“只允许作用于本次创建的仓库”“必须使用安全保护模板”。
+- `删除仓库`、`解除 main 保护`、`任意修改仓库设置`、`管理协作者`这类不可安全细分的能力不开放申请，固定禁止。
+- 底层执行方式、内部 operation id、模板字段和机器审计细节可以出现在人工/高级模式、开发文档或后端契约中，但不能进入 Agent 审批模式主流程。
+
+内部实现仍然需要分层：普通仓库数据面权限可以由 GitHub scoped token permission 表达；创建仓库、设置 branch protection 等 GitHub 原生权限拆不细的高风险操作，必须由 broker-side operation capability  enforcement 实现，且默认不得向 agent 交付 `administration:write` token。这个内部契约会影响后端 policy/schema/API、audit、threat model 和未来 MCP/operation executor；当前全局契约草案记录在 CR-0002，最终形态仍以高保真审核和契约冻结为准。
 
 ## 5. 与低保真基线的保持关系
 
 继续保留：默认 Agent 审批模式；审批/人工模式分离；授权码一次性、短寿命；discovery 严格 `127.0.0.1`；reauth 显式确认；高风险操作写审计；不显示秘密。
 
-本轮修正：模式切换必须显式且稳定；高保真页面必须完整覆盖导航和主要操作；部分批准粒度提升为“每仓库独立、申请权限组上限内的细粒度降级”；高风险管理能力拆分为独立的 broker operation capability。
+本轮修正：模式切换必须显式且稳定；高保真页面必须完整覆盖导航和主要操作；部分批准粒度提升为“每仓库独立、申请权限组上限内的细粒度降级”；高风险管理操作以统一授权项展示给用户，底层安全执行机制放入高级模式和内部契约。
 
 ## 6. 待评审选择
 
@@ -123,7 +123,7 @@ GitHub 原生权限不能把 `administration:write` 拆成“允许创建仓库/
 1. Approvals 默认页采用“左侧申请列表 + 右侧详情”的双栏桌面布局。
 2. 批量高风险申请使用顶部危险 banner + 风险排序。
 3. 细粒度授权采用三态 select（write/read/none）；确认前是否仍需要输入最终授权仓库数量，或改成逐项高风险确认。
-4. operation capability 的约束模板展示是否足够清楚，尤其是“创建仓库 + 只允许模板化保护 main”的链式范围。
+4. 受限仓库管理操作的用户语言是否足够清楚，尤其是“创建仓库 + 只允许安全模板保护 main”的链式范围。
 5. 人工模式将 Token / Grants 合并为一个导航项。
 6. Dashboard 指标卡是否足够精简，是否需要增加“最近拒绝/最近 reauth”。
 7. 静态示意中的 `:target` 确认状态是否足以表达真实交互。
