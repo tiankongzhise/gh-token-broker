@@ -100,6 +100,7 @@
 GitHub 原生权限不能把 `administration:write` 拆成“允许创建仓库/设置 main 保护，但禁止删除仓库或删除/弱化 protection”。因此本设计把高风险管理操作从 token permission matrix 中分离出来，作为独立的 broker operation capability：
 
 - operation capability 不是 GitHub token 权限；批准它不代表 agent 获得 `administration:write` token。
+- operation capability 区块必须位于仓库细粒度矩阵之前，并在页首提供显式跳转；它是与仓库 token 授权同级的一等审批对象，不能埋在页面底部。
 - agent 只能请求 broker 执行明确列出的 operation id，例如 `create_repository_with_secure_baseline` 或 `configure_main_branch_protection`。
 - 每个 operation capability 必须独立审批，不能与仓库 permission matrix 共用决定。
 - capability 必须带约束模板，例如 `secure-repo-v1` 和 `secure-main-v1`；agent 不能传任意 branch protection 参数来弱化保护。
