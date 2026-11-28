@@ -76,3 +76,9 @@ v1 不承诺防御同 Windows 用户上下文下完全恶意且具备任意代�
 3. 审计与 token inventory 的保留期限、清理、导出和删除策略。
 4. master key rotation、丢失恢复、备份恢复演练。
 5. scoped token 父/子失效语义实测与 revoke 行为矩阵。
+
+## 附录：administration token 与 operation executor 威胁草案（CR-0002）
+
+新增威胁：`administration:write` token 一旦交付给 agent，即使用户只想允许创建仓库或设置 branch protection，也可能被用于删除仓库、修改仓库设置、管理团队/协作者或删除/弱化 branch protection。GitHub 原生权限目前不能把该操作集合拆到足够细。
+
+计划缓解：高风险管理操作不通过 token 交付，而通过 broker operation capability layer 代执行；agent 只获得受控 operation id 和参数模板，不接触 administration-capable token。残余风险包括 broker 自身 confused deputy、模板参数绕过、operation 审计不足和 GitHub 权限语义变化；这些必须进入后续测试矩阵。

@@ -766,3 +766,25 @@ github_apps:
 - 用户把秘密手动粘贴到不安全位置。
 
 因此安全声明必须准确，不得把“本地加密 + 校验码”宣传成强恶意进程防御。
+
+## 附录：授权粒度与 operation capability 架构草案（CR-0002）
+
+### Token permission layer
+
+普通数据面权限仍通过 scoped token 表达。授权决策必须按仓库持久化最终 permission matrix；同一 application 内不同仓库可以有不同结果。`none` 不发送给 GitHub scoped token API，而是从 permissions object 省略。
+
+### Broker operation capability layer
+
+GitHub 原生 `administration:write` 同时覆盖创建仓库、删除仓库、仓库设置、团队/协作者和 branch protection mutation，无法表达“允许创建仓库/设置 main 保护但禁止删除”。因此高风险管理操作必须由 broker-side operation executor 代执行：
+
+```text
+agent -> broker operation capability request
+      -> policy/template validation
+      -> broker 内部使用受保护 token 调 GitHub
+      -> audit operation result
+      -> 只返回非秘密操作结果
+```
+
+默认不得向 agent/helper/MCP tool result 交付带 `administration:write` 的 token。branch protection 初版应使用批准模板，不向 agent 开放任意弱化参数。
+
+该附录是 CR-0002 契约草案索引，不是最终 API/schema。

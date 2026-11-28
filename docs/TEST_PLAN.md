@@ -319,3 +319,16 @@
 - 日志脱敏测试通过。
 - 真实测试仓库冒烟通过。
 - 文档中的启动、配置、恢复步骤与实际一致。
+
+## 附录：授权粒度与 operation capability 测试草案（CR-0002）
+
+后续测试必须覆盖：
+
+- 同一 application 内不同仓库拥有不同最终 permission matrix。
+- 超过申请 profile 上限的权限被拒绝。
+- UI/API 中 `none` 转换为 scoped token 请求中的 omission，而不是字符串 `none`。
+- agent 无法通过 helper/exec/MCP tool result 获得带 `administration:write` 的 token。
+- broker operation capability 只允许注册 operation id；未知 operation fail closed。
+- secure branch protection 模板禁止弱化 enforce admins、force push、deletion 和 required checks。
+- create repository/protection 成功、失败、部分失败与审计一致性。
+- 使用私有仓库矩阵验证 `contents`/`administration`、用户权限、App 权限、scoped token 权限的交集；公开仓库不能作为权限拒绝证据。

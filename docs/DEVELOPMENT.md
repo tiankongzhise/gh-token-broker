@@ -276,3 +276,7 @@ Phase 1 POC 已建立初始 Go 代码；约定如下，后续以实际配置为�
 - raw token 是否允许返回
 
 CR 中写明原因、原/新行为、影响、迁移回滚、需要重审的门和批准状态。
+
+## 附录：实现顺序草案（CR-0002）
+
+后端 Phase 2 当前因授权契约未冻结而暂停。恢复前必须先确认 CR-0002：per-repository permission matrix、`none` omission、token permission layer 与 broker operation capability layer 分离、administration token 不交付、secure branch protection template 和审计字段。不得先按粗粒度 profile 或共享矩阵实现 policy/API，避免返工。

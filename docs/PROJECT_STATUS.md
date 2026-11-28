@@ -8,13 +8,13 @@
 
 | 字段 | 当前值 | 证据/备注 |
 |---|---|---|
-| 当前阶段 | WebUI B 高保真与后端 Phase 2 已获开始授权；治理门禁基线已集成并同步到两个 feature 分支 | 2026-11-27 用户明确要求完成分支处理后开始高保真和后端阶段2；见 D-0016、D-0019、D-0020、D-0021、D-0022 |
+| 当前阶段 | WebUI B 高保真审核中；后端 Phase 2 因 CR-0002 授权契约未冻结而暂停 | 2026-11-27 用户明确要求完成分支处理后开始高保真和后端阶段2；见 D-0016、D-0019、D-0020、D-0021、D-0022 |
 | 批准状态 | **有限授权，不是完整产品基线批准** | 后端 token chain 已接受为 Phase 2 技术地基；审批优先低保真已确认；仍不视为高保真、Demo、完整后端、raw token 策略或 WebUI 技术栈批准 |
 | 后端核心解释 | 已确认采用保守解释：按 [DEVELOPMENT](DEVELOPMENT.md) Phase 1 的核心 token chain POC 边界执行 | 2026-11-27 用户确认“采取保守解释”；不自动包含 MCP、WebUI、scoped token、多 agent policy |
 | 产品实现状态 | 已批准低保真 wireframes 与 Phase 1 core token chain POC 均已集成进 `main` | WebUI integration PR #9 已合并且 main CI 通过；backend integration PR #10 已合并且 main CI 通过；仍无完整 daemon、MCP server、WebUI 或 credential helper 实现 |
 | 许可证 | **已确认**：`LGPL-2.1-only` | 2026-11-27 用户明确选择；见 [DECISIONS](DECISIONS.md#d-0001-license-lgpl-21) |
 | secret store MVP | **已批准**：加密 SQLite + Windows Credential Manager 保存 master key | 2026-11-27 用户批准 D-0002；见 [DECISIONS](DECISIONS.md#d-0002-secret-store-mvp) |
-| 当前审核门 | **B 高保真与后端 Phase 2 进行中；高保真完成后停在人工审核门，Phase 2 完成后停在集成/验证审核门** | 用户已明确授权开始；不自动批准 Demo、正式 WebUI 技术栈、MCP、scoped token 完整实现或自动发布 |
+| 当前审核门 | **B 高保真人工审核中；backend Phase 2 暂停等待 CR-0002 授权契约冻结** | 高保真细粒度授权与 operation capability 会影响后端契约；契约冻结前不得恢复 backend 实现 |
 
 ## 2. 批准与授权记录
 
@@ -40,6 +40,7 @@
 
 | 工作流 | 路径 | 分支 | 允许修改/目标 | 禁止事项 |
 |---|---|---|---|---|
+| 授权契约同步 | `E:\github\gh-token-broker` | `chore/contract-operation-capabilities` | `docs/changes/CR-0002.md`、PRD/ARCHITECTURE/THREAT_MODEL/TEST_PLAN/DEVELOPMENT/DECISIONS/PROJECT_STATUS 的契约草案 | 不打开 PR、不合并、不视为冻结契约、不恢复 backend 实现 |
 | 主文档/治理 | `E:\github\gh-token-broker` | `main` | 根文档、`docs/`、`scripts/check_secrets.py`、`.gitignore`、许可证与本阶段用户明确要求的文档治理 | 不开始产品实现；首个 CI workflow 已配置 |
 | WebUI 高保真 | `E:\github\gh-token-broker-webui` | `feat/webui-high-fidelity` | `design/high-fidelity/`、`docs/DESIGN_SPEC.md` | 不定正式前端技术栈、不进入 Demo、不改后端核心文件 |
 | 后端 Phase 2 | `E:\github\gh-token-broker-backend` | `feat/backend-safe-delivery` | `cmd/`、`internal/`、`go.mod`、`go.sum`、`config.example.yaml`；范围按 CR-0001 为 scoped/grant 基础、exec wrapper、credential helper、min_ttl、基础审计与 Windows 验证 | 不做 MCP/WebUI/scoped token 完整实现；不返回 raw token 给模型上下文 |
@@ -66,6 +67,17 @@ PR #14 `chore/main-pr-gate` 已合并进 `main`（merge commit `cc6c107`），me
 - `feat/backend-safe-delivery`：`f13a3777`，push CI 成功。
 
 feature 新实现可在各自 ownership 与 domain rules 内继续；任何新的 base 为 `main` 的 open PR 会再次触发 feature 暂停规则。
+
+## 3.3 Contract workspace：授权粒度与 operation capability（2026-11-28）
+
+用户批准采用推荐的 contract workspace 机制：`chore/contract-operation-capabilities` 已从 `main` 创建，用于整理 CR-0002 授权粒度与 broker operation capability 契约。当前规则：
+
+1. 可以 commit 契约草案；不打开 PR、不合并进 `main`。
+2. 该分支在冻结前不是权威规范；权威仍是 `main` 上已批准文档。
+3. WebUI 高保真整体审核通过后，用语义契约清单比较前端最终形态和 contract branch；如有差异先修 contract branch。
+4. 用户确认冻结后才开 PR 进 `main`；main CI 通过后再同步 feature 分支。
+5. backend Phase 2 在冻结前暂停。
+
 
 ## 4. 未决事项
 
